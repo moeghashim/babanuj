@@ -64,6 +64,10 @@ const domain = process.env.SHOPIFY_STORE_DOMAIN
 const endpoint = domain ? `${domain}${SHOPIFY_GRAPHQL_API_ENDPOINT}` : "";
 const key = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!;
 
+export function isShopifyConfigured() {
+  return Boolean(endpoint && key);
+}
+
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
   : never;
@@ -78,8 +82,10 @@ export async function shopifyFetch<T>({
   variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: T } | never> {
   try {
-    if (!endpoint) {
-      throw new Error("SHOPIFY_STORE_DOMAIN environment variable is not set");
+    if (!isShopifyConfigured()) {
+      throw new Error(
+        "SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN must be set",
+      );
     }
 
     const result = await fetch(endpoint, {
@@ -141,7 +147,7 @@ const reshapeCart = (cart: ShopifyCart): Cart => {
 };
 
 const reshapeCollection = (
-  collection: ShopifyCollection
+  collection: ShopifyCollection,
 ): Collection | undefined => {
   if (!collection) {
     return undefined;
@@ -183,7 +189,7 @@ const reshapeImages = (images: Connection<Image>, productTitle: string) => {
 
 const reshapeProduct = (
   product: ShopifyProduct,
-  filterHiddenProducts: boolean = true
+  filterHiddenProducts: boolean = true,
 ) => {
   if (
     !product ||
@@ -226,7 +232,7 @@ export async function createCart(): Promise<Cart> {
 }
 
 export async function addToCart(
-  lines: { merchandiseId: string; quantity: number }[]
+  lines: { merchandiseId: string; quantity: number }[],
 ): Promise<Cart> {
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
@@ -253,7 +259,7 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
 }
 
 export async function updateCart(
-  lines: { id: string; merchandiseId: string; quantity: number }[]
+  lines: { id: string; merchandiseId: string; quantity: number }[],
 ): Promise<Cart> {
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyUpdateCartOperation>({
@@ -271,6 +277,10 @@ export async function getCart(): Promise<Cart | undefined> {
   "use cache: private";
   cacheTag(TAGS.cart);
   cacheLife("seconds");
+
+  if (!isShopifyConfigured()) {
+    return undefined;
+  }
 
   const cartId = (await cookies()).get("cartId")?.value;
 
@@ -292,11 +302,18 @@ export async function getCart(): Promise<Cart | undefined> {
 }
 
 export async function getCollection(
-  handle: string
+  handle: string,
 ): Promise<Collection | undefined> {
   "use cache";
   cacheTag(TAGS.collections);
   cacheLife("days");
+
+  if (!isShopifyConfigured()) {
+    console.log(
+      `Skipping getCollection for '${handle}' - Shopify not configured`,
+    );
+    return undefined;
+  }
 
   const res = await shopifyFetch<ShopifyCollectionOperation>({
     query: getCollectionQuery,
@@ -321,9 +338,9 @@ export async function getCollectionProducts({
   cacheTag(TAGS.collections, TAGS.products);
   cacheLife("days");
 
-  if (!endpoint) {
+  if (!isShopifyConfigured()) {
     console.log(
-      `Skipping getCollectionProducts for '${collection}' - Shopify not configured`
+      `Skipping getCollectionProducts for '${collection}' - Shopify not configured`,
     );
     return [];
   }
@@ -343,7 +360,7 @@ export async function getCollectionProducts({
   }
 
   return reshapeProducts(
-    removeEdgesAndNodes(res.body.data.collection.products)
+    removeEdgesAndNodes(res.body.data.collection.products),
   );
 }
 
@@ -352,7 +369,7 @@ export async function getCollections(): Promise<Collection[]> {
   cacheTag(TAGS.collections);
   cacheLife("days");
 
-  if (!endpoint) {
+  if (!isShopifyConfigured()) {
     console.log("Skipping getCollections - Shopify not configured");
     return [
       {
@@ -388,7 +405,7 @@ export async function getCollections(): Promise<Collection[]> {
     // Filter out the `hidden` collections.
     // Collections that start with `hidden-*` need to be hidden on the search page.
     ...reshapeCollections(shopifyCollections).filter(
-      (collection) => !collection.handle.startsWith("hidden")
+      (collection) => !collection.handle.startsWith("hidden"),
     ),
   ];
 
@@ -400,7 +417,7 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   cacheTag(TAGS.collections);
   cacheLife("days");
 
-  if (!endpoint) {
+  if (!isShopifyConfigured()) {
     console.log(`Skipping getMenu for '${handle}' - Shopify not configured`);
     return [];
   }
@@ -424,6 +441,10 @@ export async function getMenu(handle: string): Promise<Menu[]> {
 }
 
 export async function getPage(handle: string): Promise<Page> {
+  if (!isShopifyConfigured()) {
+    throw new Error(`Shopify not configured for page '${handle}'`);
+  }
+
   const res = await shopifyFetch<ShopifyPageOperation>({
     query: getPageQuery,
     variables: { handle },
@@ -433,6 +454,10 @@ export async function getPage(handle: string): Promise<Page> {
 }
 
 export async function getPages(): Promise<Page[]> {
+  if (!isShopifyConfigured()) {
+    return [];
+  }
+
   const res = await shopifyFetch<ShopifyPagesOperation>({
     query: getPagesQuery,
   });
@@ -445,7 +470,7 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
   cacheTag(TAGS.products);
   cacheLife("days");
 
-  if (!endpoint) {
+  if (!isShopifyConfigured()) {
     console.log(`Skipping getProduct for '${handle}' - Shopify not configured`);
     return undefined;
   }
@@ -461,11 +486,15 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
 }
 
 export async function getProductRecommendations(
-  productId: string
+  productId: string,
 ): Promise<Product[]> {
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!isShopifyConfigured()) {
+    return [];
+  }
 
   const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
     query: getProductRecommendationsQuery,
@@ -489,6 +518,11 @@ export async function getProducts({
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!isShopifyConfigured()) {
+    console.log("Skipping getProducts - Shopify not configured");
+    return [];
+  }
 
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,

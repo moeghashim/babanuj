@@ -21,7 +21,7 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-export default function CartModal() {
+export default function CartModal({ enabled = true }: { enabled?: boolean }) {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
@@ -29,10 +29,10 @@ export default function CartModal() {
   const closeCart = () => setIsOpen(false);
 
   useEffect(() => {
-    if (!cart) {
+    if (enabled && !cart) {
       createCartAndSetCookie();
     }
-  }, [cart]);
+  }, [cart, enabled]);
 
   useEffect(() => {
     if (

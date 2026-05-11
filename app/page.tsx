@@ -1,10 +1,9 @@
-import { Carousel } from "components/carousel";
-import { ThreeItemGrid } from "components/grid/three-items";
+import { BabanujHomePage } from "components/babanuj/home-page";
 import Footer from "components/layout/footer";
 
 export const metadata = {
   description:
-    "High-performance ecommerce store built with Next.js, Vercel, and Shopify.",
+    "Babanuj imports and distributes premium Middle Eastern and Turkish food brands across the United States.",
   openGraph: {
     type: "website",
   },
@@ -13,8 +12,7 @@ export const metadata = {
 export default function HomePage() {
   return (
     <>
-      <ThreeItemGrid />
-      <Carousel />
+      <BabanujHomePage />
       <Footer />
     </>
   );

@@ -1,0 +1,57 @@
+<svg width="1200" height="820" viewBox="0 0 1200 820" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="820" fill="#F2F0EA"/>
+  <rect y="515" width="1200" height="305" fill="#E7E2D8"/>
+  <ellipse cx="656" cy="594" rx="278" ry="66" fill="#D7D0C3"/>
+  <ellipse cx="505" cy="602" rx="190" ry="44" fill="#F8F5ED"/>
+  <rect x="490" y="146" width="214" height="330" rx="8" fill="#17371D"/>
+  <rect x="506" y="164" width="182" height="296" rx="5" stroke="#C99C46" stroke-width="4"/>
+  <text x="597" y="318" fill="#D7AE52" font-family="Arial, sans-serif" font-size="48" font-weight="700" text-anchor="middle">ZAITOUNE</text>
+  <text x="598" y="360" fill="#D7AE52" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle">SWEETS</text>
+  <rect x="734" y="225" width="326" height="270" rx="14" fill="#F8F5EE" stroke="#C7AE8B" stroke-width="4"/>
+  <text x="897" y="347" fill="#6A4937" font-family="Arial, sans-serif" font-size="42" font-weight="700" text-anchor="middle">BAS SHARQI</text>
+  <text x="897" y="385" fill="#6A4937" font-family="Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle">SWEETS</text>
+  <rect x="598" y="396" width="230" height="222" rx="12" fill="#FFF9EE" stroke="#E3BA63" stroke-width="4"/>
+  <path d="M620 424C680 386 746 389 806 424" stroke="#E3A23F" stroke-width="5"/>
+  <text x="713" y="506" fill="#E58722" font-family="Arial, sans-serif" font-size="48" font-weight="800" text-anchor="middle">CRUSH</text>
+  <text x="713" y="545" fill="#E58722" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">CHOCOLATE</text>
+  <g transform="translate(214 482)">
+    <ellipse cx="156" cy="98" rx="182" ry="52" fill="#F8F4E9"/>
+    <ellipse cx="156" cy="100" rx="174" ry="45" stroke="#D1C4B3" stroke-width="4"/>
+    <g fill="#C87922" stroke="#8F531D" stroke-width="3">
+      <path d="M58 80c16-46 69-46 85 0v32H58z"/>
+      <path d="M132 80c16-46 69-46 85 0v32h-85z"/>
+      <path d="M206 80c16-46 69-46 85 0v32h-85z"/>
+    </g>
+    <g fill="#3A7E2A">
+      <rect x="63" y="103" width="76" height="12"/>
+      <rect x="137" y="103" width="76" height="12"/>
+      <rect x="211" y="103" width="76" height="12"/>
+    </g>
+  </g>
+  <g transform="translate(760 510)">
+    <rect x="0" y="72" width="108" height="52" rx="7" fill="#2B130E"/>
+    <rect x="112" y="72" width="108" height="52" rx="7" fill="#3A1B12"/>
+    <rect x="224" y="72" width="108" height="52" rx="7" fill="#2B130E"/>
+    <rect x="56" y="16" width="108" height="52" rx="7" fill="#3A1B12"/>
+    <rect x="168" y="16" width="108" height="52" rx="7" fill="#2B130E"/>
+    <g fill="#7CA43B">
+      <rect x="10" y="89" width="88" height="15"/>
+      <rect x="122" y="89" width="88" height="15"/>
+      <rect x="234" y="89" width="88" height="15"/>
+      <rect x="66" y="33" width="88" height="15"/>
+      <rect x="178" y="33" width="88" height="15"/>
+    </g>
+  </g>
+  <g transform="translate(568 626)">
+    <ellipse cx="120" cy="64" rx="144" ry="40" fill="#F8F4E9"/>
+    <g fill="#E7B9A2">
+      <rect x="34" y="22" width="48" height="48" rx="7"/>
+      <rect x="88" y="30" width="48" height="48" rx="7" fill="#F5E2CF"/>
+      <rect x="143" y="18" width="48" height="48" rx="7" fill="#D97963"/>
+      <rect x="182" y="44" width="48" height="48" rx="7" fill="#F2DCC7"/>
+    </g>
+  </g>
+  <circle cx="1052" cy="130" r="75" fill="#345533" opacity=".2"/>
+  <path d="M1040 210c-24-82 1-143 74-184" stroke="#385535" stroke-width="18" stroke-linecap="round"/>
+  <path d="M1055 112c44-14 82-7 113 22" stroke="#385535" stroke-width="18" stroke-linecap="round"/>
+</svg>

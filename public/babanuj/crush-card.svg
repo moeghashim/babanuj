@@ -1,0 +1,19 @@
+<svg width="720" height="420" viewBox="0 0 720 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="420" fill="#1A1716"/>
+  <rect x="448" y="74" width="142" height="92" rx="9" fill="#FFF8EE" stroke="#E1A843" stroke-width="4"/>
+  <text x="519" y="130" text-anchor="middle" font-family="Arial" font-weight="800" font-size="30" fill="#D77A20">CRUSH</text>
+  <g transform="translate(120 198)">
+    <rect x="0" y="74" width="118" height="58" rx="8" fill="#2C130E"/>
+    <rect x="126" y="74" width="118" height="58" rx="8" fill="#3B1B12"/>
+    <rect x="252" y="74" width="118" height="58" rx="8" fill="#2C130E"/>
+    <rect x="64" y="10" width="118" height="58" rx="8" fill="#3B1B12"/>
+    <rect x="190" y="10" width="118" height="58" rx="8" fill="#2C130E"/>
+    <g fill="#7EAA3B">
+      <rect x="12" y="94" width="94" height="16"/>
+      <rect x="138" y="94" width="94" height="16"/>
+      <rect x="264" y="94" width="94" height="16"/>
+      <rect x="76" y="30" width="94" height="16"/>
+      <rect x="202" y="30" width="94" height="16"/>
+    </g>
+  </g>
+</svg>

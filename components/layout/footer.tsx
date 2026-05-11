@@ -1,78 +1,94 @@
 import Link from "next/link";
 
-import FooterMenu from "components/layout/footer-menu";
-import LogoSquare from "components/logo-square";
-import { getMenu } from "lib/shopify";
-import { Suspense } from "react";
+import { BabanujLogo } from "components/babanuj/brand-logo";
+import { navItems } from "lib/babanuj/data";
 
-const { COMPANY_NAME, SITE_NAME } = process.env;
-
-export default async function Footer() {
+export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : "");
-  const skeleton =
-    "w-full h-6 animate-pulse rounded-sm bg-neutral-200 dark:bg-neutral-700";
-  const menu = await getMenu("next-js-frontend-footer-menu");
-  const copyrightName = COMPANY_NAME || SITE_NAME || "";
 
   return (
-    <footer className="text-sm text-neutral-500 dark:text-neutral-400">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 border-t border-neutral-200 px-6 py-12 text-sm md:flex-row md:gap-12 md:px-4 min-[1320px]:px-0 dark:border-neutral-700">
-        <div>
-          <Link
-            className="flex items-center gap-2 text-black md:pt-1 dark:text-white"
-            href="/"
-          >
-            <LogoSquare size="sm" />
-            <span className="uppercase">{SITE_NAME}</span>
+    <footer className="bg-[#171a17] text-sm text-[#d8d4c9]">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 md:grid-cols-[1.25fr_0.8fr_0.9fr_1fr_0.9fr] md:px-8">
+        <div className="max-w-sm">
+          <Link href="/" className="inline-flex rounded bg-[#f7f5ef] p-3">
+            <BabanujLogo compact />
           </Link>
+          <p className="mt-5 leading-6">
+            Bringing the finest Middle Eastern & Turkish food brands to the U.S.
+          </p>
+          <div className="mt-5 flex gap-3 text-xs font-black">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#52594c]">
+              in
+            </span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#52594c]">
+              ig
+            </span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#52594c]">
+              f
+            </span>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#52594c]">
+              @
+            </span>
+          </div>
+          <p className="mt-5 text-xs text-[#a9a69c]">
+            © {currentYear} Babanuj Imports & Distribution. All rights
+            reserved.
+          </p>
         </div>
-        <Suspense
-          fallback={
-            <div className="flex h-[188px] w-[200px] flex-col gap-2">
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-              <div className={skeleton} />
-            </div>
-          }
-        >
-          <FooterMenu menu={menu} />
-        </Suspense>
-        <div className="md:ml-auto">
-          <a
-            className="flex h-8 w-max flex-none items-center justify-center rounded-md border border-neutral-200 bg-white text-xs text-black dark:border-neutral-700 dark:bg-black dark:text-white"
-            aria-label="Deploy on Vercel"
-            href="https://vercel.com/templates/next.js/nextjs-commerce"
+        <FooterColumn title="Navigation">
+          {navItems.map((item) => (
+            <Link key={item.title} href={item.path}>
+              {item.title}
+            </Link>
+          ))}
+        </FooterColumn>
+        <FooterColumn title="For Businesses">
+          <Link href="/wholesale-catalog">Request Wholesale Catalog</Link>
+          <Link href="/for-businesses">Become a Partner</Link>
+          <Link href="/contact">Payment & Order Tracking</Link>
+          <Link href="/contact">Terms & Conditions</Link>
+        </FooterColumn>
+        <FooterColumn title="Contact Us">
+          <span>10320 W Olympic Blvd, Suite 200</span>
+          <span>Los Angeles, CA 90064</span>
+          <a href="tel:+13107727304">+1 (310) 772-7304</a>
+          <a href="mailto:info@babanuj.com">info@babanuj.com</a>
+        </FooterColumn>
+        <div>
+          <h3 className="text-xs font-black uppercase tracking-[0.16em] text-white">
+            Ready to partner with Babanuj?
+          </h3>
+          <Link
+            href="/wholesale-catalog"
+            className="mt-5 inline-flex min-h-14 items-center justify-center rounded-md bg-[#294621] px-6 text-center text-sm font-bold text-white"
           >
-            <span className="px-3">▲</span>
-            <hr className="h-full border-r border-neutral-200 dark:border-neutral-700" />
-            <span className="px-3">Deploy</span>
-          </a>
-        </div>
-      </div>
-      <div className="border-t border-neutral-200 py-6 text-sm dark:border-neutral-700">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-1 px-4 md:flex-row md:gap-0 md:px-4 min-[1320px]:px-0">
-          <p>
-            &copy; {copyrightDate} {copyrightName}
-            {copyrightName.length && !copyrightName.endsWith(".")
-              ? "."
-              : ""}{" "}
-            All rights reserved.
-          </p>
-          <hr className="mx-4 hidden h-4 w-[1px] border-l border-neutral-400 md:inline-block" />
-          <p>
-            <a href="https://github.com/vercel/commerce">View the source</a>
-          </p>
-          <p className="md:ml-auto">
-            <a href="https://vercel.com" className="text-black dark:text-white">
-              Created by ▲ Vercel
-            </a>
-          </p>
+            Request Wholesale Catalog
+          </Link>
+          <div className="mt-8 flex gap-4 text-xs text-[#a9a69c]">
+            <Link href="/contact">Privacy Policy</Link>
+            <Link href="/contact">Terms of Use</Link>
+          </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <h3 className="text-xs font-black uppercase tracking-[0.16em] text-white">
+        {title}
+      </h3>
+      <div className="mt-4 flex flex-col gap-2 leading-6 text-[#d8d4c9]">
+        {children}
+      </div>
+    </div>
   );
 }

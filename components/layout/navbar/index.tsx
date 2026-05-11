@@ -1,61 +1,67 @@
+import { BabanujLogo } from "components/babanuj/brand-logo";
 import CartModal from "components/cart/modal";
-import LogoSquare from "components/logo-square";
-import { getMenu } from "lib/shopify";
-import { Menu } from "lib/shopify/types";
+import { navItems } from "lib/babanuj/data";
+import { isShopifyConfigured } from "lib/shopify";
 import Link from "next/link";
 import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
-import Search, { SearchSkeleton } from "./search";
-
-const { SITE_NAME } = process.env;
 
 export async function Navbar() {
-  const menu = await getMenu("next-js-frontend-header-menu");
+  const commerceEnabled = isShopifyConfigured();
 
   return (
-    <nav className="relative flex items-center justify-between p-4 lg:px-6">
-      <div className="block flex-none md:hidden">
-        <Suspense fallback={null}>
-          <MobileMenu menu={menu} />
-        </Suspense>
+    <header className="sticky top-0 z-40 border-b border-[#d8d2c6] bg-[#fbfaf6]/95 backdrop-blur">
+      <div className="bg-[#294621] px-5 py-2 text-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 overflow-hidden text-[11px] font-semibold md:text-xs">
+          <span className="min-w-0 truncate">
+            Importing curated Middle Eastern & Turkish food brands into the USA.
+          </span>
+          <span className="hidden sm:inline">Proudly based in the USA 🇺🇸</span>
+        </div>
       </div>
-      <div className="flex w-full items-center">
-        <div className="flex w-full md:w-1/3">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 md:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <Suspense fallback={null}>
+            <MobileMenu menu={navItems} />
+          </Suspense>
           <Link
             href="/"
             prefetch={true}
-            className="mr-2 flex w-full items-center justify-center md:w-auto lg:mr-6"
+            className="flex min-w-0 items-center"
+            aria-label="Babanuj home"
           >
-            <LogoSquare />
-            <div className="ml-2 flex-none text-sm font-medium uppercase md:hidden lg:block">
-              {SITE_NAME}
-            </div>
+            <BabanujLogo compact />
           </Link>
-          {menu.length ? (
-            <ul className="hidden gap-6 text-sm md:flex md:items-center">
-              {menu.map((item: Menu) => (
-                <li key={item.title}>
-                  <Link
-                    href={item.path}
-                    prefetch={true}
-                    className="text-neutral-500 underline-offset-4 hover:text-black hover:underline dark:text-neutral-400 dark:hover:text-neutral-300"
-                  >
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : null}
         </div>
-        <div className="hidden justify-center md:flex md:w-1/3">
-          <Suspense fallback={<SearchSkeleton />}>
-            <Search />
-          </Suspense>
+        <ul className="hidden items-center gap-6 text-sm font-bold lg:flex">
+          {navItems.map((item) => (
+            <li key={item.title}>
+              <Link
+                href={item.path}
+                prefetch={true}
+                className="text-[#1e211b] underline-offset-4 hover:text-[#294621] hover:underline"
+              >
+                {item.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center justify-end gap-2">
+          <Link
+            href="/brands"
+            className="hidden h-11 items-center justify-center rounded-md border border-[#a9a291] bg-white px-5 text-sm font-bold text-[#1d2419] transition hover:border-[#294621] md:inline-flex"
+          >
+            Browse Brands
+          </Link>
+          <Link
+            href="/wholesale-catalog"
+            className="hidden h-11 items-center justify-center rounded-md bg-[#294621] px-5 text-sm font-bold text-white transition hover:bg-[#203719] md:inline-flex"
+          >
+            Request Wholesale Catalog
+          </Link>
+          {commerceEnabled ? <CartModal enabled={commerceEnabled} /> : null}
         </div>
-        <div className="flex justify-end md:w-1/3">
-          <CartModal />
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }
