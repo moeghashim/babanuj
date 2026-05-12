@@ -3,30 +3,15 @@ import Image from "next/image";
 
 export function BabanujLogo({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center gap-3">
-      <div
-        className={clsx(
-          "flex items-center justify-center rounded-full border-2 border-[#1f2f1d] bg-[#fbfaf6] font-serif font-bold text-[#1f2f1d]",
-          compact ? "h-9 w-9 text-xl" : "h-12 w-12 text-2xl",
-        )}
-      >
-        B
-      </div>
-      <div
-        className={clsx(
-          "relative h-10",
-          compact ? "hidden w-44 sm:block" : "w-56",
-        )}
-      >
-        <Image
-          src="/babanuj/shopify/logo.png"
-          alt="Babanuj"
-          fill
-          className="object-contain object-left"
-          sizes={compact ? "176px" : "224px"}
-          priority
-        />
-      </div>
+    <div className={clsx("relative h-10", compact ? "w-44" : "w-56")}>
+      <Image
+        src="/babanuj/shopify/logo.png"
+        alt="Babanuj"
+        fill
+        className="object-contain object-left"
+        sizes={compact ? "176px" : "224px"}
+        priority
+      />
     </div>
   );
 }
