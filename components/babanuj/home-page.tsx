@@ -28,9 +28,19 @@ export function BabanujHomePage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-[#e1dbcf] bg-[#f4f1ea]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-12 md:grid-cols-[0.9fr_1.15fr] md:items-center md:px-8 lg:py-20">
-        <div className="relative z-10 min-w-0 max-w-[calc(100vw-2.5rem)] sm:max-w-none">
+    <section className="relative min-h-[720px] overflow-hidden border-b border-[#e1dbcf] bg-[#f4f1ea] md:min-h-[760px]">
+      <Image
+        src="/babanuj/shopify/hero.jpg"
+        alt="Zaitoune Turkish delight and coffee setting"
+        fill
+        priority
+        className="object-cover object-[62%_50%]"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,#f7f5ef_0%,#f7f5ef_34%,rgba(247,245,239,0.88)_48%,rgba(247,245,239,0.5)_62%,rgba(247,245,239,0.12)_78%,rgba(247,245,239,0)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(247,245,239,0.72)_0%,rgba(247,245,239,0.1)_34%,rgba(247,245,239,0.34)_100%)] md:bg-none" />
+      <div className="relative z-10 mx-auto flex min-h-[720px] max-w-7xl items-center px-5 py-12 md:min-h-[760px] md:px-8 lg:py-20">
+        <div className="min-w-0 max-w-[calc(100vw-2.5rem)] sm:max-w-none">
           <p className="text-xs font-black uppercase tracking-[0.22em] text-[#294621]">
             Global flavors. Local partners.
           </p>
@@ -65,70 +75,8 @@ function Hero() {
             <TrustItem icon="truck" title="Reliable Supply Across the U.S." />
           </div>
         </div>
-        <div className="grid min-h-[420px] grid-cols-1 gap-4 overflow-hidden rounded-lg md:min-h-[560px] md:grid-cols-3 md:grid-rows-[1.1fr_0.7fr]">
-          <div className="relative min-h-64 overflow-hidden rounded-lg border border-[#ded7ca] bg-[#e8e1d5] md:col-span-3">
-            <Image
-              src="/babanuj/shopify/hero.jpg"
-              alt="Zaitoune Turkish delight and coffee setting"
-              fill
-              priority
-              className="object-cover"
-              sizes="(min-width: 768px) 55vw, 100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
-            <div className="absolute bottom-5 left-5 rounded-md bg-white/92 px-4 py-3 shadow-sm">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#294621]">
-                Zaitoune Sweets
-              </p>
-              <p className="mt-1 text-sm font-bold text-[#171811]">
-                Turkish & Middle Eastern Sweets
-              </p>
-            </div>
-          </div>
-          <PhotoTile
-            src="/babanuj/shopify/baklava-250.jpg"
-            alt="Zaitoune baklava gift box"
-            label="Baklava"
-          />
-          <PhotoTile
-            src="/babanuj/shopify/crush-chocolate.jpg"
-            alt="Crush Dubai chocolate bar and packaging"
-            label="Dubai Chocolate"
-          />
-          <PhotoTile
-            src="/babanuj/shopify/turkish-delight-250.jpg"
-            alt="Zaitoune Turkish delight tin and serving set"
-            label="Turkish Delight"
-          />
-        </div>
       </div>
     </section>
-  );
-}
-
-function PhotoTile({
-  src,
-  alt,
-  label,
-}: {
-  src: string;
-  alt: string;
-  label: string;
-}) {
-  return (
-    <div className="relative overflow-hidden rounded-lg border border-[#ded7ca] bg-[#e8e1d5]">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className="object-cover"
-        sizes="(min-width: 768px) 27vw, 50vw"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
-      <p className="absolute bottom-4 left-4 right-4 text-sm font-black text-white">
-        {label}
-      </p>
-    </div>
   );
 }
 
