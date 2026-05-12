@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Image from "next/image";
 
 export function BabanujLogo({ compact = false }: { compact?: boolean }) {
   return (
@@ -11,18 +12,20 @@ export function BabanujLogo({ compact = false }: { compact?: boolean }) {
       >
         B
       </div>
-      <div className={clsx("leading-none", compact && "hidden sm:block")}>
-        <div
-          className={clsx(
-            "font-serif font-bold tracking-[0.08em] text-[#151515]",
-            compact ? "text-lg" : "text-2xl",
-          )}
-        >
-          BABANUJ
-        </div>
-        <div className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#4e4e45]">
-          Imports & Distribution
-        </div>
+      <div
+        className={clsx(
+          "relative h-10",
+          compact ? "hidden w-44 sm:block" : "w-56",
+        )}
+      >
+        <Image
+          src="/babanuj/shopify/logo.png"
+          alt="Babanuj"
+          fill
+          className="object-contain object-left"
+          sizes={compact ? "176px" : "224px"}
+          priority
+        />
       </div>
     </div>
   );
@@ -46,6 +49,27 @@ export function BrandMark({
       <div className="mt-2 text-sm font-black uppercase tracking-[0.14em] text-[#1d1d1a]">
         {text}
       </div>
+    </div>
+  );
+}
+
+export function BrandLogoBadge({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={clsx(
+        "relative h-20 w-36 rounded-md border border-[#e0d8c9] bg-[#fffdfa] p-3 shadow-sm",
+        className,
+      )}
+    >
+      <Image src={src} alt={alt} fill className="object-contain p-3" />
     </div>
   );
 }

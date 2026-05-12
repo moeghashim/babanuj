@@ -1,4 +1,4 @@
-import { BrandMark } from "components/babanuj/brand-logo";
+import { BrandLogoBadge } from "components/babanuj/brand-logo";
 import Footer from "components/layout/footer";
 import { brands } from "lib/babanuj/data";
 import Image from "next/image";
@@ -36,8 +36,9 @@ export default function BrandsPage() {
                     className="object-cover transition duration-500 group-hover:scale-105"
                     sizes="(min-width: 768px) 33vw, 100vw"
                   />
-                  <BrandMark
-                    text={brand.logoText}
+                  <BrandLogoBadge
+                    src={brand.logoImage}
+                    alt={`${brand.name} logo`}
                     className="absolute bottom-5 left-5"
                   />
                 </div>

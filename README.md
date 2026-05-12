@@ -33,6 +33,9 @@ WHOLESALE_REQUEST_FROM="Babanuj <onboarding@resend.dev>"
 Without `RESEND_API_KEY`, wholesale requests are validated and logged by the API
 route for local development.
 
+The Babanuj homepage and brand previews use product and brand imagery downloaded
+from the current `babanuj.com` Shopify storefront into `public/babanuj/shopify/`.
+
 ## Checks
 
 ```bash

@@ -1,4 +1,4 @@
-import { BrandMark } from "components/babanuj/brand-logo";
+import { BrandLogoBadge } from "components/babanuj/brand-logo";
 import Footer from "components/layout/footer";
 import { getBrand, wholesaleCatalog } from "lib/babanuj/data";
 import type { Metadata } from "next";
@@ -82,8 +82,9 @@ export default async function BrandPage({
               sizes="(min-width: 768px) 50vw, 100vw"
               priority
             />
-            <BrandMark
-              text={brand.logoText}
+            <BrandLogoBadge
+              src={brand.logoImage}
+              alt={`${brand.name} logo`}
               className="absolute bottom-6 left-6"
             />
           </div>

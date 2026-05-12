@@ -11,8 +11,8 @@ import {
 } from "lib/babanuj/data";
 import Image from "next/image";
 import Link from "next/link";
+import { BrandLogoBadge } from "./brand-logo";
 import { BabanujIcon } from "./icons";
-import { BrandMark } from "./brand-logo";
 
 export function BabanujHomePage() {
   return (
@@ -65,18 +65,70 @@ function Hero() {
             <TrustItem icon="truck" title="Reliable Supply Across the U.S." />
           </div>
         </div>
-        <div className="relative min-h-[360px] overflow-hidden rounded-lg md:min-h-[560px]">
-          <Image
-            src="/babanuj/hero-scene.svg"
-            alt="Premium imported sweets and chocolate packaging"
-            fill
-            priority
-            className="object-cover"
-            sizes="(min-width: 768px) 55vw, 100vw"
+        <div className="grid min-h-[420px] grid-cols-1 gap-4 overflow-hidden rounded-lg md:min-h-[560px] md:grid-cols-3 md:grid-rows-[1.1fr_0.7fr]">
+          <div className="relative min-h-64 overflow-hidden rounded-lg border border-[#ded7ca] bg-[#e8e1d5] md:col-span-3">
+            <Image
+              src="/babanuj/shopify/hero.jpg"
+              alt="Zaitoune Turkish delight and coffee setting"
+              fill
+              priority
+              className="object-cover"
+              sizes="(min-width: 768px) 55vw, 100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0" />
+            <div className="absolute bottom-5 left-5 rounded-md bg-white/92 px-4 py-3 shadow-sm">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#294621]">
+                Zaitoune Sweets
+              </p>
+              <p className="mt-1 text-sm font-bold text-[#171811]">
+                Turkish & Middle Eastern Sweets
+              </p>
+            </div>
+          </div>
+          <PhotoTile
+            src="/babanuj/shopify/baklava-250.jpg"
+            alt="Zaitoune baklava gift box"
+            label="Baklava"
+          />
+          <PhotoTile
+            src="/babanuj/shopify/crush-chocolate.jpg"
+            alt="Crush Dubai chocolate bar and packaging"
+            label="Dubai Chocolate"
+          />
+          <PhotoTile
+            src="/babanuj/shopify/turkish-delight-250.jpg"
+            alt="Zaitoune Turkish delight tin and serving set"
+            label="Turkish Delight"
           />
         </div>
       </div>
     </section>
+  );
+}
+
+function PhotoTile({
+  src,
+  alt,
+  label,
+}: {
+  src: string;
+  alt: string;
+  label: string;
+}) {
+  return (
+    <div className="relative overflow-hidden rounded-lg border border-[#ded7ca] bg-[#e8e1d5]">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        sizes="(min-width: 768px) 27vw, 50vw"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/0" />
+      <p className="absolute bottom-4 left-4 right-4 text-sm font-black text-white">
+        {label}
+      </p>
+    </div>
   );
 }
 
@@ -121,8 +173,9 @@ function FeaturedBrands() {
                 className="object-cover transition duration-500 group-hover:scale-105"
                 sizes="(min-width: 768px) 33vw, 100vw"
               />
-              <BrandMark
-                text={brand.logoText}
+              <BrandLogoBadge
+                src={brand.logoImage}
+                alt={`${brand.name} logo`}
                 className="absolute -bottom-10 left-6"
               />
             </div>

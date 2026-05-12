@@ -2,6 +2,7 @@ export type Brand = {
   handle: string;
   name: string;
   logoText: string;
+  logoImage: string;
   origin: string;
   established: string;
   category: string;
@@ -56,6 +57,7 @@ export const brands: Brand[] = [
     handle: "zaitoune-sweets",
     name: "Zaitoune Sweets",
     logoText: "ZAITOUNE",
+    logoImage: "/babanuj/shopify/category-zaitoune.png",
     origin: "Turkiye",
     established: "1991",
     category: "Turkish & Middle Eastern Sweets",
@@ -63,15 +65,16 @@ export const brands: Brand[] = [
       "Heritage recipes crafted with premium ingredients for an authentic taste experience.",
     longDescription:
       "Zaitoune Sweets brings classic Turkish and Middle Eastern desserts to modern retail shelves with elegant packaging, dependable wholesale formats, and a flavor profile built around pistachio, honey, and delicate pastry.",
-    image: "/babanuj/zaitoune-card.svg",
-    heroImage: "/babanuj/zaitoune-hero.svg",
+    image: "/babanuj/shopify/hero.jpg",
+    heroImage: "/babanuj/shopify/hero.jpg",
     attributes: ["Premium Quality", "Retail Ready", "Giftable"],
     wholesaleLines: ["Turkish Delight", "Baklava"],
   },
   {
-    handle: "al-hudayf",
-    name: "Al Hudayf Premium Dates",
-    logoText: "AL HUDAYF",
+    handle: "bab-sharqi",
+    name: "Bab Sharqi Sweets",
+    logoText: "BAB SHARQI",
+    logoImage: "/babanuj/shopify/category-bab-sharqi.png",
     origin: "Syria",
     established: "1993",
     category: "Authentic Syrian Desserts",
@@ -79,8 +82,8 @@ export const brands: Brand[] = [
       "Traditional Syrian desserts made with generations of passion and craftsmanship.",
     longDescription:
       "Al Hudayf focuses on regional classics with formats that work across grocery, specialty, gift, and foodservice channels, from date maamoul to crisp sesame cookies.",
-    image: "/babanuj/hudayf-card.svg",
-    heroImage: "/babanuj/hudayf-hero.svg",
+    image: "/babanuj/shopify/mamoul-250.jpg",
+    heroImage: "/babanuj/shopify/mamoul-250.jpg",
     attributes: [
       "Traditional Recipes",
       "Foodservice Options",
@@ -92,6 +95,7 @@ export const brands: Brand[] = [
     handle: "crush-chocolate",
     name: "Crush Chocolate",
     logoText: "CRUSH",
+    logoImage: "/babanuj/shopify/category-crush.png",
     origin: "UAE",
     established: "2023",
     category: "Famous Dubai Chocolate",
@@ -99,8 +103,8 @@ export const brands: Brand[] = [
       "The viral Dubai chocolate experience: rich, indulgent, and unforgettable.",
     longDescription:
       "Crush Chocolate delivers the pistachio-knafeh chocolate format customers ask for by name, with retail-ready packaging and wholesale case packs for specialty, gift, online, and grocery channels.",
-    image: "/babanuj/crush-card.svg",
-    heroImage: "/babanuj/crush-hero.svg",
+    image: "/babanuj/shopify/crush-chocolate.jpg",
+    heroImage: "/babanuj/shopify/crush-chocolate.jpg",
     attributes: ["Modern Indulgence", "High Demand", "Retail Ready"],
     wholesaleLines: ["Dubai Chocolate"],
   },
@@ -151,25 +155,25 @@ export const wholesaleCatalog: WholesaleCatalogRow[] = [
     channel: "Grocery, Specialty, Foodservice",
   },
   {
-    brandHandle: "al-hudayf",
-    brand: "Al Hudayf Premium Dates",
-    logoText: "AL HUDAYF",
+    brandHandle: "bab-sharqi",
+    brand: "Bab Sharqi Sweets",
+    logoText: "BAB SHARQI",
     productLine: "Date Maamoul",
     packSizes: "16 pcs, 24 pcs, 480g",
     channel: "Grocery, Specialty, Gift",
   },
   {
-    brandHandle: "al-hudayf",
-    brand: "Al Hudayf Premium Dates",
-    logoText: "AL HUDAYF",
+    brandHandle: "bab-sharqi",
+    brand: "Bab Sharqi Sweets",
+    logoText: "BAB SHARQI",
     productLine: "Barazek",
     packSizes: "12 pcs, 24 pcs, 500g",
     channel: "Grocery, Specialty, Foodservice",
   },
   {
-    brandHandle: "al-hudayf",
-    brand: "Al Hudayf Premium Dates",
-    logoText: "AL HUDAYF",
+    brandHandle: "bab-sharqi",
+    brand: "Bab Sharqi Sweets",
+    logoText: "BAB SHARQI",
     productLine: "Mixed Cookies",
     packSizes: "500g, 1kg, 2kg",
     channel: "Grocery, Wholesale, Foodservice",
@@ -189,28 +193,28 @@ export const retailProducts: RetailProduct[] = [
     name: "Pistachio Baklava",
     brand: "Zaitoune Sweets",
     price: "$34.99",
-    image: "/babanuj/product-baklava.svg",
+    image: "/babanuj/shopify/baklava-250.jpg",
     href: "/search?q=baklava",
   },
   {
     name: "Turkish Delight Assortment",
     brand: "Zaitoune Sweets",
     price: "$24.99",
-    image: "/babanuj/product-delight.svg",
+    image: "/babanuj/shopify/turkish-delight-250.jpg",
     href: "/search?q=turkish%20delight",
   },
   {
     name: "Maamoul Date Cookies",
-    brand: "Al Hudayf",
+    brand: "Bab Sharqi Sweets",
     price: "$16.99",
-    image: "/babanuj/product-maamoul.svg",
+    image: "/babanuj/shopify/mamoul-250.jpg",
     href: "/search?q=maamoul",
   },
   {
     name: "Crush Dubai Chocolate",
     brand: "Crush Chocolate",
     price: "$18.99",
-    image: "/babanuj/product-chocolate.svg",
+    image: "/babanuj/shopify/crush-chocolate.jpg",
     href: "/search?q=dubai%20chocolate",
   },
 ];
