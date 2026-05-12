@@ -46,7 +46,7 @@ export type ProcessStep = {
 export const navItems = [
   { title: "Brands", path: "/brands" },
   { title: "Wholesale Catalog", path: "/wholesale-catalog" },
-  { title: "Shop Retail", path: "/search" },
+  { title: "Shop Retail", path: "/shop-retail" },
   { title: "For Businesses", path: "/for-businesses" },
   { title: "About", path: "/about" },
   { title: "Contact", path: "/contact" },

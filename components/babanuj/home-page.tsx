@@ -275,7 +275,7 @@ function RetailPreview() {
             Premium sweets and chocolates, delivered right to your door.
           </p>
           <Link
-            href="/search"
+            href="/shop-retail"
             className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[#294621] px-5 text-sm font-bold text-white transition hover:bg-[#203719]"
           >
             Shop Retail

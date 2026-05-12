@@ -66,7 +66,7 @@ export default async function BrandPage({
                 Request Wholesale Info
               </Link>
               <Link
-                href={`/search?q=${encodeURIComponent(brand.name)}`}
+                href={`/shop-retail?brand=${encodeURIComponent(brand.name)}`}
                 className="inline-flex h-12 items-center justify-center rounded-md border border-[#a9a291] bg-white px-6 text-sm font-bold text-[#1d2419]"
               >
                 Shop Retail
