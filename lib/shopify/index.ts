@@ -6,6 +6,17 @@ import {
 import { isShopifyError } from "lib/type-guards";
 import { ensureStartsWith } from "lib/utils";
 import {
+  brandMenu,
+  emptyCart,
+  productRecommendations,
+  productsInCollection,
+  searchProducts,
+  toShopifyCollection,
+  toShopifyCollections,
+  toShopifyProduct,
+} from "lib/babanuj/shopify-bridge";
+import { findCategory, findProductByHandle } from "lib/babanuj/data";
+import {
   unstable_cacheLife as cacheLife,
   unstable_cacheTag as cacheTag,
   revalidateTag,
@@ -218,6 +229,9 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
 };
 
 export async function createCart(): Promise<Cart> {
+  if (!endpoint) {
+    return emptyCart();
+  }
   const res = await shopifyFetch<ShopifyCreateCartOperation>({
     query: createCartMutation,
   });
@@ -228,6 +242,9 @@ export async function createCart(): Promise<Cart> {
 export async function addToCart(
   lines: { merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
+  if (!endpoint) {
+    return emptyCart();
+  }
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
     query: addToCartMutation,
@@ -240,6 +257,9 @@ export async function addToCart(
 }
 
 export async function removeFromCart(lineIds: string[]): Promise<Cart> {
+  if (!endpoint) {
+    return emptyCart();
+  }
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyRemoveFromCartOperation>({
     query: removeFromCartMutation,
@@ -255,6 +275,9 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
 export async function updateCart(
   lines: { id: string; merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
+  if (!endpoint) {
+    return emptyCart();
+  }
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyUpdateCartOperation>({
     query: editCartItemsMutation,
@@ -278,6 +301,10 @@ export async function getCart(): Promise<Cart | undefined> {
     return undefined;
   }
 
+  if (!endpoint) {
+    return emptyCart();
+  }
+
   const res = await shopifyFetch<ShopifyCartOperation>({
     query: getCartQuery,
     variables: { cartId },
@@ -297,6 +324,12 @@ export async function getCollection(
   "use cache";
   cacheTag(TAGS.collections);
   cacheLife("days");
+
+  if (!endpoint) {
+    const cat = findCategory(handle);
+    if (!cat || cat.id === "pantry") return undefined;
+    return toShopifyCollection(cat);
+  }
 
   const res = await shopifyFetch<ShopifyCollectionOperation>({
     query: getCollectionQuery,
@@ -322,10 +355,7 @@ export async function getCollectionProducts({
   cacheLife("days");
 
   if (!endpoint) {
-    console.log(
-      `Skipping getCollectionProducts for '${collection}' - Shopify not configured`
-    );
-    return [];
+    return productsInCollection(collection);
   }
 
   const res = await shopifyFetch<ShopifyCollectionProductsOperation>({
@@ -353,20 +383,7 @@ export async function getCollections(): Promise<Collection[]> {
   cacheLife("days");
 
   if (!endpoint) {
-    console.log("Skipping getCollections - Shopify not configured");
-    return [
-      {
-        handle: "",
-        title: "All",
-        description: "All products",
-        seo: {
-          title: "All",
-          description: "All products",
-        },
-        path: "/search",
-        updatedAt: new Date().toISOString(),
-      },
-    ];
+    return toShopifyCollections();
   }
 
   const res = await shopifyFetch<ShopifyCollectionsOperation>({
@@ -401,8 +418,7 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   cacheLife("days");
 
   if (!endpoint) {
-    console.log(`Skipping getMenu for '${handle}' - Shopify not configured`);
-    return [];
+    return brandMenu();
   }
 
   const res = await shopifyFetch<ShopifyMenuOperation>({
@@ -423,7 +439,10 @@ export async function getMenu(handle: string): Promise<Menu[]> {
   );
 }
 
-export async function getPage(handle: string): Promise<Page> {
+export async function getPage(handle: string): Promise<Page | undefined> {
+  if (!endpoint) {
+    return undefined;
+  }
   const res = await shopifyFetch<ShopifyPageOperation>({
     query: getPageQuery,
     variables: { handle },
@@ -433,6 +452,9 @@ export async function getPage(handle: string): Promise<Page> {
 }
 
 export async function getPages(): Promise<Page[]> {
+  if (!endpoint) {
+    return [];
+  }
   const res = await shopifyFetch<ShopifyPagesOperation>({
     query: getPagesQuery,
   });
@@ -446,8 +468,8 @@ export async function getProduct(handle: string): Promise<Product | undefined> {
   cacheLife("days");
 
   if (!endpoint) {
-    console.log(`Skipping getProduct for '${handle}' - Shopify not configured`);
-    return undefined;
+    const p = findProductByHandle(handle);
+    return p ? toShopifyProduct(p) : undefined;
   }
 
   const res = await shopifyFetch<ShopifyProductOperation>({
@@ -466,6 +488,10 @@ export async function getProductRecommendations(
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!endpoint) {
+    return productRecommendations(productId);
+  }
 
   const res = await shopifyFetch<ShopifyProductRecommendationsOperation>({
     query: getProductRecommendationsQuery,
@@ -489,6 +515,10 @@ export async function getProducts({
   "use cache";
   cacheTag(TAGS.products);
   cacheLife("days");
+
+  if (!endpoint) {
+    return searchProducts(query, sortKey, reverse);
+  }
 
   const res = await shopifyFetch<ShopifyProductsOperation>({
     query: getProductsQuery,

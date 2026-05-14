@@ -1,0 +1,342 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, TruckIcon } from "components/babanuj/icons";
+import { Photo } from "components/babanuj/photo";
+import { ALL_PRODUCTS, BRANDS, HERO_IMG } from "lib/babanuj/data";
+
+type Slide = {
+  img: string;
+  chip: string;
+  titleParts: Array<string | { italic: string }>;
+  sub: string;
+  ctas: Array<{ label: string; variant: "warn" | "cream" }>;
+  align: "left" | "right";
+};
+
+const SLIDES: Slide[] = [
+  {
+    img: HERO_IMG,
+    chip: "NEW MEMBERS · 25% OFF",
+    titleParts: ["Heirloom sweets,", { italic: "delivered weekly." }],
+    sub: "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston. Members save 25% on every order.",
+    ctas: [
+      { label: "Start Trial · $5/mo", variant: "warn" },
+      { label: "Shop the Pantry", variant: "cream" },
+    ],
+    align: "left",
+  },
+  {
+    img: ALL_PRODUCTS[3]!.img,
+    chip: "JUST DROPPED · LIMITED RUN",
+    titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
+    sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
+    ctas: [
+      { label: "Shop the Bar", variant: "warn" },
+      { label: "Read the story", variant: "cream" },
+    ],
+    align: "right",
+  },
+  {
+    img: ALL_PRODUCTS[2]!.img,
+    chip: "SPRING DROP · BAB SHARQI",
+    titleParts: ["Maamoul,", { italic: "baked this morning." }],
+    sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
+    ctas: [
+      { label: "Order Maamoul", variant: "warn" },
+      { label: "Shop Bab Sharqi", variant: "cream" },
+    ],
+    align: "left",
+  },
+  {
+    img: BRANDS[0]!.img,
+    chip: "BUILD YOUR OWN GIFT BOX",
+    titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
+    sub: "Mix any six pieces from our pantry — Members get 25% off the box, every time.",
+    ctas: [
+      { label: "Build a Box", variant: "warn" },
+      { label: "See examples", variant: "cream" },
+    ],
+    align: "right",
+  },
+];
+
+export function MarketHero() {
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const len = SLIDES.length;
+
+  useEffect(() => {
+    if (paused) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % len), 5500);
+    return () => clearInterval(t);
+  }, [paused, len]);
+
+  const go = (n: number) => setIdx(((n % len) + len) % len);
+
+  return (
+    <section style={{ padding: "0 0 32px" }}>
+      <div
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        className="mk-hero-box"
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          height: 560,
+          background: "var(--accent-dark)",
+        }}
+      >
+        {SLIDES.map((s, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: i === idx ? 1 : 0,
+              transition: "opacity .9s ease",
+              pointerEvents: i === idx ? "auto" : "none",
+            }}
+          >
+            <Photo
+              src={s.img}
+              alt=""
+              style={{
+                position: "absolute",
+                inset: 0,
+                transform: i === idx ? "scale(1.06)" : "scale(1)",
+                transformOrigin:
+                  s.align === "left" ? "right center" : "left center",
+                transition: "transform 6.5s ease",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background:
+                  s.align === "left"
+                    ? "linear-gradient(to right, rgba(13,20,8,0.78) 0%, rgba(13,20,8,0.55) 40%, transparent 75%)"
+                    : "linear-gradient(to left, rgba(13,20,8,0.78) 0%, rgba(13,20,8,0.55) 40%, transparent 75%)",
+              }}
+            />
+            <div
+              className="mk-hero-copy"
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: s.align === "left" ? 0 : "auto",
+                right: s.align === "right" ? 0 : "auto",
+                width: "58%",
+                padding: "48px 56px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                color: "#fff",
+                transform: i === idx ? "translateY(0)" : "translateY(20px)",
+                opacity: i === idx ? 1 : 0,
+                transition: "opacity .7s ease .15s, transform .7s ease .15s",
+              }}
+            >
+              <span
+                className="micro"
+                style={{
+                  background: "rgba(255,255,255,0.16)",
+                  color: "#fff",
+                  padding: "7px 14px",
+                  borderRadius: 999,
+                  alignSelf: "flex-start",
+                  backdropFilter: "blur(4px)",
+                }}
+              >
+                {s.chip}
+              </span>
+              <h1
+                className="display-heavy"
+                style={{
+                  fontSize: 68,
+                  margin: "20px 0 0",
+                  color: "#fff",
+                  lineHeight: 1,
+                }}
+              >
+                {s.titleParts.map((p, j) =>
+                  typeof p === "string" ? (
+                    <span key={j}>
+                      {p}
+                      <br />
+                    </span>
+                  ) : (
+                    <span
+                      key={j}
+                      className="editorial"
+                      style={{ color: "var(--cream)" }}
+                    >
+                      {p.italic}
+                    </span>
+                  ),
+                )}
+              </h1>
+              <p
+                style={{
+                  fontSize: 16,
+                  lineHeight: 1.55,
+                  marginTop: 18,
+                  maxWidth: 520,
+                  opacity: 0.85,
+                }}
+              >
+                {s.sub}
+              </p>
+              <div
+                className="mk-hero-ctas"
+                style={{ display: "flex", gap: 12, marginTop: 28 }}
+              >
+                {s.ctas.map((c, j) => (
+                  <button key={j} className={`market-btn ${c.variant}`}>
+                    {c.label}
+                    {j === 0 && " →"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        <div
+          className="mk-free-chip"
+          style={{
+            position: "absolute",
+            top: 24,
+            right: 24,
+            background: "rgba(255,255,255,0.92)",
+            color: "var(--ink)",
+            borderRadius: 999,
+            padding: "8px 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 12,
+            fontWeight: 600,
+            backdropFilter: "blur(4px)",
+            zIndex: 4,
+          }}
+        >
+          <TruckIcon width={14} height={14} /> Free shipping over $59
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: 24,
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 8,
+            zIndex: 5,
+          }}
+        >
+          <button
+            onClick={() => go(idx - 1)}
+            aria-label="Previous slide"
+            style={arrowBtn}
+          >
+            <ChevronLeft width={14} height={14} />
+          </button>
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => go(i)}
+              aria-label={`Slide ${i + 1}`}
+              style={{
+                width: i === idx ? 28 : 8,
+                height: 8,
+                borderRadius: 999,
+                background: i === idx ? "#fff" : "rgba(255,255,255,0.45)",
+                border: 0,
+                cursor: "pointer",
+                transition: "width .3s, background .3s",
+                padding: 0,
+              }}
+            />
+          ))}
+          <button
+            onClick={() => go(idx + 1)}
+            aria-label="Next slide"
+            style={arrowBtn}
+          >
+            <ChevronRight width={14} height={14} />
+          </button>
+        </div>
+
+        <div
+          className="mk-counter"
+          style={{
+            position: "absolute",
+            top: 24,
+            left: 24,
+            color: "#fff",
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: "0.18em",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            zIndex: 4,
+          }}
+        >
+          <span
+            className="num"
+            style={{
+              background: "rgba(0,0,0,0.35)",
+              padding: "6px 12px",
+              borderRadius: 999,
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            0{idx + 1} / 0{len}
+          </span>
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 3,
+            background: "rgba(255,255,255,0.15)",
+            zIndex: 3,
+          }}
+        >
+          <div
+            key={`bar-${idx}-${paused}`}
+            style={{
+              height: "100%",
+              background: "#fff",
+              width: "0%",
+              animation: paused ? "none" : "mhProg 5.5s linear forwards",
+            }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const arrowBtn: React.CSSProperties = {
+  width: 32,
+  height: 32,
+  borderRadius: 999,
+  background: "rgba(255,255,255,0.18)",
+  color: "#fff",
+  border: 0,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backdropFilter: "blur(4px)",
+};

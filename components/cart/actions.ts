@@ -97,7 +97,12 @@ export async function updateItemQuantity(
 
 export async function redirectToCheckout() {
   let cart = await getCart();
-  redirect(cart!.checkoutUrl);
+  const url = cart?.checkoutUrl;
+  // When Shopify isn't wired, fall back to the home page rather than 404.
+  if (!url || url === "/checkout") {
+    redirect("/");
+  }
+  redirect(url);
 }
 
 export async function createCartAndSetCookie() {

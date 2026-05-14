@@ -1,5 +1,6 @@
-import { getCollections, getPages, getProducts } from "lib/shopify";
-import { baseUrl, validateEnvironmentVariables } from "lib/utils";
+import { getCollections, getProducts } from "lib/shopify";
+import { baseUrl } from "lib/utils";
+import { BRANDS } from "lib/babanuj/data";
 import { MetadataRoute } from "next";
 
 type Route = {
@@ -10,9 +11,7 @@ type Route = {
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  validateEnvironmentVariables();
-
-  const routesMap = [""].map((route) => ({
+  const routesMap: Route[] = [""].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
   }));
@@ -31,22 +30,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  const pagesPromise = getPages().then((pages) =>
-    pages.map((page) => ({
-      url: `${baseUrl}/${page.handle}`,
-      lastModified: page.updatedAt,
-    })),
-  );
+  const brandRoutes: Route[] = BRANDS.map((b) => ({
+    url: `${baseUrl}/brand/${b.id}`,
+    lastModified: new Date().toISOString(),
+  }));
 
   let fetchedRoutes: Route[] = [];
 
   try {
     fetchedRoutes = (
-      await Promise.all([collectionsPromise, productsPromise, pagesPromise])
+      await Promise.all([collectionsPromise, productsPromise])
     ).flat();
   } catch (error) {
-    throw JSON.stringify(error, null, 2);
+    // Soft-fail in environments without Shopify wired up.
+    fetchedRoutes = [];
   }
 
-  return [...routesMap, ...fetchedRoutes];
+  return [...routesMap, ...brandRoutes, ...fetchedRoutes];
 }
