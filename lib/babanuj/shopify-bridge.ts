@@ -56,6 +56,8 @@ export function toShopifyProduct(p: BabanujProduct): Product {
     images: [image],
     seo: { title: p.name, description: `${p.name} from ${p.brand}` },
     tags: [p.brand, p.tag],
+    vendor: p.brand,
+    productType: "Dessert",
     updatedAt: new Date().toISOString(),
   };
 }

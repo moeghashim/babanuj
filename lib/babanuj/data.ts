@@ -46,6 +46,8 @@ export type BabanujCatalogRow = {
   channels: string[];
 };
 
+// Brand metadata. The `vendor` field is the exact Shopify vendor string;
+// the `id` is the URL slug used in /brand/[id] routes.
 export const BRANDS: BabanujBrand[] = [
   {
     id: "zaitoune",
@@ -64,20 +66,36 @@ export const BRANDS: BabanujBrand[] = [
     products: ["Turkish Delight", "Baklava", "Pistachio Bites"],
   },
   {
-    id: "babsharqi",
-    name: "Bab Sharqi",
-    sub: "Sweets",
-    origin: "Syria",
-    est: 1993,
-    tag: "Authentic Syrian Desserts",
+    id: "babanuj",
+    name: "Babanuj",
+    sub: "House",
+    origin: "Houston, TX",
+    est: 2023,
+    tag: "House Specialties",
     blurb:
-      "Traditional Syrian desserts made with generations of passion and craftsmanship.",
-    long: "Founded behind the eastern gate of old Damascus. Bab Sharqi is built on family recipes, semolina worked by hand, and the patience of long simmering syrups.",
-    note: "Traditional Recipes",
-    accent: "#2a3760",
+      "Our own house line — gift boxes, holiday assortments, and signature blends curated by the Babanuj team.",
+    long: "Our in-house brand. Limited drops, holiday boxes, and the things we make ourselves — supplementing the heritage houses with seasonal moments and one-off collaborations.",
+    note: "House Line",
+    accent: "#1f2a1c",
     color2: "#caa55a",
+    img: "https://babanuj.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600",
+    products: ["Gift Boxes", "Seasonal Drops", "Holiday Collections"],
+  },
+  {
+    id: "leen",
+    name: "Leen",
+    sub: "Dates",
+    origin: "Gulf",
+    est: 2020,
+    tag: "Premium Gulf Dates & Confections",
+    blurb:
+      "Stuffed dates, chocolate-dipped dates, and Gulf-style confections.",
+    long: "Leen is built around the date — Medjool, Khudri, and Sukkari from family groves in the Gulf, hand-stuffed with pistachio, almond, and chocolate. Every order is packed within forty-eight hours of leaving the kitchen.",
+    note: "Hand-stuffed",
+    accent: "#5e3a1e",
+    color2: "#d6a06e",
     img: "https://babanuj.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
-    products: ["Petit Four", "Maamoul", "Barazek", "Mixed Cookies"],
+    products: ["Stuffed Dates", "Chocolate Dates", "Premium Date Gift Boxes"],
   },
   {
     id: "crush",
@@ -96,6 +114,30 @@ export const BRANDS: BabanujBrand[] = [
     products: ["Dubai Chocolate Bar", "Pistachio Praline", "Kataifi Crunch"],
   },
 ];
+
+// Map Shopify vendor strings → our brand IDs. Shopify vendor names sometimes
+// have a "Sweets" suffix or other variants; this normalizes to brand slugs.
+export const VENDOR_TO_BRAND_ID: Record<string, string> = {
+  "Zaitoune Sweets": "zaitoune",
+  Zaitoune: "zaitoune",
+  Babanuj: "babanuj",
+  Leen: "leen",
+  Crush: "crush",
+};
+
+export function brandIdFromVendor(vendor: string | undefined): string | null {
+  if (!vendor) return null;
+  return VENDOR_TO_BRAND_ID[vendor] ?? null;
+}
+
+// Reverse lookup: brand ID → canonical vendor name in Shopify (for filtering).
+export function vendorFromBrandId(id: string): string | undefined {
+  if (id === "zaitoune") return "Zaitoune Sweets";
+  if (id === "babanuj") return "Babanuj";
+  if (id === "leen") return "Leen";
+  if (id === "crush") return "Crush";
+  return undefined;
+}
 
 export const PRODUCTS: BabanujProduct[] = [
   {
@@ -222,6 +264,9 @@ export const ALL_PRODUCTS: BabanujProduct[] = [...PRODUCTS, ...EXTRA_PRODUCTS];
 export const HERO_IMG =
   "https://babanuj.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=2400";
 
+// Categories map 1:1 to Shopify auto-collections created by the user.
+// IDs match Shopify collection handles. Hue is the fallback background
+// color when a product image is loading or missing.
 export const CATEGORIES: BabanujCategory[] = [
   {
     id: "all",
@@ -239,19 +284,12 @@ export const CATEGORIES: BabanujCategory[] = [
     filter: (p) => /baklava/i.test(p.name),
   },
   {
-    id: "chocolate",
-    name: "Chocolate",
-    hue: "#7a4a2e",
-    blurb:
-      "Single-origin chocolate, kataifi pastry, pistachio cream. The viral Dubai bar and its cousins.",
-    filter: (p) => /chocolate|crush/i.test(p.name),
-  },
-  {
     id: "cookies",
-    name: "Cookies",
+    name: "Cookies & Maamoul",
     hue: "#d6a06e",
-    blurb: "Maamoul, Barazek, Petit Four. Tea-time classics worked by hand.",
-    filter: (p) => /maamoul|cookie|barazek|petit/i.test(p.name),
+    blurb:
+      "Maamoul, Barazek, Petit Four. Tea-time classics worked by hand.",
+    filter: (p) => /maamoul|cookie|barazek|ghraybeh|petit|ka'ak/i.test(p.name),
   },
   {
     id: "turkish-delight",
@@ -262,18 +300,36 @@ export const CATEGORIES: BabanujCategory[] = [
     filter: (p) => /turkish delight|lokum/i.test(p.name),
   },
   {
+    id: "chocolate",
+    name: "Chocolate",
+    hue: "#7a4a2e",
+    blurb:
+      "Single-origin chocolate, kataifi pastry, pistachio cream. The viral Dubai bar and its cousins.",
+    filter: (p) => /chocolate|crush/i.test(p.name),
+  },
+  {
     id: "gift-boxes",
     name: "Gift Boxes",
     hue: "#3a5c3a",
-    blurb: "Pre-made and build-your-own. Wrapped, ribboned, sent.",
-    filter: (p) => /assortment|box|premium/i.test(p.name),
+    blurb:
+      "Pre-made and build-your-own. Wrapped, ribboned, sent. Hosts, teams, holidays.",
+    filter: (p) => /assortment|box|premium|gift/i.test(p.name),
   },
   {
-    id: "pantry",
-    name: "Pantry",
-    hue: "#b4441f",
-    blurb: "Everything else — the staples we ship by the case.",
-    filter: () => true,
+    id: "dates",
+    name: "Dates",
+    hue: "#5e3a1e",
+    blurb:
+      "Stuffed, chocolate-dipped, and tray gift boxes. Medjool, Khudri, Sukkari from Gulf groves.",
+    filter: (p) => /date|leen/i.test(p.name),
+  },
+  {
+    id: "coffee",
+    name: "Coffee",
+    hue: "#3a2618",
+    blurb:
+      "Arabic coffee blends, ceremonial pours, and morning roasts from the Gulf.",
+    filter: (p) => /coffee|qahwa/i.test(p.name),
   },
 ];
 
@@ -375,44 +431,58 @@ export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {
       },
     ],
   },
-  babsharqi: {
-    founder: "The Haddad family",
-    region: "Damascus, Syria",
-    yearLabel: "Family-run · 3 generations",
-    signature: "Maamoul Date Cookies",
-    quote: `"In Damascus we say: 'food is memory you can hold.' Bab Sharqi is the gate where we let those memories out into the world."`,
-    quoteBy: "Karim Haddad, founder",
+  babanuj: {
+    founder: "The Babanuj team",
+    region: "Houston, Texas",
+    yearLabel: "Founded 2023",
+    signature: "House Gift Boxes",
+    quote: `"We started Babanuj to put heirloom sweets in the hands of people who grew up with them — and the people about to discover them."`,
+    quoteBy: "The Babanuj team",
     longStory: [
-      `Bab Sharqi takes its name from the eastern gate of old Damascus, founded behind that gate in 1993 by Karim Haddad and his two daughters. The bakery is built around recipes Karim's mother brought from Aleppo in 1948.`,
-      `The semolina is worked by hand, not mixed. The date paste is made every morning. The maamoul molds — wooden stamps carved with geometric patterns — are over fifty years old.`,
-      `After the war years, Bab Sharqi rebuilt a small kitchen and a quieter business — making fewer trays, but each one closer to the original than ever.`,
+      "Babanuj is the umbrella house. We curate the heritage brands you see in the pantry — Zaitoune, Leen, Crush, and others — and we also make our own things: gift assortments, holiday boxes, and seasonal blends you won't find anywhere else.",
+      "Every Babanuj-branded product is assembled in Houston, from components sourced through our partner houses. The work is done in-house so we can move quickly on holidays, Eid, and pop-up collaborations.",
+      "Our goal is simple: never compromise on the originals, and use Babanuj's house line to fill the gaps the heritage houses don't.",
     ],
     facts: [
-      { k: "Founded", v: "1993" },
-      { k: "Region", v: "Damascus, Syria" },
-      { k: "Maker", v: "Haddad family" },
-      { k: "Signature", v: "Maamoul" },
-      { k: "Lines", v: "11 products" },
-      { k: "Method", v: "All hand-rolled" },
+      { k: "Founded", v: "2023" },
+      { k: "Region", v: "Houston, TX" },
+      { k: "Role", v: "House line + curator" },
+      { k: "Signature", v: "Gift Boxes" },
+      { k: "Lines", v: "23 products" },
+      { k: "Assembly", v: "Houston, TX" },
     ],
     timeline: [
-      {
-        year: "1948",
-        t: `Recipes carried from Aleppo to Damascus by Karim's mother.`,
-      },
-      {
-        year: "1993",
-        t: "Bab Sharqi opens behind the eastern gate of old Damascus.",
-      },
-      {
-        year: "2011",
-        t: "Production paused; family preserves the recipe books.",
-      },
-      {
-        year: "2019",
-        t: "Kitchen rebuilt in a quieter neighborhood; daughters lead production.",
-      },
-      { year: "2024", t: "First Bab Sharqi shipment lands in Houston." },
+      { year: "2023", t: "Babanuj launches as a curated import house." },
+      { year: "2024", t: "First in-house gift boxes ship for Ramadan + Eid." },
+      { year: "2025", t: "Holiday line expanded to 23 SKUs." },
+      { year: "2026", t: "Wholesale program opens to U.S. specialty retailers." },
+    ],
+  },
+  leen: {
+    founder: "Leen family",
+    region: "Gulf",
+    yearLabel: "Family-run",
+    signature: "Stuffed Dates",
+    quote: `"A date is a small thing. Done right, it carries a whole season of sun, water, and patience."`,
+    quoteBy: "Leen family",
+    longStory: [
+      "Leen is a Gulf-based confectionary built around the date — Medjool, Khudri, Sukkari — grown on family-owned groves and hand-finished with pistachios, almonds, and single-origin chocolate.",
+      "Every variety is selected by hand. Stuffing happens the same week the dates leave the grove. Babanuj is Leen's exclusive U.S. distributor, which means every order ships from our Houston warehouse within 48 hours of arrival.",
+      "Stuffed dates, chocolate-coated dates, and tray gift boxes anchor the line. Each piece is a small bite, and the trays are designed to share.",
+    ],
+    facts: [
+      { k: "Founded", v: "2020" },
+      { k: "Region", v: "Gulf" },
+      { k: "Maker", v: "Leen family" },
+      { k: "Signature", v: "Stuffed Dates" },
+      { k: "Lines", v: "13 products" },
+      { k: "Variety", v: "Medjool · Khudri · Sukkari" },
+    ],
+    timeline: [
+      { year: "2020", t: "Leen launches with hand-stuffed Medjool dates." },
+      { year: "2022", t: "Chocolate-coated line introduced." },
+      { year: "2024", t: "First Leen shipment lands in Houston." },
+      { year: "2026", t: "Premium gift-box line expands to 13 SKUs." },
     ],
   },
   crush: {

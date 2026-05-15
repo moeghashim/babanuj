@@ -132,6 +132,8 @@ export type ShopifyProduct = {
   images: Connection<Image>;
   seo: SEO;
   tags: string[];
+  vendor: string;
+  productType: string;
   updatedAt: string;
 };
 

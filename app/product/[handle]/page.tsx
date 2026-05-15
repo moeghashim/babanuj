@@ -1,5 +1,9 @@
 import { MarketPDP } from "components/babanuj/pdp";
-import { findProductByHandle } from "lib/babanuj/data";
+import {
+  shopifyProductToBabanuj,
+  shopifyProductsToBabanuj,
+} from "lib/babanuj/from-shopify";
+import { getProduct, getProductRecommendations, getProducts } from "lib/shopify";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -7,23 +11,25 @@ export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const product = findProductByHandle(params.handle);
+  const product = await getProduct(params.handle);
 
   if (!product) return notFound();
 
   return {
-    title: product.name,
-    description: `${product.name} — ${product.weight}. Made by ${product.brand}.`,
-    openGraph: {
-      images: [
-        {
-          url: product.img,
-          width: 900,
-          height: 900,
-          alt: product.name,
-        },
-      ],
-    },
+    title: product.seo?.title || product.title,
+    description: product.seo?.description || product.description,
+    openGraph: product.featuredImage?.url
+      ? {
+          images: [
+            {
+              url: product.featuredImage.url,
+              width: product.featuredImage.width,
+              height: product.featuredImage.height,
+              alt: product.featuredImage.altText,
+            },
+          ],
+        }
+      : null,
   };
 }
 
@@ -31,22 +37,45 @@ export default async function ProductPage(props: {
   params: Promise<{ handle: string }>;
 }) {
   const params = await props.params;
-  const product = findProductByHandle(params.handle);
+  const product = await getProduct(params.handle);
 
   if (!product) return notFound();
+
+  const babanujProduct = shopifyProductToBabanuj(product);
+
+  const [recsRaw, sameBrandRaw] = await Promise.all([
+    getProductRecommendations(product.id).catch(() => []),
+    product.vendor
+      ? getProducts({ query: `vendor:"${product.vendor}"` }).catch(() => [])
+      : Promise.resolve([]),
+  ]);
+
+  const related = shopifyProductsToBabanuj(
+    recsRaw.filter((r) => r.handle !== product.handle).slice(0, 6),
+  );
+  const fromBrand = shopifyProductsToBabanuj(
+    sameBrandRaw.filter((r) => r.handle !== product.handle).slice(0, 4),
+  );
+  const galleryExtras = sameBrandRaw
+    .filter((r) => r.handle !== product.handle)
+    .slice(0, 3)
+    .map((r) => r.featuredImage?.url)
+    .filter((u): u is string => Boolean(u));
 
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: product.name,
-    description: `${product.name} from ${product.brand}`,
-    image: product.img,
+    name: product.title,
+    description: product.description,
+    image: product.featuredImage?.url,
     offers: {
       "@type": "AggregateOffer",
-      availability: "https://schema.org/InStock",
-      priceCurrency: "USD",
-      highPrice: product.price.toFixed(2),
-      lowPrice: product.price.toFixed(2),
+      availability: product.availableForSale
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      priceCurrency: product.priceRange.minVariantPrice.currencyCode,
+      highPrice: product.priceRange.maxVariantPrice.amount,
+      lowPrice: product.priceRange.minVariantPrice.amount,
     },
   };
 
@@ -58,7 +87,12 @@ export default async function ProductPage(props: {
           __html: JSON.stringify(productJsonLd),
         }}
       />
-      <MarketPDP product={product} />
+      <MarketPDP
+        product={babanujProduct}
+        fromBrand={fromBrand}
+        related={related}
+        galleryExtras={galleryExtras}
+      />
     </>
   );
 }

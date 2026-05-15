@@ -3,13 +3,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
-  ArrowRight,
-  CartIcon,
   HandshakeIcon,
   HeartIcon,
   MinusIcon,
   PlusIcon,
-  QuoteIcon,
   ShieldIcon,
   TruckIcon,
 } from "components/babanuj/icons";
@@ -17,7 +14,6 @@ import { Photo } from "components/babanuj/photo";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import {
-  ALL_PRODUCTS,
   BRANDS,
   categoryFor,
   findBrand,
@@ -27,7 +23,19 @@ import {
 
 type TabId = "description" | "ingredients" | "shipping";
 
-export function MarketPDP({ product: p }: { product: BabanujProduct }) {
+type Props = {
+  product: BabanujProduct;
+  fromBrand?: BabanujProduct[];
+  related?: BabanujProduct[];
+  galleryExtras?: string[];
+};
+
+export function MarketPDP({
+  product: p,
+  fromBrand = [],
+  related = [],
+  galleryExtras = [],
+}: Props) {
   const brand = findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
   const cat = categoryFor(p);
   const [qty, setQty] = useState(1);
@@ -35,24 +43,9 @@ export function MarketPDP({ product: p }: { product: BabanujProduct }) {
   const [activeImg, setActiveImg] = useState(0);
   const [wished, setWished] = useState(false);
 
-  const gallery = useMemo(() => {
-    const others = ALL_PRODUCTS.filter(
-      (x) => x.brand === p.brand && x.id !== p.id,
-    ).slice(0, 3);
-    return [p.img, ...others.map((x) => x.img), brand.img];
-  }, [p, brand]);
-
-  const fromBrand = useMemo(
-    () =>
-      ALL_PRODUCTS.filter((x) => x.brand === p.brand && x.id !== p.id).slice(
-        0,
-        4,
-      ),
-    [p],
-  );
-  const related = useMemo(
-    () => ALL_PRODUCTS.filter((x) => x.id !== p.id).slice(0, 6),
-    [p],
+  const gallery = useMemo(
+    () => [p.img, ...galleryExtras, brand.img].filter(Boolean),
+    [p, brand, galleryExtras],
   );
 
   return (

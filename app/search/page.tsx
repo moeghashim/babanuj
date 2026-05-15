@@ -1,4 +1,6 @@
 import { CategoryView } from "components/babanuj/category-view";
+import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
+import { getProducts } from "lib/shopify";
 
 export const metadata = {
   title: "Search the pantry",
@@ -11,5 +13,10 @@ export default async function SearchPage(props: {
   const searchParams = (await props.searchParams) ?? {};
   const q = typeof searchParams.q === "string" ? searchParams.q : undefined;
 
-  return <CategoryView categoryId="all" searchValue={q} />;
+  const raw = await getProducts({ query: q });
+  const products = shopifyProductsToBabanuj(raw);
+
+  return (
+    <CategoryView categoryId="all" products={products} searchValue={q} />
+  );
 }

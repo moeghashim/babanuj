@@ -5,7 +5,6 @@ import { useMemo, useState } from "react";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { FilterIcon } from "components/babanuj/icons";
 import {
-  ALL_PRODUCTS,
   CATEGORIES,
   findCategory,
   type BabanujProduct,
@@ -15,29 +14,17 @@ type SortKey = "featured" | "price-asc" | "price-desc" | "name";
 
 type Props = {
   categoryId: string;
+  products: BabanujProduct[];
   searchValue?: string;
 };
 
-export function CategoryView({ categoryId, searchValue }: Props) {
+export function CategoryView({ categoryId, products, searchValue }: Props) {
   const cat = findCategory(categoryId);
-  const pool = ALL_PRODUCTS;
-
-  const baseItems = useMemo(() => {
-    if (searchValue) {
-      const q = searchValue.toLowerCase();
-      return pool.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
-          p.tag.toLowerCase().includes(q),
-      );
-    }
-    return pool.filter(cat.filter);
-  }, [cat, searchValue, pool]);
+  const baseItems = products;
 
   const brands = useMemo(
-    () => ["All", ...Array.from(new Set(pool.map((p) => p.brand)))],
-    [pool],
+    () => ["All", ...Array.from(new Set(products.map((p) => p.brand)))],
+    [products],
   );
 
   const [brand, setBrand] = useState("All");

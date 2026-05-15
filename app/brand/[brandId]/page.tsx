@@ -1,5 +1,7 @@
 import { BrandView } from "components/babanuj/brand-view";
-import { BRANDS, findBrand } from "lib/babanuj/data";
+import { BRANDS, findBrand, vendorFromBrandId } from "lib/babanuj/data";
+import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
+import { getProducts } from "lib/shopify";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -37,5 +39,11 @@ export default async function BrandPage(props: {
   const brand = findBrand(params.brandId);
   if (!brand) return notFound();
 
-  return <BrandView brand={brand} />;
+  const vendor = vendorFromBrandId(brand.id);
+  const raw = vendor
+    ? await getProducts({ query: `vendor:"${vendor}"` }).catch(() => [])
+    : [];
+  const products = shopifyProductsToBabanuj(raw);
+
+  return <BrandView brand={brand} products={products} />;
 }

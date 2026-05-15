@@ -6,17 +6,31 @@ import { Photo } from "components/babanuj/photo";
 import { RubElHizb } from "components/babanuj/ornaments";
 import { MarketProductCard } from "components/babanuj/product-card";
 import {
-  ALL_PRODUCTS,
   BRANDS,
   BRAND_DETAILS,
   type BabanujBrand,
   type BabanujBrandDetail,
+  type BabanujProduct,
 } from "lib/babanuj/data";
 
-export function BrandView({ brand }: { brand: BabanujBrand }) {
-  const detail: BabanujBrandDetail =
+type Props = {
+  brand: BabanujBrand;
+  products?: BabanujProduct[];
+};
+
+export function BrandView({ brand, products = [] }: Props) {
+  const baseDetail: BabanujBrandDetail =
     BRAND_DETAILS[brand.id] ?? BRAND_DETAILS.zaitoune!;
-  const brandProducts = ALL_PRODUCTS.filter((p) => p.brand === brand.name);
+  // Override the static "Lines" fact with the live product count.
+  const detail: BabanujBrandDetail = {
+    ...baseDetail,
+    facts: baseDetail.facts.map((f) =>
+      f.k === "Lines"
+        ? { k: "Lines", v: `${products.length} products` }
+        : f,
+    ),
+  };
+  const brandProducts = products;
   const otherBrands = BRANDS.filter((b) => b.id !== brand.id);
 
   return (

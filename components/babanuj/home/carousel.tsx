@@ -3,15 +3,16 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "components/babanuj/icons";
 import { MarketProductCard } from "components/babanuj/product-card";
-import { ALL_PRODUCTS } from "lib/babanuj/data";
+import type { BabanujProduct } from "lib/babanuj/data";
 
 type Props = {
   title: string;
   tag: string;
   reverse?: boolean;
+  products: BabanujProduct[];
 };
 
-export function MarketCarousel({ title, tag, reverse }: Props) {
+export function MarketCarousel({ title, tag, reverse, products }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const scroll = (dir: -1 | 1) => {
     trackRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
@@ -71,7 +72,7 @@ export function MarketCarousel({ title, tag, reverse }: Props) {
           paddingBottom: 8,
         }}
       >
-        {ALL_PRODUCTS.map((p, i) => (
+        {products.map((p, i) => (
           <MarketProductCard key={p.id} product={p} index={i} carouselCard />
         ))}
       </div>
