@@ -25,7 +25,7 @@ import {
   type BabanujProduct,
 } from "lib/babanuj/data";
 
-type TabId = "description" | "ingredients" | "shipping" | "reviews";
+type TabId = "description" | "ingredients" | "shipping";
 
 export function MarketPDP({ product: p }: { product: BabanujProduct }) {
   const brand = findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
@@ -274,26 +274,6 @@ export function MarketPDP({ product: p }: { product: BabanujProduct }) {
               }}
             >
               <span
-                style={{ display: "flex", gap: 2, color: "#d4a843", fontSize: 16 }}
-              >
-                ★★★★★
-              </span>
-              <span style={{ fontSize: 13, fontWeight: 700 }}>4.9</span>
-              <a
-                href="#reviews"
-                style={{
-                  fontSize: 13,
-                  color: "var(--ink-2)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 3,
-                }}
-              >
-                248 reviews
-              </a>
-              <span
-                style={{ width: 1, height: 14, background: "var(--rule)" }}
-              />
-              <span
                 style={{
                   fontSize: 13,
                   color: "var(--accent-dark)",
@@ -496,7 +476,6 @@ export function MarketPDP({ product: p }: { product: BabanujProduct }) {
                 { id: "description", label: "Description" },
                 { id: "ingredients", label: "Ingredients & nutrition" },
                 { id: "shipping", label: "Shipping & returns" },
-                { id: "reviews", label: "Reviews (248)" },
               ] as { id: TabId; label: string }[]
             ).map((t) => (
               <button
@@ -530,7 +509,6 @@ export function MarketPDP({ product: p }: { product: BabanujProduct }) {
             )}
             {tab === "ingredients" && <PDPIngredients />}
             {tab === "shipping" && <PDPShipping />}
-            {tab === "reviews" && <PDPReviews />}
           </div>
         </div>
       </section>

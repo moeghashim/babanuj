@@ -107,20 +107,6 @@ export function MarketProductCard({
       </div>
 
       <div style={{ padding: 16 }}>
-        <div
-          style={{
-            display: "flex",
-            gap: 2,
-            color: "#d4a843",
-            fontSize: 11,
-            marginBottom: 4,
-          }}
-        >
-          ★★★★★
-          <span style={{ color: "var(--ink-2)", marginLeft: 4 }}>
-            ({120 + index * 7})
-          </span>
-        </div>
         <div className="micro" style={{ fontSize: 10, color: "var(--ink-2)" }}>
           {p.brand}
         </div>

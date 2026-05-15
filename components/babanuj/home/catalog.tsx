@@ -1,5 +1,8 @@
 import { CATALOG } from "lib/babanuj/data";
 
+const WHOLESALE_MAILTO =
+  "mailto:wholesale@babanuj.com?subject=Wholesale%20inquiry&body=Hi%20Babanuj%2C%20we%27re%20interested%20in%20wholesale%20pricing%20for%3A%0A%0AStore%20name%3A%0AChannel%20(Grocery%2FSpecialty%2FFoodservice)%3A%0AEstimated%20monthly%20volume%3A%0ALines%20of%20interest%3A%0A";
+
 export function MarketCatalog() {
   return (
     <section id="wholesale" style={{ padding: "56px 56px" }}>
@@ -37,7 +40,9 @@ export function MarketCatalog() {
               Most accounts go live within two weeks.
             </p>
           </div>
-          <button className="market-btn">Request Full Catalog →</button>
+          <a className="market-btn" href={WHOLESALE_MAILTO}>
+            Request Full Catalog →
+          </a>
         </div>
 
         <div className="mk-catalog-scroll">
@@ -106,7 +111,10 @@ export function MarketCatalog() {
                     </span>
                   ))}
                 </span>
-                <button
+                <a
+                  href={`${WHOLESALE_MAILTO}&subject=${encodeURIComponent(
+                    `Wholesale inquiry — ${c.brand} · ${c.line}`,
+                  )}`}
                   style={{
                     justifySelf: "end",
                     padding: "6px 14px",
@@ -117,10 +125,11 @@ export function MarketCatalog() {
                     borderRadius: 999,
                     fontSize: 12,
                     fontWeight: 700,
+                    textDecoration: "none",
                   }}
                 >
                   Inquire
-                </button>
+                </a>
               </div>
             ))}
           </div>

@@ -4,7 +4,6 @@ import { MarketCatalog } from "components/babanuj/home/catalog";
 import { MarketCategories } from "components/babanuj/home/categories";
 import { MarketHero } from "components/babanuj/home/hero";
 import { MarketHowItWorks } from "components/babanuj/home/how-it-works";
-import { MarketMember } from "components/babanuj/home/member";
 import { MarketPromo } from "components/babanuj/home/promo";
 import { MarketReviews } from "components/babanuj/home/reviews";
 import { MarketTrust } from "components/babanuj/home/trust";
@@ -30,7 +29,6 @@ export default function HomePage() {
         tag="Just landed in Houston"
         reverse
       />
-      <MarketMember />
       <MarketHowItWorks />
       <MarketReviews />
       <MarketCatalog />

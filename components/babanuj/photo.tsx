@@ -1,26 +1,55 @@
-import type { CSSProperties, ImgHTMLAttributes } from "react";
+import Image from "next/image";
+import type { CSSProperties } from "react";
 
 type Props = {
   src: string;
   alt?: string;
   style?: CSSProperties;
-} & Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "style">;
+  /** When true (the default), use next/image with fill positioning. The
+   *  parent must be position:relative + sized. Set false to render a raw
+   *  <img> (rare — only for cases where the wrapper can't be sized). */
+  fill?: boolean;
+  sizes?: string;
+  priority?: boolean;
+};
 
-export function Photo({ src, alt = "", style, ...rest }: Props) {
-  return (
+export function Photo({
+  src,
+  alt = "",
+  style,
+  fill = true,
+  sizes,
+  priority,
+}: Props) {
+  if (!fill) {
     /* eslint-disable-next-line @next/next/no-img-element */
-    <img
+    return (
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: "block",
+          ...style,
+        }}
+      />
+    );
+  }
+
+  return (
+    <Image
       src={src}
       alt={alt}
-      loading="lazy"
+      fill
+      sizes={sizes ?? "(max-width: 900px) 100vw, 50vw"}
+      priority={priority}
       style={{
-        width: "100%",
-        height: "100%",
         objectFit: "cover",
-        display: "block",
         ...style,
       }}
-      {...rest}
     />
   );
 }

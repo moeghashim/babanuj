@@ -152,7 +152,10 @@ export function BrandView({ brand }: { brand: BabanujBrand }) {
               >
                 Shop {brand.name} →
               </a>
-              <button
+              <a
+                href={`mailto:wholesale@babanuj.com?subject=${encodeURIComponent(
+                  `Wholesale inquiry — ${brand.name}`,
+                )}`}
                 className="market-btn"
                 style={{
                   background: "rgba(255,255,255,0.15)",
@@ -161,7 +164,7 @@ export function BrandView({ brand }: { brand: BabanujBrand }) {
                 }}
               >
                 Wholesale inquiry
-              </button>
+              </a>
             </div>
           </div>
         </div>
