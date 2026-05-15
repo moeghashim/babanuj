@@ -110,12 +110,6 @@ export function MarketPDP({
                   fill={wished ? "currentColor" : "none"}
                 />
               </button>
-              <span
-                className="market-chip chip-save"
-                style={{ position: "absolute", top: 16, left: 16 }}
-              >
-                -25% Member
-              </span>
             </div>
             <div
               style={{
@@ -288,68 +282,22 @@ export function MarketPDP({
               <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
                 <span
                   className="display-heavy num"
-                  style={{ fontSize: 38, color: "var(--warn)" }}
+                  style={{ fontSize: 38, color: "var(--ink)" }}
                 >
                   {fmtPrice(p.price)}
                 </span>
-                <span
-                  className="num"
+              </div>
+              {p.weight && (
+                <div
                   style={{
-                    fontSize: 16,
+                    fontSize: 12,
                     color: "var(--ink-2)",
-                    textDecoration: "line-through",
+                    marginTop: 8,
                   }}
                 >
-                  {fmtPrice(p.price * 1.25)}
-                </span>
-                <span
-                  className="market-chip chip-save"
-                  style={{ fontSize: 11 }}
-                >
-                  SAVE {fmtPrice(p.price * 0.25)}
-                </span>
-              </div>
-              <div
-                style={{
-                  marginTop: 8,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  fontSize: 13,
-                }}
-              >
-                <span
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: 999,
-                    background: "var(--accent)",
-                    color: "#fff",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    fontSize: 11,
-                  }}
-                >
-                  ★
-                </span>
-                <span>
-                  <strong style={{ color: "var(--accent-dark)" }}>
-                    Members pay {fmtPrice(p.price * 0.75)}
-                  </strong>{" "}
-                  — start a free trial at checkout.
-                </span>
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--ink-2)",
-                  marginTop: 8,
-                }}
-              >
-                {p.weight}
-              </div>
+                  {p.weight}
+                </div>
+              )}
             </div>
 
             <div
@@ -401,18 +349,7 @@ export function MarketPDP({
                 label={`Add to Bag — ${fmtPrice(p.price * qty)}`}
               />
             </div>
-            <button
-              className="market-btn warn"
-              style={{
-                width: "100%",
-                justifyContent: "center",
-                padding: "14px",
-                fontSize: 14,
-                marginBottom: 22,
-              }}
-            >
-              Buy now · One-tap checkout
-            </button>
+            <div style={{ marginBottom: 22 }} />
 
             <div
               style={{

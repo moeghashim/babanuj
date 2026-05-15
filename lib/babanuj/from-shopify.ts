@@ -63,9 +63,11 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
   const brandId = VENDOR_TO_BRAND_ID[vendor] ?? null;
   const hue = (brandId && HUE_BY_BRAND[brandId]) ?? HUE_FALLBACK;
   const price = Number.parseFloat(p.priceRange.minVariantPrice.amount);
+  const firstVariantId = p.variants[0]?.id ?? p.id;
 
   return {
     id: p.id,
+    variantId: firstVariantId,
     handle: p.handle,
     name: p.title,
     brand: displayBrand(vendor || "Babanuj"),

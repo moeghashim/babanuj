@@ -1,54 +1,22 @@
 import Link from "next/link";
 import { ArrowRight } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
-import { ALL_PRODUCTS } from "lib/babanuj/data";
+
+type Props = {
+  // Image URLs sourced server-side (first product of each collection).
+  imageByCategoryId?: Record<string, string | undefined>;
+};
 
 const CATS = [
-  {
-    name: "Baklava",
-    id: "baklava",
-    count: 14,
-    hue: "#caa55a",
-    img: ALL_PRODUCTS[0]!.img,
-  },
-  {
-    name: "Chocolate",
-    id: "chocolate",
-    count: 9,
-    hue: "#7a4a2e",
-    img: ALL_PRODUCTS[3]!.img,
-  },
-  {
-    name: "Cookies",
-    id: "cookies",
-    count: 22,
-    hue: "#d6a06e",
-    img: ALL_PRODUCTS[7]!.img,
-  },
-  {
-    name: "Turkish Delight",
-    id: "turkish-delight",
-    count: 11,
-    hue: "#e8b0a8",
-    img: ALL_PRODUCTS[1]!.img,
-  },
-  {
-    name: "Gift Boxes",
-    id: "gift-boxes",
-    count: 18,
-    hue: "#3a5c3a",
-    img: ALL_PRODUCTS[6]!.img,
-  },
-  {
-    name: "Pantry",
-    id: "pantry",
-    count: 26,
-    hue: "#b4441f",
-    img: ALL_PRODUCTS[4]!.img,
-  },
+  { name: "Baklava", id: "baklava", hue: "#bfa86a" },
+  { name: "Cookies & Maamoul", id: "cookies", hue: "#d6a06e" },
+  { name: "Turkish Delight", id: "turkish-delight", hue: "#e8b0a8" },
+  { name: "Chocolate", id: "chocolate", hue: "#7a4a2e" },
+  { name: "Gift Boxes", id: "gift-boxes", hue: "#3a5c3a" },
+  { name: "Dates", id: "dates", hue: "#5e3a1e" },
 ];
 
-export function MarketCategories() {
+export function MarketCategories({ imageByCategoryId = {} }: Props) {
   return (
     <section style={{ padding: "56px 56px 32px" }}>
       <div
@@ -84,63 +52,65 @@ export function MarketCategories() {
           gap: 16,
         }}
       >
-        {CATS.map((c) => (
-          <Link
-            key={c.name}
-            href={`/search/${c.id}`}
-            className="market-card"
-            style={{
-              display: "block",
-              position: "relative",
-              borderRadius: 18,
-            }}
-          >
-            <div
+        {CATS.map((c) => {
+          const img = imageByCategoryId[c.id];
+          return (
+            <Link
+              key={c.name}
+              href={`/search/${c.id}`}
+              className="market-card"
               style={{
-                aspectRatio: "1",
-                background: c.hue,
+                display: "block",
                 position: "relative",
-                overflow: "hidden",
+                borderRadius: 18,
               }}
             >
-              <Photo
-                src={c.img}
-                alt={c.name}
-                style={{ position: "absolute", inset: 0 }}
-              />
               <div
                 style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4))",
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 12,
-                  left: 12,
-                  right: 12,
-                  color: "#fff",
+                  aspectRatio: "1",
+                  background: c.hue,
+                  position: "relative",
+                  overflow: "hidden",
                 }}
               >
+                {img && (
+                  <Photo
+                    src={img}
+                    alt={c.name}
+                    style={{ position: "absolute", inset: 0 }}
+                  />
+                )}
                 <div
                   style={{
-                    fontSize: 15,
-                    fontWeight: 700,
-                    letterSpacing: "-0.01em",
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4))",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: 12,
+                    left: 12,
+                    right: 12,
+                    color: "#fff",
                   }}
                 >
-                  {c.name}
-                </div>
-                <div style={{ fontSize: 11, opacity: 0.85 }}>
-                  {c.count} items
+                  <div
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 700,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    {c.name}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

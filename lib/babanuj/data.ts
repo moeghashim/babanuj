@@ -20,6 +20,9 @@ export type BabanujBrand = {
 
 export type BabanujProduct = {
   id: string;
+  /** Real Shopify ProductVariant GID for the default variant. Set by the
+   *  adapter from live data; falls back to a synthetic ID for seed data. */
+  variantId: string;
   handle: string;
   name: string;
   brand: string;
@@ -142,6 +145,7 @@ export function vendorFromBrandId(id: string): string | undefined {
 export const PRODUCTS: BabanujProduct[] = [
   {
     id: "p1",
+    variantId: "p1",
     handle: "pistachio-baklava",
     name: "Pistachio Baklava",
     brand: "Zaitoune",
@@ -154,6 +158,7 @@ export const PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "p2",
+    variantId: "p2",
     handle: "turkish-delight-assortment",
     name: "Turkish Delight Assortment",
     brand: "Zaitoune",
@@ -166,6 +171,7 @@ export const PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "p3",
+    variantId: "p3",
     handle: "maamoul-date-cookies",
     name: "Maamoul Date Cookies",
     brand: "Bab Sharqi",
@@ -178,6 +184,7 @@ export const PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "p4",
+    variantId: "p4",
     handle: "crush-dubai-chocolate",
     name: "Crush Dubai Chocolate",
     brand: "Crush",
@@ -193,6 +200,7 @@ export const PRODUCTS: BabanujProduct[] = [
 export const EXTRA_PRODUCTS: BabanujProduct[] = [
   {
     id: "e1",
+    variantId: "e1",
     handle: "petit-four-mix",
     name: "Petit Four Mix",
     brand: "Zaitoune",
@@ -204,6 +212,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "e2",
+    variantId: "e2",
     handle: "mini-baklava",
     name: "Mini Baklava",
     brand: "Zaitoune",
@@ -215,6 +224,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "e3",
+    variantId: "e3",
     handle: "turkish-delight-premium",
     name: "Turkish Delight Premium",
     brand: "Zaitoune",
@@ -226,6 +236,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "e4",
+    variantId: "e4",
     handle: "barazek-sesame-cookies",
     name: "Barazek Sesame Cookies",
     brand: "Zaitoune",
@@ -237,6 +248,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "e5",
+    variantId: "e5",
     handle: "maamoul-large-tray",
     name: "Maamoul 500g Tray",
     brand: "Bab Sharqi",
@@ -248,6 +260,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
   },
   {
     id: "e6",
+    variantId: "e6",
     handle: "mixed-cookies-250",
     name: "Mixed Cookies 250g",
     brand: "Zaitoune",

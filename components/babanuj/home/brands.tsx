@@ -33,7 +33,7 @@ export function MarketBrands() {
         className="mk-brands"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: `repeat(${BRANDS.length}, 1fr)`,
           gap: 16,
         }}
       >

@@ -4,8 +4,8 @@ import { PlusIcon, CartIcon } from "components/babanuj/icons";
 import { useCart } from "components/cart/cart-context";
 import { addItem } from "components/cart/actions";
 import type { BabanujProduct } from "lib/babanuj/data";
-import { toShopifyProduct } from "lib/babanuj/shopify-bridge";
-import { useActionState, type CSSProperties } from "react";
+import type { Product, ProductVariant } from "lib/shopify/types";
+import { startTransition, type CSSProperties } from "react";
 
 type Variant = "icon" | "quick-add" | "full";
 
@@ -25,18 +25,55 @@ export function AddToBagButton({
   label,
 }: Props) {
   const { addCartItem } = useCart();
-  const shopifyProduct = toShopifyProduct(product);
-  const firstVariant = shopifyProduct.variants[0]!;
-  const [, formAction] = useActionState(addItem, null);
-  const submit = formAction.bind(null, firstVariant.id);
 
-  const handleClick = async (e: React.MouseEvent) => {
+  // Shape a minimal Product/ProductVariant for the optimistic update so the
+  // cart reducer has the data it needs. The IDs are the real Shopify GIDs.
+  const shopifyVariant: ProductVariant = {
+    id: product.variantId,
+    title: "Default Title",
+    availableForSale: true,
+    selectedOptions: [{ name: "Title", value: "Default Title" }],
+    price: { amount: product.price.toFixed(2), currencyCode: "USD" },
+  };
+  const shopifyProduct: Product = {
+    id: product.id,
+    handle: product.handle,
+    availableForSale: true,
+    title: product.name,
+    description: "",
+    descriptionHtml: "",
+    options: [],
+    priceRange: {
+      minVariantPrice: shopifyVariant.price,
+      maxVariantPrice: shopifyVariant.price,
+    },
+    variants: [shopifyVariant],
+    featuredImage: {
+      url: product.img,
+      altText: product.name,
+      width: 900,
+      height: 900,
+    },
+    images: [],
+    seo: { title: product.name, description: "" },
+    tags: [product.tag].filter(Boolean),
+    vendor: product.brand,
+    productType: "",
+    updatedAt: new Date().toISOString(),
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    for (let i = 0; i < quantity; i++) {
-      addCartItem(firstVariant, shopifyProduct);
-      await submit();
-    }
+    startTransition(async () => {
+      // Optimistic UI: instant cart badge / drawer update.
+      for (let i = 0; i < quantity; i++) {
+        addCartItem(shopifyVariant, shopifyProduct);
+      }
+      // Real Shopify cart line write. Server action invalidates cart cache
+      // on success; on failure, the optimistic state rolls back.
+      await addItem(null, product.variantId);
+    });
   };
 
   if (variant === "icon") {

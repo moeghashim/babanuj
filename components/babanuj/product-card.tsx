@@ -21,9 +21,6 @@ export function MarketProductCard({
   showAddOnHover = true,
 }: Props) {
   const [hover, setHover] = useState(false);
-  const onSale = index % 2 === 0;
-  const isNew = index % 3 === 1;
-  const listPrice = p.price * 1.25;
 
   return (
     <Link
@@ -51,21 +48,20 @@ export function MarketProductCard({
           alt={p.name}
           style={{ position: "absolute", inset: 0 }}
         />
-        <div
-          style={{
-            position: "absolute",
-            top: 12,
-            left: 12,
-            display: "flex",
-            flexDirection: "column",
-            gap: 6,
-          }}
-        >
-          {onSale && (
-            <span className="market-chip chip-save">-25% Member</span>
-          )}
-          {isNew && <span className="market-chip chip-new">New</span>}
-        </div>
+        {p.tag && (
+          <div
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
+          >
+            <span className="market-chip chip-soft">{p.tag}</span>
+          </div>
+        )}
         <button
           aria-label="Wishlist"
           onClick={(e) => {
@@ -136,32 +132,10 @@ export function MarketProductCard({
             style={{
               fontSize: 18,
               fontWeight: 800,
-              color: onSale ? "var(--warn)" : "var(--ink)",
+              color: "var(--ink)",
             }}
           >
             {fmtPrice(p.price)}
-          </span>
-          {onSale && (
-            <span
-              className="num"
-              style={{
-                fontSize: 13,
-                color: "var(--ink-2)",
-                textDecoration: "line-through",
-              }}
-            >
-              {fmtPrice(listPrice)}
-            </span>
-          )}
-          <span
-            style={{
-              marginLeft: "auto",
-              fontSize: 11,
-              color: "var(--accent-dark)",
-              fontWeight: 600,
-            }}
-          >
-            Member {fmtPrice(p.price * 0.75)}
           </span>
         </div>
       </div>
