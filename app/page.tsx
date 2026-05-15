@@ -8,7 +8,7 @@ import { MarketPromo } from "components/babanuj/home/promo";
 import { MarketReviews } from "components/babanuj/home/reviews";
 import { MarketTrust } from "components/babanuj/home/trust";
 import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
-import { getCollectionProducts, getProducts } from "lib/shopify";
+import { getProducts } from "lib/shopify";
 
 export const metadata = {
   title: "Babanuj — Heirloom sweets, delivered weekly",
@@ -17,38 +17,20 @@ export const metadata = {
   openGraph: { type: "website" },
 };
 
-const CATEGORY_IDS = [
-  "baklava",
-  "cookies",
-  "turkish-delight",
-  "chocolate",
-  "gift-boxes",
-  "dates",
-];
-
 export default async function HomePage() {
-  const [bestsellersRaw, newRaw, ...categoryProducts] = await Promise.all([
+  const [bestsellersRaw, newRaw] = await Promise.all([
     getProducts({ sortKey: "BEST_SELLING" }).catch(() => []),
     getProducts({ sortKey: "CREATED_AT", reverse: true }).catch(() => []),
-    ...CATEGORY_IDS.map((id) =>
-      getCollectionProducts({ collection: id }).catch(() => []),
-    ),
   ]);
 
   const bestsellers = shopifyProductsToBabanuj(bestsellersRaw).slice(0, 12);
   const newArrivals = shopifyProductsToBabanuj(newRaw).slice(0, 12);
 
-  const imageByCategoryId: Record<string, string | undefined> = {};
-  CATEGORY_IDS.forEach((id, i) => {
-    const first = categoryProducts[i]?.[0];
-    imageByCategoryId[id] = first?.featuredImage?.url;
-  });
-
   return (
     <>
       <MarketHero />
       <MarketTrust />
-      <MarketCategories imageByCategoryId={imageByCategoryId} />
+      <MarketCategories />
       <MarketCarousel
         title="Bestsellers"
         tag="Loved by Babanuj customers"

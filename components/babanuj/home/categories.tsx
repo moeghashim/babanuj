@@ -1,49 +1,84 @@
 import Link from "next/link";
 import { ArrowRight } from "components/babanuj/icons";
-import { Photo } from "components/babanuj/photo";
+import {
+  CategoryArt,
+  type CategoryKind,
+} from "components/babanuj/category-art";
 
-type Props = {
-  // Image URLs sourced server-side (first product of each collection).
-  imageByCategoryId?: Record<string, string | undefined>;
-};
-
-const CATS = [
-  { name: "Baklava", id: "baklava", hue: "#bfa86a" },
-  { name: "Cookies & Maamoul", id: "cookies", hue: "#d6a06e" },
-  { name: "Turkish Delight", id: "turkish-delight", hue: "#e8b0a8" },
-  { name: "Chocolate", id: "chocolate", hue: "#7a4a2e" },
-  { name: "Gift Boxes", id: "gift-boxes", hue: "#3a5c3a" },
-  { name: "Dates", id: "dates", hue: "#5e3a1e" },
+// Card labels intentionally short for grid legibility. The category page itself
+// uses the longer display name from CATEGORIES in lib/babanuj/data.ts.
+const CATS: { name: string; id: string; kind: CategoryKind }[] = [
+  { name: "Baklava", id: "baklava", kind: "baklava" },
+  { name: "Cookies", id: "cookies", kind: "cookies" },
+  { name: "Turkish Delight", id: "turkish-delight", kind: "turkish-delight" },
+  { name: "Chocolate", id: "chocolate", kind: "chocolate" },
+  { name: "Gift Boxes", id: "gift-boxes", kind: "gift-boxes" },
+  { name: "Dates", id: "dates", kind: "dates" },
 ];
 
-export function MarketCategories({ imageByCategoryId = {} }: Props) {
+export function MarketCategories() {
   return (
     <section style={{ padding: "56px 56px 32px" }}>
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
+          flexDirection: "column",
+          gap: 6,
           marginBottom: 24,
         }}
       >
-        <h2 className="display-heavy" style={{ fontSize: 38, margin: 0 }}>
-          Shop by category
-        </h2>
-        <Link
-          href="/search"
+        <div
           style={{
-            color: "var(--accent)",
-            fontWeight: 600,
-            fontSize: 14,
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 12,
           }}
         >
-          View all <ArrowRight width={14} height={14} />
-        </Link>
+          <span
+            className="micro"
+            style={{ color: "var(--accent)", fontWeight: 700 }}
+          >
+            THE PANTRY
+          </span>
+          <span
+            style={{
+              flex: "0 0 20px",
+              height: 1,
+              background: "var(--accent)",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+          }}
+        >
+          <h2
+            className="display-heavy"
+            style={{ fontSize: 38, margin: 0 }}
+          >
+            Shop by category
+          </h2>
+          <Link
+            href="/search"
+            style={{
+              color: "var(--accent)",
+              fontWeight: 600,
+              fontSize: 14,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              borderBottom: "1px solid var(--accent)",
+              paddingBottom: 2,
+            }}
+          >
+            View all <ArrowRight width={14} height={14} />
+          </Link>
+        </div>
       </div>
+
       <div
         className="mk-cats"
         style={{
@@ -52,65 +87,50 @@ export function MarketCategories({ imageByCategoryId = {} }: Props) {
           gap: 16,
         }}
       >
-        {CATS.map((c) => {
-          const img = imageByCategoryId[c.id];
-          return (
-            <Link
-              key={c.name}
-              href={`/search/${c.id}`}
-              className="market-card"
+        {CATS.map((c) => (
+          <Link
+            key={c.id}
+            href={`/search/${c.id}`}
+            className="market-card"
+            style={{
+              display: "block",
+              position: "relative",
+              borderRadius: 18,
+              color: "inherit",
+            }}
+          >
+            <div
               style={{
-                display: "block",
+                aspectRatio: "1",
                 position: "relative",
-                borderRadius: 18,
+                overflow: "hidden",
               }}
             >
+              <CategoryArt kind={c.kind} />
               <div
                 style={{
-                  aspectRatio: "1",
-                  background: c.hue,
-                  position: "relative",
-                  overflow: "hidden",
+                  position: "absolute",
+                  bottom: 12,
+                  left: 14,
+                  right: 14,
+                  color: "#fff",
+                  pointerEvents: "none",
                 }}
               >
-                {img && (
-                  <Photo
-                    src={img}
-                    alt={c.name}
-                    style={{ position: "absolute", inset: 0 }}
-                  />
-                )}
                 <div
+                  className="display-heavy"
                   style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.4))",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 12,
-                    left: 12,
-                    right: 12,
-                    color: "#fff",
+                    fontSize: 13.5,
+                    letterSpacing: "-0.01em",
+                    lineHeight: 1.15,
                   }}
                 >
-                  <div
-                    style={{
-                      fontSize: 15,
-                      fontWeight: 700,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {c.name}
-                  </div>
+                  {c.name}
                 </div>
               </div>
-            </Link>
-          );
-        })}
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );
