@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { CloseIcon, MenuIcon } from "components/babanuj/icons";
 import { BRANDS } from "lib/babanuj/data";
 
@@ -26,6 +27,12 @@ const UTILITY = [
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Only render the portal client-side.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Lock body scroll when open.
   useEffect(() => {
@@ -50,27 +57,8 @@ export function MobileMenu() {
 
   const close = () => setOpen(false);
 
-  return (
+  const drawer = (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="mk-hamburger"
-        aria-label="Open menu"
-        aria-expanded={open}
-        style={{
-          background: "transparent",
-          border: 0,
-          cursor: "pointer",
-          color: "#000",
-          padding: 6,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <MenuIcon width={22} height={22} />
-      </button>
-
       {/* Scrim */}
       <div
         onClick={close}
@@ -94,15 +82,14 @@ export function MobileMenu() {
         style={{
           position: "fixed",
           top: 0,
-          left: 0,
-          height: "100%",
+          left: open ? 0 : "-100%",
+          height: "100vh",
           width: 360,
           maxWidth: "92vw",
           background: "#fff",
           color: "var(--ink)",
           zIndex: 101,
-          transform: open ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform .35s cubic-bezier(.2,.7,.3,1)",
+          transition: "left 320ms cubic-bezier(.2,.7,.3,1)",
           display: "flex",
           flexDirection: "column",
           boxShadow: "20px 0 50px rgba(0,0,0,0.15)",
@@ -210,6 +197,30 @@ export function MobileMenu() {
           </a>
         </footer>
       </aside>
+    </>
+  );
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="mk-hamburger"
+        aria-label="Open menu"
+        aria-expanded={open}
+        style={{
+          background: "transparent",
+          border: 0,
+          cursor: "pointer",
+          color: "#000",
+          padding: 6,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <MenuIcon width={22} height={22} />
+      </button>
+      {mounted && createPortal(drawer, document.body)}
     </>
   );
 }

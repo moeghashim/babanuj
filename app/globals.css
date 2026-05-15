@@ -235,14 +235,15 @@ button:focus-visible {
   .mk-nav-search {
     display: none !important;
   }
-  .mk-nav-actions > button:not(.mk-bag) {
+  .mk-nav-actions > button:not(.mk-bag):not(.mk-hamburger),
+  .mk-nav-actions > a:not(.mk-hamburger) {
     display: none !important;
   }
   .mk-bag {
     padding: 8px 14px !important;
     font-size: 12px !important;
   }
-  .mk-hamburger {
+  .mk-nav-actions .mk-hamburger {
     display: inline-flex !important;
   }
   .mk-catbar {
