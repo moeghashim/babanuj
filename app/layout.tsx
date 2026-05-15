@@ -32,8 +32,10 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  // Don't await the fetch, pass the Promise to the context provider
-  const cart = getCart();
+  // Don't await the fetch, pass the Promise to the context provider.
+  // If Shopify rejects (stale cart id, schema mismatch, etc.) treat it as
+  // an empty cart rather than crashing the whole page.
+  const cart = getCart().catch(() => undefined);
 
   return (
     <html lang="en">
