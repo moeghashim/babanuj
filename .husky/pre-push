@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Block pushes that:
+#   - fail TypeScript checks
+#   - fail the production build
+#   - try to leak .env files into the repo
+#
+# Emergency bypass (use sparingly): git push --no-verify
+set -e
+
+echo "▶ pre-push 1/3: typecheck"
+pnpm exec tsc --noEmit
+
+echo "▶ pre-push 2/3: build"
+pnpm build > /dev/null
+
+echo "▶ pre-push 3/3: secrets scan"
+LEAKED=$(git ls-files | grep -E '(^|/)\.env$|(^|/)\.env\.local$|(^|/)\.env\.production$' || true)
+if [ -n "$LEAKED" ]; then
+  echo "❌ Refusing to push: env file(s) are tracked by git:"
+  echo "$LEAKED"
+  echo "   Run: git rm --cached <file>"
+  echo "   Verify .gitignore covers it, then commit."
+  exit 1
+fi
+
+echo "✓ pre-push checks passed"
