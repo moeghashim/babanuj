@@ -5,6 +5,7 @@ import { MarketNav } from "components/babanuj/layout/nav";
 import { MarketCatBar } from "components/babanuj/layout/cat-bar";
 import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
+import { ThirdPartyScripts } from "components/babanuj/third-party";
 import { getCart } from "lib/shopify";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -61,6 +62,7 @@ export default async function RootLayout({
           <MarketNewsletter />
           <MarketFooter />
           <Toaster closeButton />
+          <ThirdPartyScripts />
         </CartProvider>
       </body>
     </html>

@@ -1,10 +1,10 @@
 import CartModal from "components/cart/modal";
 import {
   HeartIcon,
-  MenuIcon,
   SearchIcon,
   UserIcon,
 } from "components/babanuj/icons";
+import { MobileMenu } from "components/babanuj/layout/mobile-menu";
 import Link from "next/link";
 
 export function MarketNav() {
@@ -109,31 +109,25 @@ export function MarketNav() {
             justifyContent: "flex-end",
           }}
         >
-          <button
-            className="mk-hamburger"
-            aria-label="Menu"
-            style={{
-              background: "transparent",
-              border: 0,
-              cursor: "pointer",
-              color: "#000",
-              padding: 6,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <MenuIcon width={22} height={22} />
-          </button>
-          <button
-            aria-label="Sign in"
-            style={navIconBtn}
+          <MobileMenu />
+          <a
+            aria-label="Sign in to your account"
+            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "babanuj.myshopify.com"}/account/login`}
+            style={navIconBtn as React.CSSProperties}
           >
             <UserIcon width={22} height={22} />
             Sign in
-          </button>
+          </a>
           <button
-            aria-label="Wishlist"
-            style={navIconBtn}
+            type="button"
+            aria-label="Wishlist (coming soon)"
+            title="Wishlist — coming soon"
+            disabled
+            style={{
+              ...navIconBtn,
+              cursor: "not-allowed",
+              opacity: 0.55,
+            }}
           >
             <HeartIcon width={22} height={22} />
             Wishlist
