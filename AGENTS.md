@@ -163,6 +163,13 @@ Start dev server (or Preview MCP), walk through:
 
 ## When stuck
 
+- **Fixed-position element clipped to nav height?** The nav has
+  `backdrop-filter: blur(10px)`, which makes it a containing block for
+  any `position: fixed` descendant per spec. `height: 100vh` ends up
+  measured against the 62px sticky nav, so the bottom of the element
+  gets clipped. Fix: render the overlay via `createPortal(node,
+  document.body)` (guarded by a mounted-state effect for SSR). Both
+  `<MobileMenu>` and `<CartModal>` use this pattern — copy them.
 - Turbopack module-factory errors → stop dev server, `rm -rf .next`, restart
 - Stale cart cookie → clear `cartId` cookie in DevTools, reload
 - Hot-reload not picking up changes → same as above (`.next` cache)
