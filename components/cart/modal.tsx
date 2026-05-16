@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useFormStatus } from "react-dom";
 import {
   CartIcon,
@@ -19,9 +20,15 @@ const FREE_SHIP_THRESHOLD = 59;
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
+
+  // Only render the portal client-side.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!cart) createCartAndSetCookie();
@@ -63,30 +70,8 @@ export default function CartModal() {
   const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
   const freeShipPct = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
 
-  return (
+  const drawer = (
     <>
-      <button
-        aria-label="Open cart"
-        onClick={openCart}
-        className="mk-bag"
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "10px 16px",
-          background: "var(--accent)",
-          color: "#fff",
-          border: 0,
-          borderRadius: 999,
-          cursor: "pointer",
-          fontFamily: "inherit",
-          fontWeight: 600,
-          fontSize: 13,
-        }}
-      >
-        <CartIcon width={18} height={18} /> Bag · {count}
-      </button>
-
       {/* Scrim */}
       <div
         onClick={closeCart}
@@ -471,6 +456,33 @@ export default function CartModal() {
           </footer>
         )}
       </aside>
+    </>
+  );
+
+  return (
+    <>
+      <button
+        aria-label="Open cart"
+        onClick={openCart}
+        className="mk-bag"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 16px",
+          background: "var(--accent)",
+          color: "#fff",
+          border: 0,
+          borderRadius: 999,
+          cursor: "pointer",
+          fontFamily: "inherit",
+          fontWeight: 600,
+          fontSize: 13,
+        }}
+      >
+        <CartIcon width={18} height={18} /> Bag · {count}
+      </button>
+      {mounted && createPortal(drawer, document.body)}
     </>
   );
 }
