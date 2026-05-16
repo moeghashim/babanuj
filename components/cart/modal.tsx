@@ -1,12 +1,20 @@
 "use client";
 
-import { CartIcon, CloseIcon, MinusIcon, PlusIcon } from "components/babanuj/icons";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
+import {
+  CartIcon,
+  CloseIcon,
+  ShieldIcon,
+  TruckIcon,
+} from "components/babanuj/icons";
 import { createCartAndSetCookie, redirectToCheckout } from "./actions";
 import { useCart } from "./cart-context";
-import { EditItemQuantityButton } from "./edit-item-quantity-button";
 import { DeleteItemButton } from "./delete-item-button";
+import { EditItemQuantityButton } from "./edit-item-quantity-button";
+
+const FREE_SHIP_THRESHOLD = 59;
 
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
@@ -16,9 +24,7 @@ export default function CartModal() {
   const closeCart = () => setIsOpen(false);
 
   useEffect(() => {
-    if (!cart) {
-      createCartAndSetCookie();
-    }
+    if (!cart) createCartAndSetCookie();
   }, [cart]);
 
   useEffect(() => {
@@ -27,14 +33,11 @@ export default function CartModal() {
       cart?.totalQuantity !== quantityRef.current &&
       cart?.totalQuantity > 0
     ) {
-      if (!isOpen) {
-        setIsOpen(true);
-      }
+      if (!isOpen) setIsOpen(true);
       quantityRef.current = cart?.totalQuantity;
     }
   }, [isOpen, cart?.totalQuantity]);
 
-  // Lock scroll when open
   useEffect(() => {
     if (isOpen) {
       const prev = document.body.style.overflow;
@@ -45,9 +48,20 @@ export default function CartModal() {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeCart();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen]);
+
   const count = cart?.totalQuantity ?? 0;
-  const subtotal = cart?.cost.totalAmount.amount ?? "0.00";
   const lines = cart?.lines ?? [];
+  const subtotal = Number(cart?.cost.totalAmount.amount ?? 0);
+  const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
+  const freeShipPct = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
 
   return (
     <>
@@ -80,11 +94,12 @@ export default function CartModal() {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(20,16,12,0.55)",
-          zIndex: 100,
+          background: "rgba(20,16,12,0.45)",
+          zIndex: 200,
           opacity: isOpen ? 1 : 0,
           pointerEvents: isOpen ? "auto" : "none",
-          transition: "opacity .2s ease",
+          transition: "opacity .25s ease",
+          backdropFilter: "blur(2px)",
         }}
       />
 
@@ -96,75 +111,138 @@ export default function CartModal() {
         style={{
           position: "fixed",
           top: 0,
-          right: 0,
-          height: "100%",
-          width: 440,
-          maxWidth: "100vw",
+          right: isOpen ? 0 : "-100%",
+          height: "100vh",
+          width: 460,
+          maxWidth: "92vw",
           background: "#fff",
           color: "var(--ink)",
-          zIndex: 101,
-          transform: isOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform .35s cubic-bezier(.2,.7,.3,1)",
+          zIndex: 201,
+          transition: "right 320ms cubic-bezier(.2,.7,.3,1)",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "-20px 0 50px rgba(0,0,0,0.15)",
+          boxShadow: "-24px 0 60px rgba(0,0,0,0.2)",
         }}
       >
+        {/* Header */}
         <header
           style={{
+            padding: "22px 24px",
+            borderBottom: "1px solid var(--rule)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            padding: "24px 28px",
-            borderBottom: "1px solid var(--rule)",
+            flexShrink: 0,
           }}
         >
           <div>
-            <div className="micro">Your Bag</div>
+            <span className="micro" style={{ color: "var(--accent-dark)" }}>
+              Your bag
+            </span>
             <div
-              style={{
-                fontSize: 24,
-                fontWeight: 800,
-                marginTop: 4,
-                fontFamily: "Bricolage Grotesque, sans-serif",
-                letterSpacing: "-0.02em",
-              }}
+              className="display-heavy"
+              style={{ fontSize: 26, marginTop: 2, lineHeight: 1 }}
             >
-              {count} item{count === 1 ? "" : "s"}
+              {count === 0
+                ? "Empty"
+                : `${count} item${count === 1 ? "" : "s"}`}
             </div>
           </div>
           <button
             onClick={closeCart}
             aria-label="Close cart"
             style={{
-              background: "transparent",
+              width: 36,
+              height: 36,
+              borderRadius: 999,
+              background: "var(--paper)",
               border: 0,
-              color: "var(--ink)",
               cursor: "pointer",
-              padding: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--ink)",
             }}
           >
-            <CloseIcon width={22} height={22} />
+            <CloseIcon width={18} height={18} />
           </button>
         </header>
 
-        <div style={{ flex: 1, overflowY: "auto", padding: "12px 28px" }}>
-          {lines.length === 0 ? (
+        {/* Free shipping progress */}
+        {count > 0 && (
+          <div
+            style={{
+              padding: "14px 24px 16px",
+              borderBottom: "1px solid var(--rule)",
+              background: "var(--accent-soft)",
+              flexShrink: 0,
+            }}
+          >
             <div
               style={{
-                textAlign: "center",
-                padding: "80px 20px",
-                color: "var(--ink-2)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                marginBottom: 8,
               }}
             >
-              <CartIcon width={40} height={40} />
-              <div style={{ marginTop: 16, fontSize: 14 }}>
-                Your bag is empty.
-              </div>
-              <p style={{ fontSize: 12.5, marginTop: 8, color: "var(--ink-2)" }}>
-                Browse the pantry and add a few sweets to get started.
-              </p>
+              <TruckIcon width={16} height={16} />
+              {freeShipRemaining <= 0 ? (
+                <span>
+                  You unlocked{" "}
+                  <strong style={{ color: "var(--accent-dark)" }}>
+                    free shipping
+                  </strong>{" "}
+                  🎉
+                </span>
+              ) : (
+                <span>
+                  <span
+                    className="num"
+                    style={{
+                      color: "var(--accent-dark)",
+                      fontWeight: 700,
+                    }}
+                  >
+                    ${freeShipRemaining.toFixed(2)}
+                  </span>{" "}
+                  away from free shipping
+                </span>
+              )}
             </div>
+            <div
+              style={{
+                height: 5,
+                background: "rgba(255,255,255,0.6)",
+                borderRadius: 999,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  width: `${freeShipPct}%`,
+                  height: "100%",
+                  background: "var(--accent)",
+                  borderRadius: 999,
+                  transition: "width .4s ease",
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Items list */}
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            padding: count === 0 ? 0 : "8px 24px",
+          }}
+        >
+          {count === 0 ? (
+            <EmptyState onClose={closeCart} />
           ) : (
             lines
               .slice()
@@ -173,26 +251,31 @@ export default function CartModal() {
                   b.merchandise.product.title,
                 ),
               )
-              .map((item) => (
+              .map((item, i, arr) => (
                 <div
                   key={item.merchandise.id}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "64px 1fr auto",
+                    gridTemplateColumns: "72px 1fr auto",
                     gap: 14,
-                    padding: "14px 0",
-                    borderBottom: "1px dashed var(--rule)",
+                    padding: "16px 0",
+                    borderBottom:
+                      i === arr.length - 1 ? 0 : "1px solid var(--rule)",
                     alignItems: "center",
                   }}
                 >
-                  <div
+                  <Link
+                    href={`/product/${item.merchandise.product.handle}`}
+                    onClick={closeCart}
+                    aria-label={`View ${item.merchandise.product.title}`}
                     style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: 10,
+                      width: 72,
+                      height: 72,
+                      borderRadius: 12,
                       overflow: "hidden",
                       position: "relative",
                       background: "var(--paper)",
+                      display: "block",
                     }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -207,32 +290,13 @@ export default function CartModal() {
                         objectFit: "cover",
                       }}
                     />
+                  </Link>
+                  <div style={{ minWidth: 0 }}>
                     <div
                       style={{
-                        position: "absolute",
-                        top: 4,
-                        left: 4,
-                      }}
-                    >
-                      <DeleteItemButton
-                        item={item}
-                        optimisticUpdate={updateCartItem}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      className="micro"
-                      style={{ fontSize: 10, color: "var(--ink-2)" }}
-                    >
-                      {item.merchandise.product.title}
-                    </div>
-                    <div
-                      style={{
-                        fontWeight: 700,
                         fontSize: 14,
-                        marginTop: 2,
-                        lineHeight: 1.3,
+                        fontWeight: 700,
+                        lineHeight: 1.25,
                       }}
                     >
                       {item.merchandise.product.title}
@@ -241,16 +305,17 @@ export default function CartModal() {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: 6,
+                        gap: 10,
                         marginTop: 8,
                       }}
                     >
                       <div
                         style={{
-                          display: "flex",
+                          display: "inline-flex",
                           alignItems: "center",
                           border: "1px solid var(--rule)",
                           borderRadius: 999,
+                          overflow: "hidden",
                         }}
                       >
                         <EditItemQuantityButton
@@ -259,10 +324,11 @@ export default function CartModal() {
                           optimisticUpdate={updateCartItem}
                         />
                         <span
+                          className="num"
                           style={{
-                            minWidth: 24,
+                            minWidth: 22,
                             textAlign: "center",
-                            fontWeight: 600,
+                            fontWeight: 700,
                             fontSize: 13,
                           }}
                         >
@@ -274,81 +340,197 @@ export default function CartModal() {
                           optimisticUpdate={updateCartItem}
                         />
                       </div>
+                      <DeleteItemButton
+                        item={item}
+                        optimisticUpdate={updateCartItem}
+                      />
                     </div>
                   </div>
                   <div
-                    className="num"
+                    className="display-heavy num"
                     style={{
-                      fontWeight: 800,
-                      fontVariantNumeric: "tabular-nums",
-                      fontFamily: "Bricolage Grotesque, sans-serif",
+                      fontSize: 16,
+                      alignSelf: "start",
+                      paddingTop: 4,
                     }}
                   >
-                    $
-                    {Number(item.cost.totalAmount.amount).toFixed(2)}
+                    ${Number(item.cost.totalAmount.amount).toFixed(2)}
                   </div>
                 </div>
               ))
           )}
         </div>
 
-        <footer
-          style={{
-            padding: "20px 28px 28px",
-            borderTop: "1px solid var(--rule)",
-            background: "var(--paper)",
-          }}
-        >
-          <div
+        {/* Footer */}
+        {count > 0 && (
+          <footer
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: 14,
-              marginBottom: 14,
+              borderTop: "1px solid var(--rule)",
+              padding: "16px 24px 22px",
+              background: "#fff",
+              flexShrink: 0,
             }}
           >
-            <span style={{ color: "var(--ink-2)" }}>Subtotal</span>
-            <span
-              className="num"
+            <div
               style={{
-                fontWeight: 800,
-                fontFamily: "Bricolage Grotesque, sans-serif",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "baseline",
+                marginBottom: 4,
               }}
             >
-              ${Number(subtotal).toFixed(2)}
-            </span>
-          </div>
-          <div
-            style={{
-              fontSize: 11.5,
-              color: "var(--ink-2)",
-              marginBottom: 14,
-            }}
-          >
-            Shipping calculated at checkout. Free over $59.
-          </div>
-          <form action={redirectToCheckout}>
-            <CheckoutButton disabled={lines.length === 0} />
-          </form>
-        </footer>
+              <span style={{ fontSize: 13, color: "var(--ink-2)" }}>
+                Subtotal
+              </span>
+              <span className="num" style={{ fontSize: 14, fontWeight: 700 }}>
+                ${subtotal.toFixed(2)}
+              </span>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "baseline",
+                marginTop: 10,
+                paddingTop: 10,
+                borderTop: "1px dashed var(--rule)",
+              }}
+            >
+              <span style={{ fontSize: 14, fontWeight: 700 }}>
+                Estimated total
+              </span>
+              <span className="display-heavy num" style={{ fontSize: 22 }}>
+                ${subtotal.toFixed(2)}
+              </span>
+            </div>
+            <div
+              style={{
+                fontSize: 10.5,
+                color: "var(--ink-2)",
+                marginTop: 2,
+                textAlign: "right",
+              }}
+            >
+              Shipping & taxes at checkout
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1.4fr",
+                gap: 8,
+                marginTop: 14,
+              }}
+            >
+              <Link
+                href="/cart"
+                onClick={closeCart}
+                className="market-btn outline"
+                style={{
+                  justifyContent: "center",
+                  padding: "13px",
+                  fontSize: 13,
+                }}
+              >
+                View bag
+              </Link>
+              <form action={redirectToCheckout}>
+                <CheckoutButton />
+              </form>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 14,
+                justifyContent: "center",
+                marginTop: 12,
+                fontSize: 10.5,
+                color: "var(--ink-2)",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <ShieldIcon width={12} height={12} /> Secure checkout
+              </span>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <TruckIcon width={12} height={12} /> Ships in 48h
+              </span>
+            </div>
+          </footer>
+        )}
       </aside>
     </>
   );
 }
 
-function CheckoutButton({ disabled }: { disabled?: boolean }) {
+function EmptyState({ onClose }: { onClose: () => void }) {
+  return (
+    <div style={{ padding: "60px 24px", textAlign: "center" }}>
+      <div
+        style={{
+          display: "inline-flex",
+          width: 72,
+          height: 72,
+          borderRadius: 999,
+          background: "var(--accent-soft)",
+          color: "var(--accent-dark)",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 16,
+        }}
+      >
+        <CartIcon width={32} height={32} />
+      </div>
+      <div className="display" style={{ fontSize: 22 }}>
+        Your bag is empty
+      </div>
+      <p
+        style={{
+          fontSize: 13.5,
+          color: "var(--ink-2)",
+          marginTop: 6,
+          marginBottom: 18,
+        }}
+      >
+        Start with our bestsellers — or build a gift box.
+      </p>
+      <Link
+        href="/search"
+        onClick={onClose}
+        className="market-btn"
+        style={{ padding: "12px 20px", fontSize: 13 }}
+      >
+        Shop the pantry →
+      </Link>
+    </div>
+  );
+}
+
+function CheckoutButton() {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={disabled || pending}
-      className="market-btn"
+      disabled={pending}
+      className="market-btn warn"
       style={{
         width: "100%",
         justifyContent: "center",
-        padding: "14px",
-        fontSize: 14,
-        opacity: disabled || pending ? 0.5 : 1,
+        padding: "13px",
+        fontSize: 13,
+        opacity: pending ? 0.5 : 1,
       }}
     >
       {pending ? "Loading…" : "Checkout →"}
