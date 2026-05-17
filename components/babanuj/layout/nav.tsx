@@ -1,10 +1,7 @@
 import CartModal from "components/cart/modal";
-import {
-  HeartIcon,
-  SearchIcon,
-  UserIcon,
-} from "components/babanuj/icons";
+import { HeartIcon, UserIcon } from "components/babanuj/icons";
 import { MobileMenu } from "components/babanuj/layout/mobile-menu";
+import { SearchBar } from "components/babanuj/layout/search-bar";
 import Link from "next/link";
 
 export function MarketNav() {
@@ -49,56 +46,7 @@ export function MarketNav() {
           </span>
         </Link>
 
-        <form
-          className="mk-nav-search"
-          action="/search"
-          style={{
-            flex: 1,
-            display: "flex",
-            maxWidth: 640,
-            margin: "0 auto",
-            position: "relative",
-            width: "100%",
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              background: "var(--paper)",
-              borderRadius: 999,
-              padding: "12px 20px",
-              gap: 10,
-            }}
-          >
-            <SearchIcon width={18} height={18} />
-            <input
-              name="q"
-              placeholder="Search 240+ sweets, brands, gifts…"
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: 0,
-                outline: "none",
-                fontFamily: "inherit",
-                fontSize: 14,
-              }}
-            />
-            <span
-              className="micro"
-              style={{
-                fontSize: 10,
-                opacity: 0.5,
-                padding: "4px 8px",
-                border: "1px solid var(--rule)",
-                borderRadius: 6,
-              }}
-            >
-              ⌘K
-            </span>
-          </div>
-        </form>
+        <SearchBar />
 
         <div
           className="mk-nav-actions"
