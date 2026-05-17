@@ -90,7 +90,7 @@ export function MarketCategories() {
         {CATS.map((c) => (
           <Link
             key={c.id}
-            href={`/search/${c.id}`}
+            href={`/collections/${c.id}`}
             className="market-card"
             style={{
               display: "block",

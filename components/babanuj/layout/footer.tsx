@@ -4,10 +4,10 @@ import { BRANDS } from "lib/babanuj/data";
 const SHOP_LINKS = [
   { label: "All Sweets", href: "/search" },
   { label: "Bestsellers", href: "/search" },
-  { label: "Baklava", href: "/search/baklava" },
-  { label: "Chocolate", href: "/search/chocolate" },
-  { label: "Cookies", href: "/search/cookies" },
-  { label: "Gift Boxes", href: "/search/gift-boxes" },
+  { label: "Baklava", href: "/collections/baklava" },
+  { label: "Chocolate", href: "/collections/chocolate" },
+  { label: "Cookies", href: "/collections/cookies" },
+  { label: "Gift Boxes", href: "/collections/gift-boxes" },
 ];
 
 const COLS = [

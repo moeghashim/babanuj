@@ -54,7 +54,7 @@ export function MarketPDP({
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: cat.name, href: `/search/${cat.id}` },
+          { label: cat.name, href: `/collections/${cat.id}` },
           { label: p.name },
         ]}
       />

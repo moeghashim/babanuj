@@ -121,7 +121,7 @@ export function CategoryView({ categoryId, products, searchValue }: Props) {
             {CATEGORIES.filter((c) => c.id !== "pantry").map((c) => (
               <Link
                 key={c.id}
-                href={c.id === "all" ? "/search" : `/search/${c.id}`}
+                href={c.id === "all" ? "/search" : `/collections/${c.id}`}
                 style={{
                   padding: "8px 14px",
                   borderRadius: 999,

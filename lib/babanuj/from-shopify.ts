@@ -83,7 +83,7 @@ export function shopifyProductsToBabanuj(ps: Product[]): BabanujProduct[] {
   return ps.map(shopifyProductToBabanuj);
 }
 
-// For pages that take a category ID (`/search/[collection]`): if the
+// For pages that take a category ID (`/collections/[collection]`): if the
 // handle matches a known design category, return that; otherwise build a
 // minimal one from the Shopify collection itself.
 export function categoryFromShopifyCollection(

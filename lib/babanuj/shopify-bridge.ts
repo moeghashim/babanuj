@@ -72,7 +72,7 @@ export function toShopifyCollection(c: BabanujCategory): Collection {
     title: c.name,
     description: c.blurb,
     seo: { title: c.name, description: c.blurb },
-    path: `/search/${c.id}`,
+    path: `/collections/${c.id}`,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -148,7 +148,7 @@ export function brandMenu(): Menu[] {
   return [
     { title: "Shop All", path: "/search" },
     ...CATEGORIES.filter((c) => c.id !== "all" && c.id !== "pantry").map(
-      (c) => ({ title: c.name, path: `/search/${c.id}` }),
+      (c) => ({ title: c.name, path: `/collections/${c.id}` }),
     ),
     ...BRANDS.map((b) => ({ title: b.name, path: `/brand/${b.id}` })),
   ];

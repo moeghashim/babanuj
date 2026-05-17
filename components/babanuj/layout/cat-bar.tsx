@@ -2,13 +2,13 @@ import Link from "next/link";
 
 const CATS = [
   { label: "Shop All", href: "/search" },
-  { label: "Baklava", href: "/search/baklava" },
-  { label: "Cookies & Maamoul", href: "/search/cookies" },
-  { label: "Turkish Delight", href: "/search/turkish-delight" },
-  { label: "Chocolate", href: "/search/chocolate" },
-  { label: "Gift Boxes", href: "/search/gift-boxes" },
-  { label: "Dates", href: "/search/dates" },
-  { label: "Coffee", href: "/search/coffee" },
+  { label: "Baklava", href: "/collections/baklava" },
+  { label: "Cookies & Maamoul", href: "/collections/cookies" },
+  { label: "Turkish Delight", href: "/collections/turkish-delight" },
+  { label: "Chocolate", href: "/collections/chocolate" },
+  { label: "Gift Boxes", href: "/collections/gift-boxes" },
+  { label: "Dates", href: "/collections/dates" },
+  { label: "Coffee", href: "/collections/coffee" },
   { label: "Wholesale", href: "#wholesale" },
 ];
 

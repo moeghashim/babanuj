@@ -17,4 +17,16 @@ export default {
       },
     ],
   },
+  async redirects() {
+    // Old category URL pattern moved from /search/<handle> → /collections/<handle>
+    // to match Shopify's native convention. 301 so any cached/external links
+    // still resolve.
+    return [
+      {
+        source: "/search/:handle",
+        destination: "/collections/:handle",
+        permanent: true,
+      },
+    ];
+  },
 };

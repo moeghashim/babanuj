@@ -6,11 +6,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata(props: {
-  params: Promise<{ collection: string }>;
+  params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const known = CATEGORIES.some((c) => c.id === params.collection);
-  const collection = known ? await getCollection(params.collection) : undefined;
+  const known = CATEGORIES.some((c) => c.id === params.handle);
+  const collection = known ? await getCollection(params.handle) : undefined;
 
   if (!known && !collection) return notFound();
 
@@ -21,20 +21,19 @@ export async function generateMetadata(props: {
     };
   }
 
-  const cat = CATEGORIES.find((c) => c.id === params.collection)!;
+  const cat = CATEGORIES.find((c) => c.id === params.handle)!;
   return { title: cat.name, description: cat.blurb };
 }
 
 export default async function CategoryPage(props: {
-  params: Promise<{ collection: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ handle: string }>;
 }) {
   const params = await props.params;
-  const known = CATEGORIES.some((c) => c.id === params.collection);
+  const known = CATEGORIES.some((c) => c.id === params.handle);
   if (!known) return notFound();
 
-  const raw = await getCollectionProducts({ collection: params.collection });
+  const raw = await getCollectionProducts({ collection: params.handle });
   const products = shopifyProductsToBabanuj(raw);
 
-  return <CategoryView categoryId={params.collection} products={products} />;
+  return <CategoryView categoryId={params.handle} products={products} />;
 }
