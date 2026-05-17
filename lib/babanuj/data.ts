@@ -568,3 +568,34 @@ export function categoryFor(p: BabanujProduct): BabanujCategory {
     ) ?? CATEGORIES[0]!
   );
 }
+
+/**
+ * Shopify Storefront search query string for a category, used as a
+ * fallback when the matching Shopify collection isn't created (yet) or
+ * is empty. Mirrors the conditions the user is told to set on their
+ * Smart collection.
+ *
+ * Returns `null` for the "all" pseudo-category — caller should fetch
+ * the unfiltered product list instead.
+ */
+export function categoryShopifyQuery(id: string): string | null {
+  switch (id) {
+    case "baklava":
+      return "tag:Baklava";
+    case "cookies":
+      return `tag:Cookies OR tag:"Ka'ak & Maamoul" OR tag:"Ghraybeh & Barazek"`;
+    case "turkish-delight":
+      return `tag:"Turkish Delight"`;
+    case "chocolate":
+      return `product_type:Chocolate OR tag:Chocolate`;
+    case "gift-boxes":
+      return `tag:"Gift Boxes"`;
+    case "dates":
+      return `product_type:dates`;
+    case "coffee":
+      return `product_type:Coffee`;
+    case "all":
+    default:
+      return null;
+  }
+}

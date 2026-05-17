@@ -1,7 +1,11 @@
 import { CategoryView } from "components/babanuj/category-view";
-import { CATEGORIES } from "lib/babanuj/data";
+import { CATEGORIES, categoryShopifyQuery } from "lib/babanuj/data";
 import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
-import { getCollection, getCollectionProducts } from "lib/shopify";
+import {
+  getCollection,
+  getCollectionProducts,
+  getProducts,
+} from "lib/shopify";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -32,7 +36,19 @@ export default async function CategoryPage(props: {
   const known = CATEGORIES.some((c) => c.id === params.handle);
   if (!known) return notFound();
 
-  const raw = await getCollectionProducts({ collection: params.handle });
+  // Primary path: the Shopify Smart collection the user created in admin.
+  let raw = await getCollectionProducts({ collection: params.handle });
+
+  // Fallback path: if the collection doesn't exist (or is empty), search the
+  // catalog by the category's tag / product type. Keeps the page useful
+  // before the user has created the collection in Shopify admin.
+  if (raw.length === 0) {
+    const q = categoryShopifyQuery(params.handle);
+    if (q) {
+      raw = await getProducts({ query: q }).catch(() => []);
+    }
+  }
+
   const products = shopifyProductsToBabanuj(raw);
 
   return <CategoryView categoryId={params.handle} products={products} />;
