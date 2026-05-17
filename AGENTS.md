@@ -114,6 +114,25 @@ Avoids a Klaviyo dependency for launch.
 
 Never force-push `main`. Never commit directly to `main`.
 
+**Commit author**: every commit on this repo must be authored as:
+
+```
+Moe Ghashim <mohanadgh@gmail.com>
+```
+
+This is the identity tied to the GitHub account that owns the repo and the
+Vercel project. Before your first commit in a fresh clone or worktree, verify:
+
+```bash
+git config user.name   # → Moe Ghashim
+git config user.email  # → mohanadgh@gmail.com
+```
+
+If either is wrong, set it locally (`git config user.name "Moe Ghashim"` /
+`git config user.email "mohanadgh@gmail.com"`) — do **not** edit the global
+git config. Co-author trailers (e.g. `Co-Authored-By: …`) are fine, but the
+primary author must always be the identity above.
+
 ## Pre-push checks (enforced via husky)
 
 `.husky/pre-push` runs:
