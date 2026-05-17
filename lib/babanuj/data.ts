@@ -344,6 +344,22 @@ export const CATEGORIES: BabanujCategory[] = [
       "Arabic coffee blends, ceremonial pours, and morning roasts from the Gulf.",
     filter: (p) => /coffee|qahwa/i.test(p.name),
   },
+  {
+    id: "honey",
+    name: "Honey",
+    hue: "#caa55a",
+    blurb:
+      "Raw and infused honeys from the region — drizzle, spoon, or pair with our cheeses and breads.",
+    filter: (p) => /honey/i.test(p.name),
+  },
+  {
+    id: "bread",
+    name: "Bread",
+    hue: "#c39666",
+    blurb:
+      "Pita, pocket bread, zaatar, and cheese-filled flatbreads — Phoenicia's authentic Middle Eastern bakery.",
+    filter: (p) => /bread|pita|zaatar|akawi|phoenicia/i.test(p.name),
+  },
 ];
 
 export const CATALOG: BabanujCatalogRow[] = [
@@ -594,6 +610,10 @@ export function categoryShopifyQuery(id: string): string | null {
       return `product_type:dates`;
     case "coffee":
       return `product_type:Coffee`;
+    case "honey":
+      return `tag:Honey OR product_type:Honey`;
+    case "bread":
+      return `tag:Bread OR product_type:Bread`;
     case "all":
     default:
       return null;

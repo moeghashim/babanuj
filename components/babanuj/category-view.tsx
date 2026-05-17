@@ -273,7 +273,6 @@ export function CategoryView({ categoryId, products, searchValue }: Props) {
               </FilterGroup>
               <FilterGroup title="Features">
                 {[
-                  "Member 25% off",
                   "Ships in 48hr",
                   "Vegan-friendly",
                   "Gift wrapped",

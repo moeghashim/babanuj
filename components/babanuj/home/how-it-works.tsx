@@ -9,7 +9,7 @@ const STEPS = [
   {
     n: "02",
     title: "Fill your bag",
-    sub: "Members save 25% on every item. Free shipping over $59, every time.",
+    sub: "Free U.S. shipping on every order over $70.",
   },
   {
     n: "03",

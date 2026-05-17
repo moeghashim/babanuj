@@ -15,7 +15,7 @@ import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
 
-const FREE_SHIP_THRESHOLD = 59;
+const FREE_SHIP_THRESHOLD = 70;
 
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();

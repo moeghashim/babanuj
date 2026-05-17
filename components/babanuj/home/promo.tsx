@@ -28,7 +28,7 @@ export function MarketPromo() {
         >
           <div>
             <span className="market-chip chip-soft">
-              Members only · 25% off
+              Build your own
             </span>
             <h3
               className="display-heavy"

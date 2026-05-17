@@ -17,12 +17,12 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     img: HERO_IMG,
-    chip: "NEW MEMBERS · 25% OFF",
+    chip: "HEIRLOOM SWEETS · SHIPPED FRESH",
     titleParts: ["Heirloom sweets,", { italic: "delivered weekly." }],
-    sub: "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston. Members save 25% on every order.",
+    sub: "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston.",
     ctas: [
-      { label: "Start Trial · $5/mo", variant: "warn" },
-      { label: "Shop the Pantry", variant: "cream" },
+      { label: "Shop the Pantry", variant: "warn" },
+      { label: "Read our story", variant: "cream" },
     ],
     align: "left",
   },
@@ -52,7 +52,7 @@ const SLIDES: Slide[] = [
     img: BRANDS[0]!.img,
     chip: "BUILD YOUR OWN GIFT BOX",
     titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
-    sub: "Mix any six pieces from our pantry — Members get 25% off the box, every time.",
+    sub: "Mix any six pieces from our pantry — we pack it, wrap it, ship it.",
     ctas: [
       { label: "Build a Box", variant: "warn" },
       { label: "See examples", variant: "cream" },
@@ -223,7 +223,7 @@ export function MarketHero() {
             zIndex: 4,
           }}
         >
-          <TruckIcon width={14} height={14} /> Free shipping over $59
+          <TruckIcon width={14} height={14} /> Free shipping over $70
         </div>
 
         <div

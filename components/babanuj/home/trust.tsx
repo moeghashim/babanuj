@@ -8,7 +8,7 @@ import {
 const ITEMS = [
   {
     icon: <TruckIcon width={20} height={20} />,
-    title: "Free shipping over $59",
+    title: "Free shipping over $70",
     sub: "From Houston, TX",
   },
   {

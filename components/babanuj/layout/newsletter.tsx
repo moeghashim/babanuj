@@ -38,7 +38,7 @@ export function MarketNewsletter() {
             Get $10 off when you join
           </h3>
           <p style={{ fontSize: 14, color: "var(--ink-2)" }}>
-            One email a month. New brands, member drops, recipes. No spam, no
+            One email a month. New brands, fresh drops, recipes. No spam, no
             nonsense.
           </p>
         </div>

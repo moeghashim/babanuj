@@ -17,7 +17,7 @@ const COLS = [
   },
   {
     h: "Help",
-    items: ["Contact", "Shipping", "Returns", "Membership FAQ", "Recipes"],
+    items: ["Contact", "Shipping", "Returns", "FAQ", "Recipes"],
   },
 ];
 
@@ -63,7 +63,7 @@ export function MarketFooter() {
             }}
           >
             Curated sweets from the Middle East and Türkiye — shipped fresh
-            from Houston to your door. Members save 25%, every time.
+            from Houston to your door.
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 18 }}>
             {["IG", "TT", "PIN", "LI"].map((s) => (

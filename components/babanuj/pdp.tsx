@@ -158,7 +158,7 @@ export function MarketPDP({
               {[
                 {
                   icon: <TruckIcon width={18} height={18} />,
-                  t: "Free over $59",
+                  t: "Free over $70",
                   s: "Houston, TX",
                 },
                 {
@@ -721,7 +721,7 @@ function PDPIngredients() {
 function PDPShipping() {
   const items = [
     {
-      t: "Standard · Free over $59",
+      t: "Standard · Free over $70",
       s: "2–4 business days. Ships from our Houston, TX warehouse via UPS Ground.",
     },
     {

@@ -24,8 +24,8 @@ const REVIEWS = [
     name: "Ahmed S.",
     city: "San Jose, CA",
     stars: 5,
-    q: "Shipping from Houston was fast and everything arrived intact. Membership pays for itself in two orders.",
-    tag: "Member · 2 years",
+    q: "Shipping from Houston was fast and everything arrived intact. The packaging is gorgeous — I've reordered four times.",
+    tag: "Repeat customer · 2 years",
   },
 ];
 
@@ -45,7 +45,7 @@ export function MarketReviews() {
             ★ 4.9 from 2,400+ reviews
           </span>
           <h2 className="display-heavy" style={{ fontSize: 38, margin: "6px 0 0" }}>
-            What members are saying
+            What customers are saying
           </h2>
         </div>
         <a

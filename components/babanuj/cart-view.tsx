@@ -14,7 +14,7 @@ import {
 import { MarketProductCard } from "components/babanuj/product-card";
 import type { BabanujProduct } from "lib/babanuj/data";
 
-const FREE_SHIP_THRESHOLD = 59;
+const FREE_SHIP_THRESHOLD = 70;
 
 type Props = {
   recommended: BabanujProduct[];
@@ -329,7 +329,7 @@ export function CartView({ recommended }: Props) {
                     }}
                   >
                     <TruckIcon width={14} height={14} /> Free standard shipping
-                    over $59
+                    over $70
                   </div>
                   <div
                     style={{
