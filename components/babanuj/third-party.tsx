@@ -31,18 +31,30 @@ export function ThirdPartyScripts() {
         </>
       )}
 
-      {/* Smile.io loyalty + referrals */}
+      {/* Smile.io loyalty + referrals. The loader exposes the
+          `window.SmileUI` singleton; we call `initialize()` with the
+          publishable key once it's available (the event may fire either
+          before or after our listener registers). */}
       {smileShopId && (
         <>
-          <Script id="smile-config" strategy="afterInteractive">
+          <Script id="smile-init" strategy="afterInteractive">
             {`
-              window.SmileUI = window.SmileUI || {};
-              window.SmileUI.channelKey = '${smileShopId}';
+              (function () {
+                var tries = 0;
+                var iv = setInterval(function () {
+                  if (window.SmileUI && typeof window.SmileUI.initialize === 'function') {
+                    window.SmileUI.initialize({ publishableKey: '${smileShopId}' });
+                    clearInterval(iv);
+                  } else if (++tries > 100) {
+                    clearInterval(iv);
+                  }
+                }, 100);
+              })();
             `}
           </Script>
           <Script
             id="smile-loader"
-            src="https://cdn.smile.io/js/smile-ui.js"
+            src="https://js.smile.io/v1/smile-ui.js"
             strategy="afterInteractive"
             defer
           />
