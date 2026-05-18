@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, TruckIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
 import { ALL_PRODUCTS, BRANDS, HERO_IMG } from "lib/babanuj/data";
@@ -10,7 +11,7 @@ type Slide = {
   chip: string;
   titleParts: Array<string | { italic: string }>;
   sub: string;
-  ctas: Array<{ label: string; variant: "warn" | "cream" }>;
+  ctas: Array<{ label: string; href: string; variant: "warn" | "cream" }>;
   align: "left" | "right";
 };
 
@@ -21,8 +22,8 @@ const SLIDES: Slide[] = [
     titleParts: ["Heirloom sweets,", { italic: "delivered weekly." }],
     sub: "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston.",
     ctas: [
-      { label: "Shop the Pantry", variant: "warn" },
-      { label: "Read our story", variant: "cream" },
+      { label: "Shop the Pantry", href: "/search", variant: "warn" },
+      { label: "Read our story", href: "/brand/babanuj", variant: "cream" },
     ],
     align: "left",
   },
@@ -32,8 +33,8 @@ const SLIDES: Slide[] = [
     titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
     sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
     ctas: [
-      { label: "Shop the Bar", variant: "warn" },
-      { label: "Read the story", variant: "cream" },
+      { label: "Shop the Bar", href: "/product/crush-dubai-chocolate", variant: "warn" },
+      { label: "Read the story", href: "/brand/crush", variant: "cream" },
     ],
     align: "right",
   },
@@ -43,8 +44,8 @@ const SLIDES: Slide[] = [
     titleParts: ["Maamoul,", { italic: "baked this morning." }],
     sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
     ctas: [
-      { label: "Order Maamoul", variant: "warn" },
-      { label: "Shop Bab Sharqi", variant: "cream" },
+      { label: "Order Maamoul", href: "/product/maamoul-date-cookies", variant: "warn" },
+      { label: "Shop Bab Sharqi", href: "/collections/cookies", variant: "cream" },
     ],
     align: "left",
   },
@@ -54,8 +55,8 @@ const SLIDES: Slide[] = [
     titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
     sub: "Mix any six pieces from our pantry — we pack it, wrap it, ship it.",
     ctas: [
-      { label: "Build a Box", variant: "warn" },
-      { label: "See examples", variant: "cream" },
+      { label: "Build a Box", href: "/collections/gift-boxes", variant: "warn" },
+      { label: "See examples", href: "/collections/gift-boxes", variant: "cream" },
     ],
     align: "right",
   },
@@ -194,10 +195,15 @@ export function MarketHero() {
                 style={{ display: "flex", gap: 12, marginTop: 28 }}
               >
                 {s.ctas.map((c, j) => (
-                  <button key={j} className={`market-btn ${c.variant}`}>
+                  <Link
+                    key={j}
+                    href={c.href}
+                    className={`market-btn ${c.variant}`}
+                    tabIndex={i === idx ? 0 : -1}
+                  >
                     {c.label}
                     {j === 0 && " →"}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
