@@ -17,11 +17,11 @@ const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: SITE_NAME,
+    default: `${SITE_NAME} — Middle Eastern Sweets, Baklava & Maamoul Online`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Curated sweets from the Middle East and Türkiye — shipped fresh from Houston to your door.",
+    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight and Dubai chocolate from Türkish, Syrian and Gulf bakers. Shipped fresh from Houston. Free U.S. shipping over $70.",
   robots: {
     follow: true,
     index: true,

@@ -11,9 +11,11 @@ import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
 import { getProducts } from "lib/shopify";
 
 export const metadata = {
-  title: "Babanuj — Heirloom sweets, delivered weekly",
+  title: {
+    absolute: "Buy Baklava, Maamoul & Turkish Delight Online | Babanuj",
+  },
   description:
-    "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston.",
+    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight and Dubai chocolate from Türkish, Syrian and Gulf bakers. Shipped fresh from Houston. Free U.S. shipping over $70.",
   openGraph: { type: "website" },
 };
 
