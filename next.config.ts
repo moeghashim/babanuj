@@ -13,7 +13,7 @@ export default {
       },
       {
         protocol: "https",
-        hostname: "babanuj.com",
+        hostname: "babanuj.myshopify.com",
       },
     ],
   },

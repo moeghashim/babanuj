@@ -65,7 +65,7 @@ export const BRANDS: BabanujBrand[] = [
     note: "Premium Quality",
     accent: "#3a5c3a",
     color2: "#caa55a",
-    img: "https://babanuj.com/cdn/shop/files/Untitled_design_-_2024-12-19T141151.774.png?v=1734606721&width=1600",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141151.774.png?v=1734606721&width=1600",
     products: ["Turkish Delight", "Baklava", "Pistachio Bites"],
   },
   {
@@ -81,7 +81,7 @@ export const BRANDS: BabanujBrand[] = [
     note: "House Line",
     accent: "#1f2a1c",
     color2: "#caa55a",
-    img: "https://babanuj.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600",
     products: ["Gift Boxes", "Seasonal Drops", "Holiday Collections"],
   },
   {
@@ -97,7 +97,7 @@ export const BRANDS: BabanujBrand[] = [
     note: "Hand-stuffed",
     accent: "#5e3a1e",
     color2: "#d6a06e",
-    img: "https://babanuj.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
     products: ["Stuffed Dates", "Chocolate Dates", "Premium Date Gift Boxes"],
   },
   {
@@ -113,7 +113,7 @@ export const BRANDS: BabanujBrand[] = [
     note: "Modern Indulgence",
     accent: "#3a1f14",
     color2: "#e6a85a",
-    img: "https://babanuj.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=1600",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=1600",
     products: ["Dubai Chocolate Bar", "Pistachio Praline", "Kataifi Crunch"],
   },
 ];
@@ -154,7 +154,7 @@ export const PRODUCTS: BabanujProduct[] = [
     tag: "Bestseller",
     hue: "#bfa86a",
     dark: "#5a4419",
-    img: "https://babanuj.com/cdn/shop/files/N44qvd7J2Vf4KH4dNuRkHYzBEXHg9H3RqUSHFsiLr3Y.jpg?v=1735902548&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/N44qvd7J2Vf4KH4dNuRkHYzBEXHg9H3RqUSHFsiLr3Y.jpg?v=1735902548&width=900",
   },
   {
     id: "p2",
@@ -167,7 +167,7 @@ export const PRODUCTS: BabanujProduct[] = [
     tag: "Gift-ready",
     hue: "#e8b0a8",
     dark: "#7a3a32",
-    img: "https://babanuj.com/cdn/shop/files/Ju91QtTdb6vUdoSoGkL6_XyFgHhYLkUUqxpaxaRxP34.jpg?v=1735902907&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Ju91QtTdb6vUdoSoGkL6_XyFgHhYLkUUqxpaxaRxP34.jpg?v=1735902907&width=900",
   },
   {
     id: "p3",
@@ -180,7 +180,7 @@ export const PRODUCTS: BabanujProduct[] = [
     tag: "Traditional",
     hue: "#d6a06e",
     dark: "#5e3a1e",
-    img: "https://babanuj.com/cdn/shop/files/Y13PYNTWFfRVUo1ErzfFpz1q3qW_BaFxbLkYgbKd7gw.jpg?v=1770130398&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Y13PYNTWFfRVUo1ErzfFpz1q3qW_BaFxbLkYgbKd7gw.jpg?v=1770130398&width=900",
   },
   {
     id: "p4",
@@ -193,7 +193,7 @@ export const PRODUCTS: BabanujProduct[] = [
     tag: "Viral",
     hue: "#7a4a2e",
     dark: "#2a1108",
-    img: "https://babanuj.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=900",
   },
 ];
 
@@ -208,7 +208,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "350g · assorted",
     tag: "Gift",
     hue: "#caa55a",
-    img: "https://babanuj.com/cdn/shop/files/468flJLbTP9P8MaUg1KKymoSQVxEZs2GFuMa9jDSwc8.png?v=1735902803&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/468flJLbTP9P8MaUg1KKymoSQVxEZs2GFuMa9jDSwc8.png?v=1735902803&width=900",
   },
   {
     id: "e2",
@@ -220,7 +220,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "100g · 4 pieces",
     tag: "New",
     hue: "#bfa86a",
-    img: "https://babanuj.com/cdn/shop/files/lqPRzbozRobisL3m3-W3Q_01aLLgqlyuCdmKqnum2T8.jpg?v=1735902490&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/lqPRzbozRobisL3m3-W3Q_01aLLgqlyuCdmKqnum2T8.jpg?v=1735902490&width=900",
   },
   {
     id: "e3",
@@ -232,7 +232,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "650g · gift box",
     tag: "Holiday",
     hue: "#e8b0a8",
-    img: "https://babanuj.com/cdn/shop/files/Delight_Mix_Turkish_Delight_Middle_East_Sweets_Ramadan_Eid_1.png?v=1770635003&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/Delight_Mix_Turkish_Delight_Middle_East_Sweets_Ramadan_Eid_1.png?v=1770635003&width=900",
   },
   {
     id: "e4",
@@ -244,7 +244,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "500g",
     tag: "Crunchy",
     hue: "#d6a06e",
-    img: "https://babanuj.com/cdn/shop/files/m3PuiO4qPWImISmy5MEzHhVRKf4g7vusaP0jgU7-IQA.jpg?v=1735902825&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/m3PuiO4qPWImISmy5MEzHhVRKf4g7vusaP0jgU7-IQA.jpg?v=1735902825&width=900",
   },
   {
     id: "e5",
@@ -256,7 +256,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "500g · large tray",
     tag: "Family",
     hue: "#d6a06e",
-    img: "https://babanuj.com/cdn/shop/files/0Z9b3b5xRQF5uMtIBKpF7KAPPGBG_PecIknkCJKrarM.jpg?v=1735902667&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/0Z9b3b5xRQF5uMtIBKpF7KAPPGBG_PecIknkCJKrarM.jpg?v=1735902667&width=900",
   },
   {
     id: "e6",
@@ -268,14 +268,14 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     weight: "250g · assorted",
     tag: "Tea-time",
     hue: "#caa55a",
-    img: "https://babanuj.com/cdn/shop/files/pK79w940R8wMA2qNcRLksmBLv1AYgiFTF4OYfWHQ1rY.jpg?v=1735902730&width=900",
+    img: "https://babanuj.myshopify.com/cdn/shop/files/pK79w940R8wMA2qNcRLksmBLv1AYgiFTF4OYfWHQ1rY.jpg?v=1735902730&width=900",
   },
 ];
 
 export const ALL_PRODUCTS: BabanujProduct[] = [...PRODUCTS, ...EXTRA_PRODUCTS];
 
 export const HERO_IMG =
-  "https://babanuj.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=2400";
+  "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=2400";
 
 // Categories map 1:1 to Shopify auto-collections created by the user.
 // IDs match Shopify collection handles. Hue is the fallback background
