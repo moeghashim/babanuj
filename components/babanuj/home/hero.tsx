@@ -102,6 +102,8 @@ export function MarketHero() {
             <Photo
               src={s.img}
               alt=""
+              priority={i === 0}
+              sizes="100vw"
               style={{
                 position: "absolute",
                 inset: 0,

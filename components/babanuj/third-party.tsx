@@ -18,9 +18,9 @@ export function ThirdPartyScripts() {
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
-          <Script id="ga4-init" strategy="afterInteractive">
+          <Script id="ga4-init" strategy="lazyOnload">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
@@ -37,7 +37,7 @@ export function ThirdPartyScripts() {
           before or after our listener registers). */}
       {smileShopId && (
         <>
-          <Script id="smile-init" strategy="afterInteractive">
+          <Script id="smile-init" strategy="lazyOnload">
             {`
               (function () {
                 var tries = 0;
@@ -55,7 +55,7 @@ export function ThirdPartyScripts() {
           <Script
             id="smile-loader"
             src="https://js.smile.io/v1/smile-ui.js"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             defer
           />
         </>
@@ -66,7 +66,7 @@ export function ThirdPartyScripts() {
         <Script
           id="shopify-inbox"
           src={`https://cdn.shopify.com/shopifycloud/portable-wallets/latest/portable-wallets.iife.js?shop_id=${inboxShopId}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           defer
         />
       )}

@@ -275,7 +275,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
 export const ALL_PRODUCTS: BabanujProduct[] = [...PRODUCTS, ...EXTRA_PRODUCTS];
 
 export const HERO_IMG =
-  "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=2400";
+  "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600";
 
 // Categories map 1:1 to Shopify auto-collections created by the user.
 // IDs match Shopify collection handles. Hue is the fallback background

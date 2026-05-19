@@ -16,7 +16,7 @@
   --accent: #1a1410;
   --accent-dark: #000000;
   --accent-soft: #efece4;
-  --warn: #c4571f;
+  --warn: #b04d1a; /* WCAG AA: 5.19:1 against #fff (was #c4571f at 4.46:1) */
   --cream: #f9f3e6;
   --tan: #e8d7b8;
 }
