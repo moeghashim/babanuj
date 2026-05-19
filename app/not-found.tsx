@@ -9,7 +9,6 @@ export const metadata = {
   robots: { index: false, follow: true },
 };
 
-// Six handpicked collections to offer as a way back in.
 const QUICK_LINKS: Array<{ id: string; label?: string }> = [
   { id: "baklava" },
   { id: "cookies", label: "Maamoul & Cookies" },
@@ -40,7 +39,6 @@ export default function NotFound() {
         overflow: "hidden",
       }}
     >
-      {/* Faint ornaments — bazaar tile texture, scattered around the edges. */}
       <div
         aria-hidden
         style={{
@@ -94,9 +92,7 @@ export default function NotFound() {
           </span>
         </div>
 
-        {/* 404 with the Rub el Hizb star in the middle "0". */}
         <div
-          className="bn-404"
           style={{
             display: "flex",
             alignItems: "center",
@@ -106,18 +102,19 @@ export default function NotFound() {
             lineHeight: 0.9,
           }}
         >
-          <span className="display-heavy bn-404-digit">4</span>
+          <span className="display-heavy mk-404-digit">4</span>
           <span
             aria-hidden
-            className="bn-404-star"
+            className="mk-spin-slow mk-404-star"
             style={{
               display: "inline-flex",
               color: "var(--warn)",
+              margin: "0 -8px",
             }}
           >
-            <RubElHizb size={180} stroke={2} />
+            <RubElHizb size={160} stroke={2} />
           </span>
-          <span className="display-heavy bn-404-digit">4</span>
+          <span className="display-heavy mk-404-digit">4</span>
         </div>
 
         <h1
@@ -190,7 +187,6 @@ export default function NotFound() {
                   border: "1px solid var(--rule)",
                   padding: "10px 16px",
                   fontSize: 13,
-                  transition: "background .15s, border-color .15s, transform .15s",
                 }}
               >
                 <span
@@ -209,33 +205,6 @@ export default function NotFound() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        .bn-404-digit {
-          font-size: 260px;
-          letter-spacing: -0.06em;
-        }
-        .bn-404-star {
-          animation: bn404Spin 22s linear infinite;
-          transform-origin: center;
-          margin: 0 -8px;
-        }
-        @keyframes bn404Spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .bn-404-star { animation: none; }
-        }
-        @media (max-width: 900px) {
-          .bn-404-digit { font-size: 180px; }
-          .bn-404-star svg { width: 130px; height: 130px; }
-        }
-        @media (max-width: 480px) {
-          .bn-404-digit { font-size: 128px; }
-          .bn-404-star svg { width: 96px; height: 96px; }
-        }
-      `}</style>
     </section>
   );
 }
