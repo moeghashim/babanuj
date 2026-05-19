@@ -10,12 +10,23 @@ import {
   getProducts,
 } from "lib/shopify";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+
+const PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
+  "honey-tube-mixed-honey-25g": "mixed-honey-packets-25g",
+};
+
+function redirectStaleProductHandle(handle: string) {
+  const target = PRODUCT_HANDLE_REDIRECTS[handle];
+  if (target) permanentRedirect(`/product/${target}`);
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
+  redirectStaleProductHandle(params.handle);
+
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
@@ -42,6 +53,8 @@ export default async function ProductPage(props: {
   params: Promise<{ handle: string }>;
 }) {
   const params = await props.params;
+  redirectStaleProductHandle(params.handle);
+
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
