@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { CloseIcon, MenuIcon } from "components/babanuj/icons";
 import { BRANDS } from "lib/babanuj/data";
+import { useMountEffect } from "lib/use-mount-effect";
 
 const CATEGORIES = [
   { label: "Shop All", href: "/search" },
@@ -30,9 +31,9 @@ export function MobileMenu() {
   const [mounted, setMounted] = useState(false);
 
   // Only render the portal client-side.
-  useEffect(() => {
+  useMountEffect(() => {
     setMounted(true);
-  }, []);
+  });
 
   // Lock body scroll when open.
   useEffect(() => {
