@@ -12,6 +12,7 @@ import React, {
   useContext,
   useMemo,
   useOptimistic,
+  useState,
 } from "react";
 
 type UpdateType = "plus" | "minus" | "delete";
@@ -33,6 +34,9 @@ type CartContextType = {
     updateType: UpdateType,
   ) => void;
   addCartItem: (variant: ProductVariant, product: Product) => void;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -207,6 +211,7 @@ export function CartProvider({
     initialCart,
     cartReducer,
   );
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const updateCartItem = (
     merchandiseId: string,
@@ -225,9 +230,19 @@ export function CartProvider({
     });
   };
 
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+
   const value = useMemo(
-    () => ({ cart: optimisticCart, updateCartItem, addCartItem }),
-    [optimisticCart],
+    () => ({
+      cart: optimisticCart,
+      updateCartItem,
+      addCartItem,
+      isCartOpen,
+      openCart,
+      closeCart,
+    }),
+    [optimisticCart, isCartOpen],
   );
 
   return (

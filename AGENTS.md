@@ -165,6 +165,12 @@ Start dev server (or Preview MCP), walk through:
 - Smile.io: smile.io admin → Babanuj account
 - Klaviyo: not used (Shopify Email replaces it)
 
+## React App Rules
+
+- Do not import `useEffect` directly.
+- Prefer render-time derivation, event handlers, and framework data loading over effects.
+- `useMountEffect` is the only allowed mount-only escape hatch for synchronizing with an external system.
+
 ## Don'ts
 
 - Don't touch `main` directly

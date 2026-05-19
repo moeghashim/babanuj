@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useFormStatus } from "react-dom";
+import { useMountEffect } from "lib/use-mount-effect";
 import {
   CartIcon,
   CloseIcon,
   ShieldIcon,
   TruckIcon,
 } from "components/babanuj/icons";
-import { createCartAndSetCookie, redirectToCheckout } from "./actions";
+import { redirectToCheckout } from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
@@ -18,32 +19,19 @@ import { EditItemQuantityButton } from "./edit-item-quantity-button";
 const FREE_SHIP_THRESHOLD = 70;
 
 export default function CartModal() {
-  const { cart, updateCartItem } = useCart();
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    cart,
+    updateCartItem,
+    isCartOpen: isOpen,
+    openCart,
+    closeCart,
+  } = useCart();
   const [mounted, setMounted] = useState(false);
-  const quantityRef = useRef(cart?.totalQuantity);
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
 
   // Only render the portal client-side.
-  useEffect(() => {
+  useMountEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!cart) createCartAndSetCookie();
-  }, [cart]);
-
-  useEffect(() => {
-    if (
-      cart?.totalQuantity &&
-      cart?.totalQuantity !== quantityRef.current &&
-      cart?.totalQuantity > 0
-    ) {
-      if (!isOpen) setIsOpen(true);
-      quantityRef.current = cart?.totalQuantity;
-    }
-  }, [isOpen, cart?.totalQuantity]);
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -62,7 +50,7 @@ export default function CartModal() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen]);
+  }, [isOpen, closeCart]);
 
   const count = cart?.totalQuantity ?? 0;
   const lines = cart?.lines ?? [];

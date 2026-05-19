@@ -24,7 +24,7 @@ export function AddToBagButton({
   style,
   label,
 }: Props) {
-  const { addCartItem } = useCart();
+  const { addCartItem, openCart } = useCart();
 
   // Shape a minimal Product/ProductVariant for the optimistic update so the
   // cart reducer has the data it needs. The IDs are the real Shopify GIDs.
@@ -70,6 +70,7 @@ export function AddToBagButton({
       for (let i = 0; i < quantity; i++) {
         addCartItem(shopifyVariant, shopifyProduct);
       }
+      openCart();
       // Real Shopify cart line write. Server action invalidates cart cache
       // on success; on failure, the optimistic state rolls back.
       await addItem(null, product.variantId);

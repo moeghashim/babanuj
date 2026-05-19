@@ -21,11 +21,30 @@ export async function addItem(
   }
 
   try {
+    await ensureCart();
     await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
     updateTag(TAGS.cart);
   } catch (e) {
-    return "Error adding item to cart";
+    // If the existing cart was stale (Shopify dropped it after checkout),
+    // recreate and retry once. addToCart with no cart returns a non-200 or
+    // throws; either way we want a fresh cart rather than a silent failure
+    // that would revert the optimistic UI to 0.
+    try {
+      const fresh = await createCart();
+      (await cookies()).set("cartId", fresh.id!);
+      await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
+      updateTag(TAGS.cart);
+    } catch {
+      return "Error adding item to cart";
+    }
   }
+}
+
+async function ensureCart() {
+  const store = await cookies();
+  if (store.get("cartId")?.value) return;
+  const fresh = await createCart();
+  store.set("cartId", fresh.id!);
 }
 
 export async function removeItem(prevState: any, merchandiseId: string) {
@@ -105,7 +124,3 @@ export async function redirectToCheckout() {
   redirect(url);
 }
 
-export async function createCartAndSetCookie() {
-  let cart = await createCart();
-  (await cookies()).set("cartId", cart.id!);
-}
