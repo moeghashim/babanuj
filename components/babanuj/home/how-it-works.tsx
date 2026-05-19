@@ -65,7 +65,7 @@ export function MarketHowItWorks() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontFamily: "Bricolage Grotesque, sans-serif",
+                  fontFamily: "var(--font-bricolage), sans-serif",
                   fontWeight: 800,
                   fontSize: 18,
                 }}

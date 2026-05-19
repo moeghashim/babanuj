@@ -7,13 +7,43 @@ import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
 import { getCart } from "lib/shopify";
-import Script from "next/script";
+import {
+  Bricolage_Grotesque,
+  DM_Sans,
+  DM_Serif_Display,
+} from "next/font/google";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
 
 const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
+
+// next/font self-hosts the font files and bundles the @font-face CSS into
+// the global stylesheet. Unlike a <link> in <head>, the @font-face rules
+// reach the not-found / error envelopes too, so the 404 page renders in
+// the same type as the rest of the site.
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["600", "800"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const dmSerifDisplay = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  variable: "--font-dm-serif",
+  display: "swap",
+});
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
@@ -40,34 +70,10 @@ export default async function RootLayout({
   const cart = getCart().catch(() => undefined);
 
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        {/* Non-render-blocking font load: preload the stylesheet (so the
-            request fires early) but inject the actual <link rel="stylesheet">
-            via JS so it doesn't block the parser. Noscript fallback keeps
-            text styled for the small subset of users without JS. The URL has
-            `display=swap` so text paints in fallback then re-flows. */}
-        <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap"
-        />
-        <Script id="font-injector" strategy="beforeInteractive">
-          {`(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap';document.head.appendChild(l);})();`}
-        </Script>
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap"
-          />
-        </noscript>
-      </head>
+    <html
+      lang="en"
+      className={`${bricolage.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
+    >
       <body className="market-root">
         <CartProvider cartPromise={cart}>
           <MarketAnnounce />

@@ -805,7 +805,7 @@ function PDPReviews() {
           style={{
             fontSize: 64,
             fontWeight: 800,
-            fontFamily: "Bricolage Grotesque, sans-serif",
+            fontFamily: "var(--font-bricolage), sans-serif",
             color: "var(--ink)",
             lineHeight: 1,
             fontVariantNumeric: "tabular-nums",
