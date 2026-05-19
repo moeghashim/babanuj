@@ -27,9 +27,7 @@ export function MarketPromo() {
           }}
         >
           <div>
-            <span className="market-chip chip-soft">
-              Build your own
-            </span>
+            <span className="market-chip chip-soft">Build your own</span>
             <h3
               className="display-heavy"
               style={{ fontSize: 30, margin: "12px 0 8px", lineHeight: 1.1 }}
@@ -101,13 +99,13 @@ export function MarketPromo() {
                 color: "#fff",
               }}
             >
-              Just dropped · Limited
+              Eid-ready · Summer-safe
             </span>
             <h3
               className="display-heavy"
               style={{ fontSize: 30, margin: "12px 0 8px", lineHeight: 1.1 }}
             >
-              Crush Dubai Chocolate is back
+              Baklava for the table
             </h3>
             <p
               style={{
@@ -117,10 +115,10 @@ export function MarketPromo() {
                 marginBottom: 16,
               }}
             >
-              The viral Dubai bar — kataifi pastry, pistachio cream, layered
-              into single-origin chocolate. Limit 4 per order.
+              Layered pistachio and honey sweets that travel well for hosting,
+              gifting, and coffee after dinner.
             </p>
-            <button className="market-btn cream">Shop the Bar →</button>
+            <button className="market-btn cream">Shop Baklava →</button>
           </div>
           <div
             className="mk-promo-img"
@@ -133,8 +131,8 @@ export function MarketPromo() {
             }}
           >
             <Photo
-              src={ALL_PRODUCTS[3]!.img}
-              alt="Crush Dubai Chocolate"
+              src={ALL_PRODUCTS[0]!.img}
+              alt="Pistachio baklava"
               style={{ position: "absolute", inset: 0 }}
             />
           </div>

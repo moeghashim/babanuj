@@ -28,13 +28,17 @@ const SLIDES: Slide[] = [
     align: "left",
   },
   {
-    img: ALL_PRODUCTS[3]!.img,
-    chip: "JUST DROPPED · LIMITED RUN",
-    titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
-    sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
+    img: ALL_PRODUCTS[1]!.img,
+    chip: "EID HOSTING · GIFT-READY",
+    titleParts: ["Turkish delight,", { italic: "ready to share." }],
+    sub: "Soft lokum, baklava, and maamoul for Eid visits, coffee service, and last-minute gifts.",
     ctas: [
-      { label: "Shop the Bar", href: "/product/crush-dubai-chocolate", variant: "warn" },
-      { label: "Read the story", href: "/brand/crush", variant: "cream" },
+      {
+        label: "Shop Turkish Delight",
+        href: "/product/zaitoune-turkish-delight-250g",
+        variant: "warn",
+      },
+      { label: "Shop Zaitoune", href: "/brand/zaitoune", variant: "cream" },
     ],
     align: "right",
   },
@@ -44,8 +48,16 @@ const SLIDES: Slide[] = [
     titleParts: ["Maamoul,", { italic: "baked this morning." }],
     sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
     ctas: [
-      { label: "Order Maamoul", href: "/product/maamoul-date-cookies", variant: "warn" },
-      { label: "Shop Bab Sharqi", href: "/collections/cookies", variant: "cream" },
+      {
+        label: "Order Maamoul",
+        href: "/product/maamoul-date-cookies",
+        variant: "warn",
+      },
+      {
+        label: "Shop Bab Sharqi",
+        href: "/collections/cookies",
+        variant: "cream",
+      },
     ],
     align: "left",
   },
@@ -55,8 +67,16 @@ const SLIDES: Slide[] = [
     titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
     sub: "Mix any six pieces from our pantry — we pack it, wrap it, ship it.",
     ctas: [
-      { label: "Build a Box", href: "/collections/gift-boxes", variant: "warn" },
-      { label: "See examples", href: "/collections/gift-boxes", variant: "cream" },
+      {
+        label: "Build a Box",
+        href: "/collections/gift-boxes",
+        variant: "warn",
+      },
+      {
+        label: "See examples",
+        href: "/collections/gift-boxes",
+        variant: "cream",
+      },
     ],
     align: "right",
   },

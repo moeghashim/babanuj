@@ -14,6 +14,7 @@ import { createCartAndSetCookie, redirectToCheckout } from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
+import { trackInitiateCheckout } from "lib/meta/events";
 
 const FREE_SHIP_THRESHOLD = 70;
 
@@ -128,9 +129,7 @@ export default function CartModal() {
               className="display-heavy"
               style={{ fontSize: 26, marginTop: 2, lineHeight: 1 }}
             >
-              {count === 0
-                ? "Empty"
-                : `${count} item${count === 1 ? "" : "s"}`}
+              {count === 0 ? "Empty" : `${count} item${count === 1 ? "" : "s"}`}
             </div>
           </div>
           <button
@@ -419,7 +418,10 @@ export default function CartModal() {
               >
                 View bag
               </Link>
-              <form action={redirectToCheckout}>
+              <form
+                action={redirectToCheckout}
+                onSubmit={() => trackInitiateCheckout(cart)}
+              >
                 <CheckoutButton />
               </form>
             </div>

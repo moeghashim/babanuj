@@ -1,4 +1,5 @@
 import Script from "next/script";
+import { MetaPixel } from "./meta-pixel";
 
 /**
  * Embed loaders for third-party tools — each renders ONLY when its env
@@ -8,6 +9,7 @@ import Script from "next/script";
  */
 export function ThirdPartyScripts() {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const smileShopId = process.env.NEXT_PUBLIC_SMILE_SHOP_ID;
   const inboxShopId = process.env.NEXT_PUBLIC_SHOPIFY_INBOX_SHOP_ID;
 
@@ -30,6 +32,8 @@ export function ThirdPartyScripts() {
           </Script>
         </>
       )}
+
+      {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
 
       {/* Smile.io loyalty + referrals. The loader exposes the
           `window.SmileUI` singleton; we call `initialize()` with the

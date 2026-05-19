@@ -6,13 +6,10 @@ import { redirectToCheckout } from "components/cart/actions";
 import { useCart } from "components/cart/cart-context";
 import { DeleteItemButton } from "components/cart/delete-item-button";
 import { EditItemQuantityButton } from "components/cart/edit-item-quantity-button";
-import {
-  ArrowRight,
-  ShieldIcon,
-  TruckIcon,
-} from "components/babanuj/icons";
+import { ArrowRight, ShieldIcon, TruckIcon } from "components/babanuj/icons";
 import { MarketProductCard } from "components/babanuj/product-card";
 import type { BabanujProduct } from "lib/babanuj/data";
+import { trackInitiateCheckout } from "lib/meta/events";
 
 const FREE_SHIP_THRESHOLD = 70;
 
@@ -306,7 +303,10 @@ export function CartView({ recommended }: Props) {
                   </span>
                 </div>
 
-                <form action={redirectToCheckout}>
+                <form
+                  action={redirectToCheckout}
+                  onSubmit={() => trackInitiateCheckout(cart)}
+                >
                   <CheckoutButton />
                 </form>
 
@@ -694,8 +694,8 @@ function Line({
           color: accent
             ? "var(--accent-dark)"
             : subtle
-            ? "var(--ink-2)"
-            : "var(--ink)",
+              ? "var(--ink-2)"
+              : "var(--ink)",
         }}
       >
         {value}

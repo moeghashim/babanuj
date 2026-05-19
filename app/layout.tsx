@@ -21,7 +21,7 @@ export const metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight and Dubai chocolate from Türkish, Syrian and Gulf bakers. Shipped fresh from Houston. Free U.S. shipping over $70.",
+    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight, stuffed dates, and gift-ready assortments. Shipped fresh from Houston. Free U.S. shipping over $70.",
   robots: {
     follow: true,
     index: true,

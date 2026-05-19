@@ -17,8 +17,8 @@ const REVIEWS = [
     name: "Priya R.",
     city: "Chicago, IL",
     stars: 5,
-    q: "The Dubai chocolate is unreal — better than anything I tried in the airport. Sent four boxes as gifts.",
-    tag: "Crush Dubai Bar",
+    q: "The Turkish delight and baklava box arrived fresh and looked beautiful on our Eid table.",
+    tag: "Eid sweets box",
   },
   {
     name: "Ahmed S.",
@@ -44,7 +44,10 @@ export function MarketReviews() {
           <span className="micro" style={{ color: "var(--accent-dark)" }}>
             ★ 4.9 from 2,400+ reviews
           </span>
-          <h2 className="display-heavy" style={{ fontSize: 38, margin: "6px 0 0" }}>
+          <h2
+            className="display-heavy"
+            style={{ fontSize: 38, margin: "6px 0 0" }}
+          >
             What customers are saying
           </h2>
         </div>
@@ -65,7 +68,14 @@ export function MarketReviews() {
       >
         {REVIEWS.map((r, i) => (
           <div key={i} className="market-card" style={{ padding: 22 }}>
-            <div style={{ display: "flex", gap: 2, color: "#d4a843", fontSize: 16 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 2,
+                color: "#d4a843",
+                fontSize: 16,
+              }}
+            >
               {"★".repeat(r.stars)}
             </div>
             <p
@@ -106,7 +116,9 @@ export function MarketReviews() {
               </div>
               <div style={{ lineHeight: 1.2 }}>
                 <div style={{ fontSize: 13, fontWeight: 700 }}>{r.name}</div>
-                <div style={{ fontSize: 11, color: "var(--ink-2)" }}>{r.city}</div>
+                <div style={{ fontSize: 11, color: "var(--ink-2)" }}>
+                  {r.city}
+                </div>
               </div>
               <span
                 className="market-chip chip-soft"

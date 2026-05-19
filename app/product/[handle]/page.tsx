@@ -1,9 +1,14 @@
 import { MarketPDP } from "components/babanuj/pdp";
+import { MetaProductTracker } from "components/babanuj/meta-product-tracker";
 import {
   shopifyProductToBabanuj,
   shopifyProductsToBabanuj,
 } from "lib/babanuj/from-shopify";
-import { getProduct, getProductRecommendations, getProducts } from "lib/shopify";
+import {
+  getProduct,
+  getProductRecommendations,
+  getProducts,
+} from "lib/shopify";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -93,6 +98,7 @@ export default async function ProductPage(props: {
         related={related}
         galleryExtras={galleryExtras}
       />
+      <MetaProductTracker product={babanujProduct} />
     </>
   );
 }
