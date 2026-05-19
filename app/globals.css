@@ -193,7 +193,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* ============ HERO PROGRESS ANIM ============ */
+/* ============ ANIMATIONS ============ */
 
 @keyframes mhProg {
   from {
@@ -202,6 +202,38 @@ button:focus-visible {
   to {
     width: 100%;
   }
+}
+
+@keyframes mkSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mk-spin-slow {
+  animation: mkSpin 22s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-spin-slow {
+    animation: none;
+  }
+}
+
+/* ============ 404 ============ */
+
+.mk-404-digit {
+  font-size: 220px;
+  letter-spacing: -0.06em;
+}
+
+.mk-404-star svg {
+  width: 160px;
+  height: 160px;
 }
 
 /* ============ RESPONSIVE ============ */
@@ -395,6 +427,13 @@ button:focus-visible {
   .mk-news .display-heavy {
     font-size: 26px !important;
   }
+  .mk-404-digit {
+    font-size: 128px !important;
+  }
+  .mk-404-star svg {
+    width: 100px !important;
+    height: 100px !important;
+  }
   .mk-bread {
     padding-left: 20px !important;
     padding-right: 20px !important;
@@ -508,6 +547,13 @@ button:focus-visible {
   }
   .mk-hero-copy .display-heavy {
     font-size: 32px !important;
+  }
+  .mk-404-digit {
+    font-size: 96px !important;
+  }
+  .mk-404-star svg {
+    width: 78px !important;
+    height: 78px !important;
   }
   .mk-foot {
     grid-template-columns: 1fr !important;
