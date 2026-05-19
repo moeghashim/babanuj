@@ -516,3 +516,12 @@ button:focus-visible {
     grid-column: auto;
   }
 }
+
+/* Mobile LCP win: only the first hero slide is rendered + loaded. The other
+   3 slides are display:none so their images never enter the lazy-load
+   observer's queue. Above 768px we restore the full carousel. */
+@media (max-width: 768px) {
+  .mk-hero-slide-rest {
+    display: none !important;
+  }
+}

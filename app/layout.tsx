@@ -7,6 +7,7 @@ import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
 import { getCart } from "lib/shopify";
+import Script from "next/script";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -47,10 +48,25 @@ export default async function RootLayout({
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+        {/* Non-render-blocking font load: preload the stylesheet (so the
+            request fires early) but inject the actual <link rel="stylesheet">
+            via JS so it doesn't block the parser. Noscript fallback keeps
+            text styled for the small subset of users without JS. The URL has
+            `display=swap` so text paints in fallback then re-flows. */}
         <link
-          rel="stylesheet"
+          rel="preload"
+          as="style"
           href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap"
         />
+        <Script id="font-injector" strategy="beforeInteractive">
+          {`(function(){var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap';document.head.appendChild(l);})();`}
+        </Script>
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display:ital@1&display=swap"
+          />
+        </noscript>
       </head>
       <body className="market-root">
         <CartProvider cartPromise={cart}>

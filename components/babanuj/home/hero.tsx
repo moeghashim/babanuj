@@ -65,13 +65,24 @@ const SLIDES: Slide[] = [
 export function MarketHero() {
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
+  // On mobile we hide slides 2-4 (LCP win) so the carousel has nothing to
+  // rotate to — track that here and skip the interval entirely.
+  const [isMobile, setIsMobile] = useState(false);
   const len = SLIDES.length;
 
   useEffect(() => {
-    if (paused) return;
+    const mq = window.matchMedia("(max-width: 768px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (paused || isMobile) return;
     const t = setInterval(() => setIdx((i) => (i + 1) % len), 5500);
     return () => clearInterval(t);
-  }, [paused, len]);
+  }, [paused, len, isMobile]);
 
   const go = (n: number) => setIdx(((n % len) + len) % len);
 
@@ -91,6 +102,7 @@ export function MarketHero() {
         {SLIDES.map((s, i) => (
           <div
             key={i}
+            className={i === 0 ? "mk-hero-slide" : "mk-hero-slide mk-hero-slide-rest"}
             style={{
               position: "absolute",
               inset: 0,
