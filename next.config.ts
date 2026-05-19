@@ -23,6 +23,11 @@ export default {
     // still resolve.
     return [
       {
+        source: "/products/:handle",
+        destination: "/product/:handle",
+        permanent: true,
+      },
+      {
         source: "/search/:handle",
         destination: "/collections/:handle",
         permanent: true,
