@@ -7,43 +7,12 @@ import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
 import { getCart } from "lib/shopify";
-import {
-  Bricolage_Grotesque,
-  DM_Sans,
-  DM_Serif_Display,
-} from "next/font/google";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
 
 const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
-
-// next/font self-hosts the font files and bundles the @font-face CSS into
-// the global stylesheet. Unlike a <link> in <head>, the @font-face rules
-// reach the not-found / error envelopes too, so the 404 page renders in
-// the same type as the rest of the site.
-const bricolage = Bricolage_Grotesque({
-  subsets: ["latin"],
-  weight: ["600", "800"],
-  variable: "--font-bricolage",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const dmSerifDisplay = DM_Serif_Display({
-  subsets: ["latin"],
-  weight: "400",
-  style: "italic",
-  variable: "--font-dm-serif",
-  display: "swap",
-});
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
@@ -70,10 +39,7 @@ export default async function RootLayout({
   const cart = getCart().catch(() => undefined);
 
   return (
-    <html
-      lang="en"
-      className={`${bricolage.variable} ${dmSans.variable} ${dmSerifDisplay.variable}`}
-    >
+    <html lang="en">
       <body className="market-root">
         <CartProvider cartPromise={cart}>
           <MarketAnnounce />
