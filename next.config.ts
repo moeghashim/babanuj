@@ -38,6 +38,11 @@ export default {
         permanent: true,
       },
       {
+        source: "/collections/zaitoune",
+        destination: "/brand/zaitoune",
+        permanent: true,
+      },
+      {
         source: "/search/:handle",
         destination: "/collections/:handle",
         permanent: true,
