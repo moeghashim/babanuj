@@ -110,7 +110,7 @@ export function MobileMenu() {
             href="/"
             onClick={close}
             style={{
-              fontFamily: "Bricolage Grotesque, sans-serif",
+              fontFamily: "var(--font-bricolage), sans-serif",
               fontWeight: 800,
               fontSize: 24,
               letterSpacing: "-0.02em",
