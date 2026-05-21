@@ -58,6 +58,18 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
   const vendor = p.vendor ?? "";
   const brandId = VENDOR_TO_BRAND_ID[vendor] ?? null;
   const hue = (brandId && HUE_BY_BRAND[brandId]) ?? HUE_FALLBACK;
+  const options = (p.options ?? []).filter(
+    (option) =>
+      option.name !== "Title" ||
+      option.values.some((value) => value !== "Default Title"),
+  );
+  const variants = p.variants.map((variant) => ({
+    id: variant.id,
+    title: variant.title,
+    availableForSale: variant.availableForSale,
+    selectedOptions: variant.selectedOptions,
+    price: Number.parseFloat(variant.price.amount),
+  }));
   const firstAvailableVariant = p.variants.find(
     (variant) => variant.availableForSale,
   );
@@ -70,6 +82,8 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
     id: p.id,
     variantId: firstVariant?.id ?? p.id,
     availableForSale: Boolean(p.availableForSale && firstAvailableVariant),
+    options,
+    variants,
     handle: p.handle,
     name: p.title,
     brand: displayBrand(vendor || "Babanuj"),

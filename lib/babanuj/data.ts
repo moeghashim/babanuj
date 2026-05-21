@@ -24,6 +24,8 @@ export type BabanujProduct = {
    *  adapter from live data; falls back to a synthetic ID for seed data. */
   variantId: string;
   availableForSale?: boolean;
+  options?: BabanujProductOption[];
+  variants?: BabanujProductVariant[];
   handle: string;
   name: string;
   brand: string;
@@ -33,6 +35,23 @@ export type BabanujProduct = {
   hue: string;
   dark?: string;
   img: string;
+};
+
+export type BabanujProductOption = {
+  id?: string;
+  name: string;
+  values: string[];
+};
+
+export type BabanujProductVariant = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  selectedOptions: {
+    name: string;
+    value: string;
+  }[];
+  price: number;
 };
 
 export type BabanujCategory = {
