@@ -80,6 +80,7 @@ export default function CartModal() {
 
       {/* Drawer */}
       <aside
+        className="mk-cart-drawer"
         role="dialog"
         aria-modal="true"
         aria-label="Your bag"
@@ -87,7 +88,8 @@ export default function CartModal() {
           position: "fixed",
           top: 0,
           right: isOpen ? 0 : "-100%",
-          height: "100vh",
+          height: "100dvh",
+          maxHeight: "100dvh",
           width: 460,
           maxWidth: "92vw",
           background: "#fff",
@@ -208,8 +210,10 @@ export default function CartModal() {
 
         {/* Items list */}
         <div
+          className="mk-cart-drawer-items"
           style={{
             flex: 1,
+            minHeight: 0,
             overflowY: "auto",
             padding: count === 0 ? 0 : "8px 24px",
           }}
@@ -337,14 +341,16 @@ export default function CartModal() {
         {/* Footer */}
         {count > 0 && (
           <footer
+            className="mk-cart-drawer-footer"
             style={{
               borderTop: "1px solid var(--rule)",
-              padding: "16px 24px 22px",
+              padding: "16px 24px calc(22px + env(safe-area-inset-bottom))",
               background: "#fff",
               flexShrink: 0,
             }}
           >
             <div
+              className="mk-cart-drawer-total-row"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -388,6 +394,7 @@ export default function CartModal() {
             </div>
 
             <div
+              className="mk-cart-drawer-actions"
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1.4fr",
@@ -416,6 +423,7 @@ export default function CartModal() {
             </div>
 
             <div
+              className="mk-cart-drawer-trust"
               style={{
                 display: "flex",
                 gap: 14,
