@@ -28,14 +28,12 @@ type Props = {
   product: BabanujProduct;
   fromBrand?: BabanujProduct[];
   related?: BabanujProduct[];
-  galleryExtras?: string[];
 };
 
 export function MarketPDP({
   product: p,
   fromBrand = [],
   related = [],
-  galleryExtras = [],
 }: Props) {
   const brand =
     findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
@@ -69,9 +67,15 @@ export function MarketPDP({
   );
 
   const gallery = useMemo(
-    () => [p.img, ...galleryExtras, brand.img].filter(Boolean),
-    [p, brand, galleryExtras],
+    () =>
+      uniqueImages([
+        selectedVariant?.image,
+        selectedProduct.img,
+        ...(selectedProduct.images ?? []),
+      ]),
+    [selectedProduct, selectedVariant],
   );
+  const activeGalleryImage = gallery[activeImg] ?? gallery[0] ?? p.img;
 
   return (
     <div>
@@ -105,7 +109,7 @@ export function MarketPDP({
               }}
             >
               <Photo
-                src={gallery[activeImg]!}
+                src={activeGalleryImage}
                 alt={p.name}
                 style={{ position: "absolute", inset: 0 }}
               />
@@ -726,8 +730,13 @@ function productForVariant(
     ...product,
     variantId: variant.id,
     availableForSale: variant.availableForSale,
+    img: variant.image ?? product.img,
     price: Number.isFinite(variant.price) ? variant.price : product.price,
   };
+}
+
+function uniqueImages(images: (string | undefined)[]) {
+  return [...new Set(images.filter((image): image is string => Boolean(image)))];
 }
 
 function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {
