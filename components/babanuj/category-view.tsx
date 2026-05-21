@@ -14,11 +14,19 @@ type SortKey = "featured" | "price-asc" | "price-desc" | "name";
 
 type Props = {
   categoryId: string;
+  categoryTitle?: string;
+  categoryBlurb?: string;
   products: BabanujProduct[];
   searchValue?: string;
 };
 
-export function CategoryView({ categoryId, products, searchValue }: Props) {
+export function CategoryView({
+  categoryBlurb,
+  categoryId,
+  categoryTitle,
+  products,
+  searchValue,
+}: Props) {
   const cat = findCategory(categoryId);
   const baseItems = products;
 
@@ -43,10 +51,12 @@ export function CategoryView({ categoryId, products, searchValue }: Props) {
     return r;
   }, [baseItems, brand, sort, priceMax]);
 
-  const title = searchValue ? `Results for "${searchValue}"` : cat.name;
+  const title = searchValue
+    ? `Results for "${searchValue}"`
+    : (categoryTitle ?? cat.name);
   const blurb = searchValue
     ? `Matching products across all brands.`
-    : cat.blurb;
+    : (categoryBlurb ?? cat.blurb);
 
   return (
     <div>
