@@ -14,7 +14,7 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const known = CATEGORIES.some((c) => c.id === params.handle);
-  const collection = known ? await getCollection(params.handle) : undefined;
+  const collection = await getCollection(params.handle);
 
   if (!known && !collection) return notFound();
 
@@ -34,7 +34,9 @@ export default async function CategoryPage(props: {
 }) {
   const params = await props.params;
   const known = CATEGORIES.some((c) => c.id === params.handle);
-  if (!known) return notFound();
+  const collection = await getCollection(params.handle);
+
+  if (!known && !collection) return notFound();
 
   // Primary path: the Shopify Smart collection the user created in admin.
   let raw = await getCollectionProducts({ collection: params.handle });
@@ -51,5 +53,12 @@ export default async function CategoryPage(props: {
 
   const products = shopifyProductsToBabanuj(raw);
 
-  return <CategoryView categoryId={params.handle} products={products} />;
+  return (
+    <CategoryView
+      categoryBlurb={!known ? collection?.description : undefined}
+      categoryId={params.handle}
+      categoryTitle={!known ? collection?.title : undefined}
+      products={products}
+    />
+  );
 }

@@ -35,7 +35,7 @@ const SLIDES: Slide[] = [
     ctas: [
       {
         label: "Shop the Bar",
-        href: "/product/crush-dubai-chocolate",
+        href: "/product/crush-dubai-chocolate-bar-210g",
         variant: "warn",
       },
       { label: "Read the story", href: "/brand/crush", variant: "cream" },
@@ -50,7 +50,7 @@ const SLIDES: Slide[] = [
     ctas: [
       {
         label: "Order Maamoul",
-        href: "/product/maamoul-date-cookies",
+        href: "/product/zaitoune-maamoul-date-250g",
         variant: "warn",
       },
       {
