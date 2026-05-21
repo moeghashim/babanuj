@@ -112,7 +112,7 @@ export function MobileMenu() {
             onClick={close}
             style={{
               fontFamily: "var(--font-logo), var(--font-bricolage), sans-serif",
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: 24,
               letterSpacing: 0,
               color: "#000",

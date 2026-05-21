@@ -40,6 +40,7 @@ export function MarketNav() {
               fontSize: 30,
               fontFamily: "var(--font-logo), var(--font-bricolage), sans-serif",
               letterSpacing: 0,
+              fontWeight: 700,
               color: "#000",
             }}
           >
