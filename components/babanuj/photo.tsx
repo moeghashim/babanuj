@@ -11,6 +11,8 @@ type Props = {
   fill?: boolean;
   sizes?: string;
   priority?: boolean;
+  fetchPriority?: "high" | "low" | "auto";
+  quality?: number;
 };
 
 export function Photo({
@@ -20,6 +22,8 @@ export function Photo({
   fill = true,
   sizes,
   priority,
+  fetchPriority,
+  quality,
 }: Props) {
   if (!fill) {
     /* eslint-disable-next-line @next/next/no-img-element */
@@ -28,6 +32,7 @@ export function Photo({
         src={src}
         alt={alt}
         loading="lazy"
+        fetchPriority={fetchPriority}
         style={{
           width: "100%",
           height: "100%",
@@ -46,6 +51,8 @@ export function Photo({
       fill
       sizes={sizes ?? "(max-width: 900px) 100vw, 50vw"}
       priority={priority}
+      fetchPriority={fetchPriority}
+      quality={quality}
       style={{
         objectFit: "cover",
         ...style,

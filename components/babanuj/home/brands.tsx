@@ -5,7 +5,13 @@ import { BRANDS } from "lib/babanuj/data";
 
 export function MarketBrands() {
   return (
-    <section style={{ padding: "40px 56px" }}>
+    <section
+      style={{
+        padding: "40px 56px",
+        contentVisibility: "auto",
+        containIntrinsicSize: "420px",
+      }}
+    >
       <div
         style={{
           display: "flex",
@@ -18,7 +24,10 @@ export function MarketBrands() {
           <span className="micro" style={{ color: "var(--accent-dark)" }}>
             The Houses
           </span>
-          <h2 className="display-heavy" style={{ fontSize: 38, margin: "6px 0 0" }}>
+          <h2
+            className="display-heavy"
+            style={{ fontSize: 38, margin: "6px 0 0" }}
+          >
             Shop by brand
           </h2>
         </div>
@@ -54,14 +63,22 @@ export function MarketBrands() {
               <Photo
                 src={b.img}
                 alt={b.name}
+                quality={60}
+                sizes="(max-width: 900px) 96px, 140px"
                 style={{ position: "absolute", inset: 0 }}
               />
             </div>
             <div style={{ padding: 18 }}>
-              <div className="micro" style={{ fontSize: 10, color: "var(--ink-2)" }}>
+              <div
+                className="micro"
+                style={{ fontSize: 10, color: "var(--ink-2)" }}
+              >
                 {b.origin} · est. {b.est}
               </div>
-              <div className="display-heavy" style={{ fontSize: 22, marginTop: 4 }}>
+              <div
+                className="display-heavy"
+                style={{ fontSize: 22, marginTop: 4 }}
+              >
                 {b.name}
               </div>
               <p

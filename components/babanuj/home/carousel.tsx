@@ -1,7 +1,4 @@
-"use client";
-
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "components/babanuj/icons";
+import { CarouselControls } from "components/babanuj/home/carousel-controls";
 import { MarketProductCard } from "components/babanuj/product-card";
 import type { BabanujProduct } from "lib/babanuj/data";
 
@@ -13,16 +10,15 @@ type Props = {
 };
 
 export function MarketCarousel({ title, tag, reverse, products }: Props) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const scroll = (dir: -1 | 1) => {
-    trackRef.current?.scrollBy({ left: dir * 320, behavior: "smooth" });
-  };
+  const trackId = `mk-carousel-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
   return (
     <section
       style={{
         padding: "32px 56px",
         background: reverse ? "var(--paper)" : "transparent",
+        contentVisibility: "auto",
+        containIntrinsicSize: "520px",
       }}
     >
       <div
@@ -44,25 +40,10 @@ export function MarketCarousel({ title, tag, reverse, products }: Props) {
             {title}
           </h2>
         </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button
-            onClick={() => scroll(-1)}
-            aria-label="Scroll left"
-            style={arrowBtn}
-          >
-            <ChevronLeft width={16} height={16} />
-          </button>
-          <button
-            onClick={() => scroll(1)}
-            aria-label="Scroll right"
-            style={arrowBtn}
-          >
-            <ChevronRight width={16} height={16} />
-          </button>
-        </div>
+        <CarouselControls trackId={trackId} />
       </div>
       <div
-        ref={trackRef}
+        id={trackId}
         className="mk-carousel-track"
         style={{
           display: "flex",
@@ -79,16 +60,3 @@ export function MarketCarousel({ title, tag, reverse, products }: Props) {
     </section>
   );
 }
-
-const arrowBtn: React.CSSProperties = {
-  width: 40,
-  height: 40,
-  borderRadius: 999,
-  background: "#fff",
-  border: "1px solid var(--rule)",
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: "var(--ink)",
-};

@@ -6,9 +6,9 @@ import { MarketCatBar } from "components/babanuj/layout/cat-bar";
 import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
+import { DeferredToaster } from "components/babanuj/deferred-toaster";
 import { getCart } from "lib/shopify";
 import { ReactNode } from "react";
-import { Toaster } from "sonner";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
 
@@ -49,7 +49,7 @@ export default async function RootLayout({
           <main>{children}</main>
           <MarketNewsletter />
           <MarketFooter />
-          <Toaster closeButton />
+          <DeferredToaster />
           <ThirdPartyScripts />
         </CartProvider>
       </body>

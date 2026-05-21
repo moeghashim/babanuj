@@ -4,7 +4,13 @@ import { ALL_PRODUCTS } from "lib/babanuj/data";
 
 export function MarketPromo() {
   return (
-    <section style={{ padding: "40px 56px" }}>
+    <section
+      style={{
+        padding: "40px 56px",
+        contentVisibility: "auto",
+        containIntrinsicSize: "360px",
+      }}
+    >
       <div
         className="mk-promo"
         style={{
@@ -27,9 +33,7 @@ export function MarketPromo() {
           }}
         >
           <div>
-            <span className="market-chip chip-soft">
-              Build your own
-            </span>
+            <span className="market-chip chip-soft">Build your own</span>
             <h3
               className="display-heavy"
               style={{ fontSize: 30, margin: "12px 0 8px", lineHeight: 1.1 }}
@@ -62,6 +66,8 @@ export function MarketPromo() {
             <Photo
               src={ALL_PRODUCTS[6]!.img}
               alt="Gift box"
+              quality={60}
+              sizes="(max-width: 900px) 200px, 200px"
               style={{ position: "absolute", inset: 0 }}
             />
           </div>
@@ -135,6 +141,8 @@ export function MarketPromo() {
             <Photo
               src={ALL_PRODUCTS[3]!.img}
               alt="Crush Dubai Chocolate"
+              quality={60}
+              sizes="(max-width: 900px) 200px, 200px"
               style={{ position: "absolute", inset: 0 }}
             />
           </div>
