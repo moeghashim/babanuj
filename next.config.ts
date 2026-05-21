@@ -1,6 +1,6 @@
 export default {
   experimental: {
-    ppr: true,
+    ppr: "incremental",
     inlineCss: true,
     useCache: true,
   },
@@ -34,6 +34,11 @@ export default {
       },
       {
         source: "/products/:handle",
+        destination: "/product/:handle",
+        permanent: true,
+      },
+      {
+        source: "/collections/:collection/products/:handle",
         destination: "/product/:handle",
         permanent: true,
       },
