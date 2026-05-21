@@ -54,7 +54,7 @@ export function MarketFooter() {
                 className="display-heavy"
                 style={{
                   fontFamily:
-                    "var(--font-logo), var(--font-bricolage), sans-serif",
+                    "var(--font-bricolage, ui-sans-serif), sans-serif",
                   fontWeight: 800,
                   fontSize: 32,
                   letterSpacing: "-0.02em",

@@ -27,13 +27,13 @@ const SLIDES: Slide[] = [
     align: "left",
   },
   {
-    img: ALL_PRODUCTS[3]!.img,
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/41gllxLXI7L._SX679.jpg?v=1757873500",
     chip: "JUST DROPPED · LIMITED RUN",
-    titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
-    sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
+    titleParts: ["Milaf Date Cola", { italic: "is here." }],
+    sub: "A crisp Saudi date cola made with real date sweetness. Serve chilled with maamoul, baklava, or your next pantry box.",
     cta: {
-      label: "Shop the Bar",
-      href: "/product/crush-dubai-chocolate-bar-210g",
+      label: "Shop Milaf Cola",
+      href: "/product/milaf-date-cola-240ml-8-1-fl-oz",
       variant: "warn",
     },
     align: "right",
