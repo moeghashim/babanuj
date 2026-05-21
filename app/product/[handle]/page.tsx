@@ -74,11 +74,6 @@ export default async function ProductPage(props: {
   const fromBrand = shopifyProductsToBabanuj(
     sameBrandRaw.filter((r) => r.handle !== product.handle).slice(0, 4),
   );
-  const galleryExtras = sameBrandRaw
-    .filter((r) => r.handle !== product.handle)
-    .slice(0, 3)
-    .map((r) => r.featuredImage?.url)
-    .filter((u): u is string => Boolean(u));
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -147,7 +142,6 @@ export default async function ProductPage(props: {
         product={babanujProduct}
         fromBrand={fromBrand}
         related={related}
-        galleryExtras={galleryExtras}
       />
       <MetaProductTracker product={babanujProduct} />
     </>

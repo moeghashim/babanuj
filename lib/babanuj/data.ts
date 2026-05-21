@@ -26,6 +26,7 @@ export type BabanujProduct = {
   availableForSale?: boolean;
   options?: BabanujProductOption[];
   variants?: BabanujProductVariant[];
+  images?: string[];
   handle: string;
   name: string;
   brand: string;
@@ -47,6 +48,7 @@ export type BabanujProductVariant = {
   id: string;
   title: string;
   availableForSale: boolean;
+  image?: string;
   selectedOptions: {
     name: string;
     value: string;

@@ -67,6 +67,7 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
     id: variant.id,
     title: variant.title,
     availableForSale: variant.availableForSale,
+    image: variant.image?.url,
     selectedOptions: variant.selectedOptions,
     price: Number.parseFloat(variant.price.amount),
   }));
@@ -84,6 +85,11 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
     availableForSale: Boolean(p.availableForSale && firstAvailableVariant),
     options,
     variants,
+    images: uniqueStrings([
+      firstVariant?.image?.url,
+      p.featuredImage?.url,
+      ...p.images.map((image) => image.url),
+    ]),
     handle: p.handle,
     name: p.title,
     brand: displayBrand(vendor || "Babanuj"),
@@ -93,6 +99,10 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
     hue,
     img: p.featuredImage?.url ?? "",
   };
+}
+
+function uniqueStrings(values: (string | undefined)[]): string[] {
+  return [...new Set(values.filter((value): value is string => Boolean(value)))];
 }
 
 export function shopifyProductsToBabanuj(ps: Product[]): BabanujProduct[] {
