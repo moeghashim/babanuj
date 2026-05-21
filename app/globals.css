@@ -293,6 +293,56 @@ button {
   scroll-snap-align: start;
 }
 
+.mk-catbar {
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  padding: 10px 56px;
+  scroll-padding-inline: 56px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mk-catbar::-webkit-scrollbar {
+  display: none;
+}
+
+.mk-catbar-link {
+  align-items: center;
+  color: var(--ink);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 13.5px;
+  font-weight: 500;
+  min-height: 34px;
+  padding: 6px 2px;
+  position: relative;
+  scroll-snap-align: start;
+  touch-action: manipulation;
+  user-select: none;
+  white-space: nowrap;
+  -webkit-user-drag: none;
+}
+
+.mk-catbar-link-active {
+  font-weight: 700;
+}
+
+.mk-catbar-link-active::after {
+  background: var(--accent);
+  bottom: -11px;
+  content: "";
+  height: 2px;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
 /* ============ FOCUS ============ */
 a,
 input,
@@ -395,6 +445,7 @@ button:focus-visible {
     padding-left: 20px !important;
     padding-right: 20px !important;
     gap: 18px !important;
+    scroll-padding-inline: 20px !important;
   }
   .mk-carousel-card {
     flex: 0 0 240px !important;
