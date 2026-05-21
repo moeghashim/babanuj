@@ -68,6 +68,14 @@ export type Page = {
   updatedAt: string;
 };
 
+export type Policy = {
+  id: string;
+  title: string;
+  handle: string;
+  body: string;
+  url: string;
+};
+
 export type Product = Omit<ShopifyProduct, "variants" | "images"> & {
   variants: ProductVariant[];
   images: Image[];
@@ -243,6 +251,17 @@ export type ShopifyPageOperation = {
 export type ShopifyPagesOperation = {
   data: {
     pages: Connection<Page>;
+  };
+};
+
+export type ShopifyPoliciesOperation = {
+  data: {
+    shop: {
+      privacyPolicy?: Policy | null;
+      refundPolicy?: Policy | null;
+      shippingPolicy?: Policy | null;
+      termsOfService?: Policy | null;
+    };
   };
 };
 
