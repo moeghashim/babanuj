@@ -4,6 +4,7 @@ import { PlusIcon, CartIcon } from "components/babanuj/icons";
 import { useCart } from "components/cart/cart-context";
 import { addItem } from "components/cart/actions";
 import type { BabanujProduct } from "lib/babanuj/data";
+import { trackAddToCart } from "lib/meta/events";
 import type { Product, ProductVariant } from "lib/shopify/types";
 import { startTransition, type CSSProperties } from "react";
 
@@ -73,7 +74,16 @@ export function AddToBagButton({
       openCart();
       // Real Shopify cart line write. Server action invalidates cart cache
       // on success; on failure, the optimistic state rolls back.
-      await addItem(null, product.variantId);
+      const result = await addItem(null, product.variantId);
+      if (!result) {
+        trackAddToCart({
+          id: product.handle,
+          name: product.name,
+          brand: product.brand,
+          price: product.price,
+          quantity,
+        });
+      }
     });
   };
 

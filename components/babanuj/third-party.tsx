@@ -3,6 +3,7 @@
 import Script from "next/script";
 import { useState } from "react";
 import { useMountEffect } from "lib/use-mount-effect";
+import { MetaPixel } from "components/babanuj/meta-pixel";
 
 /**
  * Embed loaders for third-party tools — each renders ONLY when its env
@@ -13,6 +14,7 @@ import { useMountEffect } from "lib/use-mount-effect";
 export function ThirdPartyScripts() {
   const [canLoad, setCanLoad] = useState(false);
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const smileShopId = process.env.NEXT_PUBLIC_SMILE_SHOP_ID;
   const inboxShopId = process.env.NEXT_PUBLIC_SHOPIFY_INBOX_SHOP_ID;
 
@@ -29,36 +31,38 @@ export function ThirdPartyScripts() {
     };
   });
 
-  if (!canLoad) return null;
-
   return (
     <>
-      {/* Google Analytics 4 (gtag.js) */}
-      {gaId && (
+      {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
+
+      {!canLoad ? null : (
         <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="lazyOnload"
-          />
-          <Script id="ga4-init" strategy="lazyOnload">
-            {`
+          {/* Google Analytics 4 (gtag.js) */}
+          {gaId && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                strategy="lazyOnload"
+              />
+              <Script id="ga4-init" strategy="lazyOnload">
+                {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', '${gaId}', { anonymize_ip: true });
             `}
-          </Script>
-        </>
-      )}
+              </Script>
+            </>
+          )}
 
-      {/* Smile.io loyalty + referrals. The loader exposes the
+          {/* Smile.io loyalty + referrals. The loader exposes the
           `window.SmileUI` singleton; we call `initialize()` with the
           publishable key once it's available (the event may fire either
           before or after our listener registers). */}
-      {smileShopId && (
-        <>
-          <Script id="smile-init" strategy="lazyOnload">
-            {`
+          {smileShopId && (
+            <>
+              <Script id="smile-init" strategy="lazyOnload">
+                {`
               (function () {
                 var tries = 0;
                 var iv = setInterval(function () {
@@ -71,24 +75,26 @@ export function ThirdPartyScripts() {
                 }, 100);
               })();
             `}
-          </Script>
-          <Script
-            id="smile-loader"
-            src="https://js.smile.io/v1/smile-ui.js"
-            strategy="lazyOnload"
-            defer
-          />
-        </>
-      )}
+              </Script>
+              <Script
+                id="smile-loader"
+                src="https://js.smile.io/v1/smile-ui.js"
+                strategy="lazyOnload"
+                defer
+              />
+            </>
+          )}
 
-      {/* Shopify Inbox chat */}
-      {inboxShopId && (
-        <Script
-          id="shopify-inbox"
-          src={`https://cdn.shopify.com/shopifycloud/portable-wallets/latest/portable-wallets.iife.js?shop_id=${inboxShopId}`}
-          strategy="lazyOnload"
-          defer
-        />
+          {/* Shopify Inbox chat */}
+          {inboxShopId && (
+            <Script
+              id="shopify-inbox"
+              src={`https://cdn.shopify.com/shopifycloud/portable-wallets/latest/portable-wallets.iife.js?shop_id=${inboxShopId}`}
+              strategy="lazyOnload"
+              defer
+            />
+          )}
+        </>
       )}
     </>
   );
