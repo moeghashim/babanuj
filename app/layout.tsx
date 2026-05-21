@@ -15,8 +15,9 @@ import { baseUrl } from "lib/utils";
 
 const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
 const logoFont = localFont({
-  src: "../fonts/BricolageGrotesque-Bold.ttf",
+  src: "../fonts/Inter-Bold.ttf",
   variable: "--font-logo",
+  weight: "700",
   display: "swap",
 });
 

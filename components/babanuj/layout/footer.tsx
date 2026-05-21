@@ -55,6 +55,7 @@ export function MarketFooter() {
                 style={{
                   fontFamily:
                     "var(--font-logo), var(--font-bricolage), sans-serif",
+                  fontWeight: 700,
                   fontSize: 32,
                   letterSpacing: 0,
                   color: "#fff",
