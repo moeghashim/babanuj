@@ -13,7 +13,12 @@ const SHOP_LINKS = [
 const COLS = [
   {
     h: "Wholesale",
-    items: ["Request Catalog", "Become a Partner", "Private Label", "Foodservice"],
+    items: [
+      "Request Catalog",
+      "Become a Partner",
+      "Private Label",
+      "Foodservice",
+    ],
   },
   {
     h: "Help",
@@ -41,14 +46,19 @@ export function MarketFooter() {
         }}
       >
         <div>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: 16 }}>
-            <Link
-              href="/"
-              style={{ textDecoration: "none", color: "#fff" }}
-            >
+          <div
+            style={{ display: "flex", alignItems: "center", marginBottom: 16 }}
+          >
+            <Link href="/" style={{ textDecoration: "none", color: "#fff" }}>
               <span
                 className="display-heavy"
-                style={{ fontSize: 32, color: "#fff" }}
+                style={{
+                  fontFamily:
+                    "var(--font-logo), var(--font-bricolage), sans-serif",
+                  fontSize: 32,
+                  letterSpacing: 0,
+                  color: "#fff",
+                }}
               >
                 babanuj
               </span>
@@ -62,8 +72,8 @@ export function MarketFooter() {
               maxWidth: 320,
             }}
           >
-            Curated sweets from the Middle East and Türkiye — shipped fresh
-            from Houston to your door.
+            Curated sweets from the Middle East and Türkiye — shipped fresh from
+            Houston to your door.
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 18 }}>
             {["IG", "TT", "PIN", "LI"].map((s) => (
@@ -89,7 +99,10 @@ export function MarketFooter() {
         </div>
 
         <div>
-          <div className="micro" style={{ color: "var(--cream)", marginBottom: 16 }}>
+          <div
+            className="micro"
+            style={{ color: "var(--cream)", marginBottom: 16 }}
+          >
             Shop
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -106,7 +119,10 @@ export function MarketFooter() {
         </div>
 
         <div>
-          <div className="micro" style={{ color: "var(--cream)", marginBottom: 16 }}>
+          <div
+            className="micro"
+            style={{ color: "var(--cream)", marginBottom: 16 }}
+          >
             Brands
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -154,7 +170,7 @@ export function MarketFooter() {
           opacity: 0.6,
         }}
       >
-        <span>© 2026 Babanuj Inc.  ·  10099 Westpark Dr, Houston TX 77042</span>
+        <span>© 2026 Babanuj Inc. · 10099 Westpark Dr, Houston TX 77042</span>
         <div style={{ display: "flex", gap: 18 }}>
           <a href="#">Privacy</a>
           <a href="#">Terms</a>

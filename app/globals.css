@@ -591,6 +591,13 @@ button:focus-visible {
     display: none !important;
   }
   .mk-hero-slide > img {
+    inset: auto 16px 16px auto !important;
+    width: min(34vw, 128px) !important;
+    height: 84px !important;
+    border-radius: 18px;
+    opacity: 0.76;
+  }
+  .mk-hero-controls {
     display: none !important;
   }
 }

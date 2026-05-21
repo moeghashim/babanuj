@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { CloseIcon, MenuIcon } from "components/babanuj/icons";
 import { BRANDS } from "lib/babanuj/data";
@@ -36,7 +37,7 @@ export function MobileMenu() {
   });
 
   // Lock body scroll when open.
-  useEffect(() => {
+  React.useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
@@ -47,7 +48,7 @@ export function MobileMenu() {
   }, [open]);
 
   // Close on Escape.
-  useEffect(() => {
+  React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -110,10 +111,10 @@ export function MobileMenu() {
             href="/"
             onClick={close}
             style={{
-              fontFamily: "var(--font-bricolage), sans-serif",
+              fontFamily: "var(--font-logo), var(--font-bricolage), sans-serif",
               fontWeight: 800,
               fontSize: 24,
-              letterSpacing: "-0.02em",
+              letterSpacing: 0,
               color: "#000",
               textDecoration: "none",
             }}
@@ -146,11 +147,7 @@ export function MobileMenu() {
 
           <Section label="Brands">
             {BRANDS.map((b) => (
-              <DrawerLink
-                key={b.id}
-                href={`/brand/${b.id}`}
-                onSelect={close}
-              >
+              <DrawerLink key={b.id} href={`/brand/${b.id}`} onSelect={close}>
                 {b.name}
                 <span
                   style={{

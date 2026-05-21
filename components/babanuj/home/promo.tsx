@@ -1,6 +1,12 @@
 import { Photo } from "components/babanuj/photo";
 import { RubElHizb } from "components/babanuj/ornaments";
 import { ALL_PRODUCTS } from "lib/babanuj/data";
+import Link from "next/link";
+
+const MILAF_COLA = {
+  href: "/product/milaf-date-cola-240ml-8-1-fl-oz",
+  img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/41gllxLXI7L._SX679.jpg?v=1757873500",
+};
 
 export function MarketPromo() {
   return (
@@ -76,7 +82,7 @@ export function MarketPromo() {
         <div
           className="mk-promo-card"
           style={{
-            background: "var(--accent)",
+            background: "#111b12",
             color: "#fff",
             borderRadius: 24,
             padding: 36,
@@ -113,7 +119,7 @@ export function MarketPromo() {
               className="display-heavy"
               style={{ fontSize: 30, margin: "12px 0 8px", lineHeight: 1.1 }}
             >
-              Crush Dubai Chocolate is back
+              Milaf Date Cola is here
             </h3>
             <p
               style={{
@@ -123,24 +129,26 @@ export function MarketPromo() {
                 marginBottom: 16,
               }}
             >
-              The viral Dubai bar — kataifi pastry, pistachio cream, layered
-              into single-origin chocolate. Limit 4 per order.
+              A crisp Saudi date cola made with real date sweetness. Serve
+              chilled with maamoul, baklava, or your next pantry box.
             </p>
-            <button className="market-btn cream">Shop the Bar →</button>
+            <Link href={MILAF_COLA.href} className="market-btn cream">
+              Shop Milaf Cola →
+            </Link>
           </div>
           <div
             className="mk-promo-img"
             style={{
               borderRadius: 18,
-              background: "#2a1108",
+              background: "#d9c394",
               height: 180,
               position: "relative",
               overflow: "hidden",
             }}
           >
             <Photo
-              src={ALL_PRODUCTS[3]!.img}
-              alt="Crush Dubai Chocolate"
+              src={MILAF_COLA.img}
+              alt="Milaf Date Cola 240ml can"
               quality={60}
               sizes="(max-width: 900px) 200px, 200px"
               style={{ position: "absolute", inset: 0 }}
