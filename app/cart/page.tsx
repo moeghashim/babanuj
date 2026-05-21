@@ -7,6 +7,8 @@ export const metadata = {
   description: "Review your bag and check out.",
 };
 
+export const experimental_ppr = true;
+
 export default async function CartPage() {
   const raw = await getProducts({ sortKey: "BEST_SELLING" }).catch(() => []);
   const recommended = shopifyProductsToBabanuj(raw).slice(0, 4);

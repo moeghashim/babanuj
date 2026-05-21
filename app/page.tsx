@@ -19,6 +19,8 @@ export const metadata = {
   openGraph: { type: "website" },
 };
 
+export const experimental_ppr = true;
+
 export default async function HomePage() {
   const [bestsellersRaw, newRaw] = await Promise.all([
     getProducts({ sortKey: "BEST_SELLING" }).catch(() => []),

@@ -7,6 +7,8 @@ export const metadata = {
   description: "Browse every brand and line in the Babanuj pantry.",
 };
 
+export const experimental_ppr = true;
+
 export default async function SearchPage(props: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
