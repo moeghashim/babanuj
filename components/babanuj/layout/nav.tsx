@@ -38,7 +38,7 @@ export function MarketNav() {
             className="display-heavy"
             style={{
               fontSize: 30,
-              fontFamily: "var(--font-logo), var(--font-bricolage), sans-serif",
+              fontFamily: "var(--font-bricolage, ui-sans-serif), sans-serif",
               letterSpacing: "-0.02em",
               fontWeight: 800,
               color: "#000",

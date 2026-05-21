@@ -8,18 +8,11 @@ import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
 import { DeferredToaster } from "components/babanuj/deferred-toaster";
 import { getCart } from "lib/shopify";
-import localFont from "next/font/local";
 import { ReactNode } from "react";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
 
 const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
-const logoFont = localFont({
-  src: "../fonts/BricolageGrotesque-Bold.ttf",
-  variable: "--font-logo",
-  weight: "800",
-  display: "swap",
-});
 
 export const metadata = {
   metadataBase: new URL(baseUrl),
@@ -47,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`market-root ${logoFont.variable}`}>
+      <body className="market-root">
         <CartProvider cartPromise={cart}>
           <MarketAnnounce />
           <MarketUtility />
