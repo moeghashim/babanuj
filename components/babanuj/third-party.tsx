@@ -15,7 +15,6 @@ export function ThirdPartyScripts() {
   const [canLoad, setCanLoad] = useState(false);
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-  const smileShopId = process.env.NEXT_PUBLIC_SMILE_SHOP_ID;
   const inboxShopId = process.env.NEXT_PUBLIC_SHOPIFY_INBOX_SHOP_ID;
 
   useMountEffect(() => {
@@ -52,36 +51,6 @@ export function ThirdPartyScripts() {
               gtag('config', '${gaId}', { anonymize_ip: true });
             `}
               </Script>
-            </>
-          )}
-
-          {/* Smile.io loyalty + referrals. The loader exposes the
-          `window.SmileUI` singleton; we call `initialize()` with the
-          publishable key once it's available (the event may fire either
-          before or after our listener registers). */}
-          {smileShopId && (
-            <>
-              <Script id="smile-init" strategy="lazyOnload">
-                {`
-              (function () {
-                var tries = 0;
-                var iv = setInterval(function () {
-                  if (window.SmileUI && typeof window.SmileUI.initialize === 'function') {
-                    window.SmileUI.initialize({ publishableKey: '${smileShopId}' });
-                    clearInterval(iv);
-                  } else if (++tries > 100) {
-                    clearInterval(iv);
-                  }
-                }, 100);
-              })();
-            `}
-              </Script>
-              <Script
-                id="smile-loader"
-                src="https://js.smile.io/v1/smile-ui.js"
-                strategy="lazyOnload"
-                defer
-              />
             </>
           )}
 
