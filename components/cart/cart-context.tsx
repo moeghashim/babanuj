@@ -29,10 +29,8 @@ type CartAction =
 
 type CartContextType = {
   cart: Cart | undefined;
-  updateCartItem: (
-    merchandiseId: string,
-    updateType: UpdateType,
-  ) => void;
+  setCart: (cart: Cart) => void;
+  updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
   addCartItem: (variant: ProductVariant, product: Product) => void;
   isCartOpen: boolean;
   openCart: () => void;
@@ -207,16 +205,14 @@ export function CartProvider({
   cartPromise: Promise<Cart | undefined>;
 }) {
   const initialCart = use(cartPromise);
+  const [baseCart, setBaseCart] = useState(initialCart);
   const [optimisticCart, updateOptimisticCart] = useOptimistic(
-    initialCart,
+    baseCart,
     cartReducer,
   );
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const updateCartItem = (
-    merchandiseId: string,
-    updateType: UpdateType,
-  ) => {
+  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
     updateOptimisticCart({
       type: "UPDATE_ITEM",
       payload: { merchandiseId, updateType },
@@ -236,6 +232,7 @@ export function CartProvider({
   const value = useMemo(
     () => ({
       cart: optimisticCart,
+      setCart: setBaseCart,
       updateCartItem,
       addCartItem,
       isCartOpen,
@@ -245,9 +242,7 @@ export function CartProvider({
     [optimisticCart, isCartOpen],
   );
 
-  return (
-    <CartContext.Provider value={value}>{children}</CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export function useCart() {

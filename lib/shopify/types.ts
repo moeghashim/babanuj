@@ -115,6 +115,12 @@ export type ShopifyCart = {
   totalQuantity: number;
 };
 
+export type ShopifyUserError = {
+  field: string[] | null;
+  message: string;
+  code?: string | null;
+};
+
 export type ShopifyCollection = {
   handle: string;
   title: string;
@@ -155,13 +161,25 @@ export type ShopifyCartOperation = {
 };
 
 export type ShopifyCreateCartOperation = {
-  data: { cartCreate: { cart: ShopifyCart } };
+  data: {
+    cartCreate: {
+      cart: ShopifyCart | null;
+      userErrors: ShopifyUserError[];
+    };
+  };
+  variables: {
+    lineItems?: {
+      merchandiseId: string;
+      quantity: number;
+    }[];
+  };
 };
 
 export type ShopifyAddToCartOperation = {
   data: {
     cartLinesAdd: {
-      cart: ShopifyCart;
+      cart: ShopifyCart | null;
+      userErrors: ShopifyUserError[];
     };
   };
   variables: {

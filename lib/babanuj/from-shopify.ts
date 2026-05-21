@@ -4,11 +4,7 @@
 
 import type { Product, Collection } from "lib/shopify/types";
 import type { BabanujProduct, BabanujCategory } from "./data";
-import {
-  CATEGORIES,
-  VENDOR_TO_BRAND_ID,
-  findCategory,
-} from "./data";
+import { CATEGORIES, VENDOR_TO_BRAND_ID, findCategory } from "./data";
 
 // Background swatch shown under product images while they load. Map by
 // brand for visual coherence; fall back to a sage neutral.
@@ -62,12 +58,18 @@ export function shopifyProductToBabanuj(p: Product): BabanujProduct {
   const vendor = p.vendor ?? "";
   const brandId = VENDOR_TO_BRAND_ID[vendor] ?? null;
   const hue = (brandId && HUE_BY_BRAND[brandId]) ?? HUE_FALLBACK;
-  const price = Number.parseFloat(p.priceRange.minVariantPrice.amount);
-  const firstVariantId = p.variants[0]?.id ?? p.id;
+  const firstAvailableVariant = p.variants.find(
+    (variant) => variant.availableForSale,
+  );
+  const firstVariant = firstAvailableVariant ?? p.variants[0];
+  const price = Number.parseFloat(
+    firstVariant?.price.amount ?? p.priceRange.minVariantPrice.amount,
+  );
 
   return {
     id: p.id,
-    variantId: firstVariantId,
+    variantId: firstVariant?.id ?? p.id,
+    availableForSale: Boolean(p.availableForSale && firstAvailableVariant),
     handle: p.handle,
     name: p.title,
     brand: displayBrand(vendor || "Babanuj"),
