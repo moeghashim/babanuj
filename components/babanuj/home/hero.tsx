@@ -33,7 +33,11 @@ const SLIDES: Slide[] = [
     titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
     sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
     ctas: [
-      { label: "Shop the Bar", href: "/product/crush-dubai-chocolate", variant: "warn" },
+      {
+        label: "Shop the Bar",
+        href: "/product/crush-dubai-chocolate",
+        variant: "warn",
+      },
       { label: "Read the story", href: "/brand/crush", variant: "cream" },
     ],
     align: "right",
@@ -44,8 +48,16 @@ const SLIDES: Slide[] = [
     titleParts: ["Maamoul,", { italic: "baked this morning." }],
     sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
     ctas: [
-      { label: "Order Maamoul", href: "/product/maamoul-date-cookies", variant: "warn" },
-      { label: "Shop Bab Sharqi", href: "/collections/cookies", variant: "cream" },
+      {
+        label: "Order Maamoul",
+        href: "/product/maamoul-date-cookies",
+        variant: "warn",
+      },
+      {
+        label: "Shop Bab Sharqi",
+        href: "/collections/cookies",
+        variant: "cream",
+      },
     ],
     align: "left",
   },
@@ -55,8 +67,16 @@ const SLIDES: Slide[] = [
     titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
     sub: "Mix any six pieces from our pantry — we pack it, wrap it, ship it.",
     ctas: [
-      { label: "Build a Box", href: "/collections/gift-boxes", variant: "warn" },
-      { label: "See examples", href: "/collections/gift-boxes", variant: "cream" },
+      {
+        label: "Build a Box",
+        href: "/collections/gift-boxes",
+        variant: "warn",
+      },
+      {
+        label: "See examples",
+        href: "/collections/gift-boxes",
+        variant: "cream",
+      },
     ],
     align: "right",
   },
@@ -67,7 +87,7 @@ export function MarketHero() {
   const [paused, setPaused] = useState(false);
   // On mobile we hide slides 2-4 (LCP win) so the carousel has nothing to
   // rotate to — track that here and skip the interval entirely.
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
   const len = SLIDES.length;
 
   useEffect(() => {
@@ -102,7 +122,9 @@ export function MarketHero() {
         {SLIDES.map((s, i) => (
           <div
             key={i}
-            className={i === 0 ? "mk-hero-slide" : "mk-hero-slide mk-hero-slide-rest"}
+            className={
+              i === 0 ? "mk-hero-slide" : "mk-hero-slide mk-hero-slide-rest"
+            }
             style={{
               position: "absolute",
               inset: 0,
@@ -111,20 +133,22 @@ export function MarketHero() {
               pointerEvents: i === idx ? "auto" : "none",
             }}
           >
-            <Photo
-              src={s.img}
-              alt=""
-              priority={i === 0}
-              sizes="100vw"
-              style={{
-                position: "absolute",
-                inset: 0,
-                transform: i === idx ? "scale(1.06)" : "scale(1)",
-                transformOrigin:
-                  s.align === "left" ? "right center" : "left center",
-                transition: "transform 6.5s ease",
-              }}
-            />
+            {!isMobile && (
+              <Photo
+                src={s.img}
+                alt=""
+                quality={i === 0 ? 60 : 75}
+                sizes="100vw"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  transform: i === idx ? "scale(1.06)" : "scale(1)",
+                  transformOrigin:
+                    s.align === "left" ? "right center" : "left center",
+                  transition: "transform 6.5s ease",
+                }}
+              />
+            )}
             <div
               style={{
                 position: "absolute",

@@ -1,4 +1,8 @@
+"use client";
+
 import Script from "next/script";
+import { useState } from "react";
+import { useMountEffect } from "lib/use-mount-effect";
 
 /**
  * Embed loaders for third-party tools — each renders ONLY when its env
@@ -7,9 +11,25 @@ import Script from "next/script";
  * client without round-trips.
  */
 export function ThirdPartyScripts() {
+  const [canLoad, setCanLoad] = useState(false);
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const smileShopId = process.env.NEXT_PUBLIC_SMILE_SHOP_ID;
   const inboxShopId = process.env.NEXT_PUBLIC_SHOPIFY_INBOX_SHOP_ID;
+
+  useMountEffect(() => {
+    const load = () => setCanLoad(true);
+    const timeout = window.setTimeout(load, 6500);
+    window.addEventListener("pointerdown", load, { once: true, passive: true });
+    window.addEventListener("keydown", load, { once: true });
+
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener("pointerdown", load);
+      window.removeEventListener("keydown", load);
+    };
+  });
+
+  if (!canLoad) return null;
 
   return (
     <>

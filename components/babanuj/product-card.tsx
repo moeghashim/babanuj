@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import { HeartIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
@@ -20,13 +17,9 @@ export function MarketProductCard({
   carouselCard = false,
   showAddOnHover = true,
 }: Props) {
-  const [hover, setHover] = useState(false);
-
   return (
     <Link
       href={`/product/${p.handle}`}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
       className={"market-card" + (carouselCard ? " mk-carousel-card" : "")}
       style={{
         position: "relative",
@@ -46,6 +39,12 @@ export function MarketProductCard({
         <Photo
           src={p.img}
           alt={p.name}
+          quality={carouselCard ? 60 : 75}
+          sizes={
+            carouselCard
+              ? "(max-width: 900px) 64px, 280px"
+              : "(max-width: 900px) 50vw, 25vw"
+          }
           style={{ position: "absolute", inset: 0 }}
         />
         {p.tag && (
@@ -62,12 +61,8 @@ export function MarketProductCard({
             <span className="market-chip chip-soft">{p.tag}</span>
           </div>
         )}
-        <button
-          aria-label="Wishlist"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+        <span
+          aria-hidden="true"
           style={{
             position: "absolute",
             top: 12,
@@ -85,21 +80,26 @@ export function MarketProductCard({
           }}
         >
           <HeartIcon width={16} height={16} />
-        </button>
-        <div
-          style={{
-            position: "absolute",
-            left: 12,
-            right: 12,
-            bottom: 12,
-            opacity: showAddOnHover ? (hover ? 1 : 0) : 1,
-            transform:
-              showAddOnHover && !hover ? "translateY(8px)" : "translateY(0)",
-            transition: "opacity .2s, transform .2s",
-          }}
-        >
-          <AddToBagButton product={p} variant="quick-add" style={{ width: "100%" }} />
-        </div>
+        </span>
+        {!carouselCard && (
+          <div
+            className={
+              "mk-quick-add" + (showAddOnHover ? "" : " mk-quick-add-visible")
+            }
+            style={{
+              position: "absolute",
+              left: 12,
+              right: 12,
+              bottom: 12,
+            }}
+          >
+            <AddToBagButton
+              product={p}
+              variant="quick-add"
+              style={{ width: "100%" }}
+            />
+          </div>
+        )}
       </div>
 
       <div style={{ padding: 16 }}>
