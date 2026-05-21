@@ -102,7 +102,12 @@ export function MarketProductCard({
         )}
       </div>
 
-      <div style={{ padding: 16 }}>
+      <div
+        style={{
+          padding: 16,
+          fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
+        }}
+      >
         <div className="micro" style={{ fontSize: 10, color: "var(--ink-2)" }}>
           {p.brand}
         </div>

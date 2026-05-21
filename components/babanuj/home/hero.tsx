@@ -126,7 +126,7 @@ export function MarketHero() {
                 priority={i === 0}
                 fetchPriority={i === 0 ? "high" : "auto"}
                 quality={i === 0 ? 60 : 75}
-                sizes="(max-width: 768px) 128px, 100vw"
+                sizes="(max-width: 768px) 100vw, 100vw"
                 style={{
                   position: "absolute",
                   inset: 0,

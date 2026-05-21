@@ -318,6 +318,7 @@ button:focus-visible {
   .mk-hero-copy p {
     font-size: 13.5px !important;
     margin-top: 14px !important;
+    max-width: 300px !important;
   }
   .mk-hero-ctas {
     gap: 8px !important;
@@ -591,11 +592,12 @@ button:focus-visible {
     display: none !important;
   }
   .mk-hero-slide > img {
-    inset: auto 16px 16px auto !important;
-    width: min(34vw, 128px) !important;
-    height: 84px !important;
-    border-radius: 18px;
-    opacity: 0.76;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0;
+    opacity: 0.72;
+    object-position: center bottom;
   }
   .mk-hero-controls {
     display: none !important;
