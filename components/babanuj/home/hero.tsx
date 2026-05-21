@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, TruckIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
 import { ALL_PRODUCTS, BRANDS, HERO_IMG } from "lib/babanuj/data";
+import { useMountEffect } from "lib/use-mount-effect";
 
 type Slide = {
   img: string;
   chip: string;
   titleParts: Array<string | { italic: string }>;
   sub: string;
-  ctas: Array<{ label: string; href: string; variant: "warn" | "cream" }>;
+  cta: { label: string; href: string; variant: "warn" | "cream" };
   align: "left" | "right";
 };
 
@@ -21,10 +23,7 @@ const SLIDES: Slide[] = [
     chip: "HEIRLOOM SWEETS · SHIPPED FRESH",
     titleParts: ["Heirloom sweets,", { italic: "delivered weekly." }],
     sub: "Curated Türkish, Syrian and Gulf sweet houses — shipped fresh from Houston.",
-    ctas: [
-      { label: "Shop the Pantry", href: "/search", variant: "warn" },
-      { label: "Read our story", href: "/brand/babanuj", variant: "cream" },
-    ],
+    cta: { label: "Shop the Pantry", href: "/search", variant: "warn" },
     align: "left",
   },
   {
@@ -32,14 +31,11 @@ const SLIDES: Slide[] = [
     chip: "JUST DROPPED · LIMITED RUN",
     titleParts: ["The Crush Dubai bar", { italic: "is back in stock." }],
     sub: "Kataifi pastry. Pistachio cream. Single-origin chocolate. Hand-finished in Dubai. Limit 4 per order.",
-    ctas: [
-      {
-        label: "Shop the Bar",
-        href: "/product/crush-dubai-chocolate-bar-210g",
-        variant: "warn",
-      },
-      { label: "Read the story", href: "/brand/crush", variant: "cream" },
-    ],
+    cta: {
+      label: "Shop the Bar",
+      href: "/product/crush-dubai-chocolate-bar-210g",
+      variant: "warn",
+    },
     align: "right",
   },
   {
@@ -47,18 +43,11 @@ const SLIDES: Slide[] = [
     chip: "SPRING DROP · BAB SHARQI",
     titleParts: ["Maamoul,", { italic: "baked this morning." }],
     sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
-    ctas: [
-      {
-        label: "Order Maamoul",
-        href: "/product/zaitoune-maamoul-date-250g",
-        variant: "warn",
-      },
-      {
-        label: "Shop Bab Sharqi",
-        href: "/collections/cookies",
-        variant: "cream",
-      },
-    ],
+    cta: {
+      label: "Order Maamoul",
+      href: "/product/zaitoune-maamoul-date-250g",
+      variant: "warn",
+    },
     align: "left",
   },
   {
@@ -66,18 +55,11 @@ const SLIDES: Slide[] = [
     chip: "BUILD YOUR OWN GIFT BOX",
     titleParts: ["Pick six.", { italic: "We pack, wrap, ship." }],
     sub: "Mix any six pieces from our pantry — we pack it, wrap it, ship it.",
-    ctas: [
-      {
-        label: "Build a Box",
-        href: "/collections/gift-boxes",
-        variant: "warn",
-      },
-      {
-        label: "See examples",
-        href: "/collections/gift-boxes",
-        variant: "cream",
-      },
-    ],
+    cta: {
+      label: "Build a Box",
+      href: "/collections/gift-boxes",
+      variant: "warn",
+    },
     align: "right",
   },
 ];
@@ -90,16 +72,20 @@ export function MarketHero() {
   const [isMobile, setIsMobile] = useState(true);
   const len = SLIDES.length;
 
-  useEffect(() => {
+  useMountEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
-    const sync = () => setIsMobile(mq.matches);
+    const sync = () => {
+      setIsMobile(mq.matches);
+      if (mq.matches) setIdx(0);
+    };
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
-  }, []);
+  });
 
-  useEffect(() => {
-    if (paused || isMobile) return;
+  React.useEffect(() => {
+    if (isMobile) return;
+    if (paused) return;
     const t = setInterval(() => setIdx((i) => (i + 1) % len), 5500);
     return () => clearInterval(t);
   }, [paused, len, isMobile]);
@@ -133,12 +119,14 @@ export function MarketHero() {
               pointerEvents: i === idx ? "auto" : "none",
             }}
           >
-            {!isMobile && (
+            {(!isMobile || i === 0) && (
               <Photo
                 src={s.img}
                 alt=""
+                priority={i === 0}
+                fetchPriority={i === 0 ? "high" : "auto"}
                 quality={i === 0 ? 60 : 75}
-                sizes="100vw"
+                sizes="(max-width: 768px) 128px, 100vw"
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -232,17 +220,13 @@ export function MarketHero() {
                 className="mk-hero-ctas"
                 style={{ display: "flex", gap: 12, marginTop: 28 }}
               >
-                {s.ctas.map((c, j) => (
-                  <Link
-                    key={j}
-                    href={c.href}
-                    className={`market-btn ${c.variant}`}
-                    tabIndex={i === idx ? 0 : -1}
-                  >
-                    {c.label}
-                    {j === 0 && " →"}
-                  </Link>
-                ))}
+                <Link
+                  href={s.cta.href}
+                  className={`market-btn ${s.cta.variant}`}
+                  tabIndex={i === idx ? 0 : -1}
+                >
+                  {s.cta.label} →
+                </Link>
               </div>
             </div>
           </div>
@@ -271,6 +255,7 @@ export function MarketHero() {
         </div>
 
         <div
+          className="mk-hero-controls"
           style={{
             position: "absolute",
             bottom: 24,
@@ -341,7 +326,7 @@ export function MarketHero() {
               backdropFilter: "blur(4px)",
             }}
           >
-            0{idx + 1} / 0{len}
+            0{idx + 1} / 0{isMobile ? 1 : len}
           </span>
         </div>
 
