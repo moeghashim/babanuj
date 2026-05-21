@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useFormStatus } from "react-dom";
 import { useMountEffect } from "lib/use-mount-effect";
+import { trackInitiateCheckout } from "lib/meta/events";
 import {
   CartIcon,
   CloseIcon,
@@ -116,9 +117,7 @@ export default function CartModal() {
               className="display-heavy"
               style={{ fontSize: 26, marginTop: 2, lineHeight: 1 }}
             >
-              {count === 0
-                ? "Empty"
-                : `${count} item${count === 1 ? "" : "s"}`}
+              {count === 0 ? "Empty" : `${count} item${count === 1 ? "" : "s"}`}
             </div>
           </div>
           <button
@@ -407,7 +406,10 @@ export default function CartModal() {
               >
                 View bag
               </Link>
-              <form action={redirectToCheckout}>
+              <form
+                action={redirectToCheckout}
+                onSubmit={() => trackInitiateCheckout(cart)}
+              >
                 <CheckoutButton />
               </form>
             </div>
