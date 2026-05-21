@@ -70,6 +70,7 @@ import {
   ShopifyProductsOperation,
   ShopifyRemoveFromCartOperation,
   ShopifyUpdateCartOperation,
+  ShopifyUserError,
 } from "./types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
@@ -154,6 +155,21 @@ const reshapeCart = (cart: ShopifyCart): Cart => {
   };
 };
 
+function formatShopifyUserErrors(errors: ShopifyUserError[] = []) {
+  return errors
+    .map((error) => {
+      const path = error.field?.join(".");
+      const code = error.code ? ` (${error.code})` : "";
+      return `${path ? `${path}: ` : ""}${error.message}${code}`;
+    })
+    .join("; ");
+}
+
+function throwIfShopifyUserErrors(errors: ShopifyUserError[] = []) {
+  if (errors.length === 0) return;
+  throw new Error(formatShopifyUserErrors(errors));
+}
+
 const reshapeCollection = (
   collection: ShopifyCollection,
 ): Collection | undefined => {
@@ -231,32 +247,50 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
-export async function createCart(): Promise<Cart> {
+export async function createCart(
+  lineItems?: { merchandiseId: string; quantity: number }[],
+): Promise<Cart> {
   if (!endpoint) {
     return emptyCart();
   }
   const res = await shopifyFetch<ShopifyCreateCartOperation>({
     query: createCartMutation,
+    variables: {
+      lineItems,
+    },
   });
 
-  return reshapeCart(res.body.data.cartCreate.cart);
+  throwIfShopifyUserErrors(res.body.data.cartCreate.userErrors);
+  const cart = res.body.data.cartCreate.cart;
+  if (!cart) {
+    throw new Error("Shopify cartCreate returned no cart");
+  }
+
+  return reshapeCart(cart);
 }
 
 export async function addToCart(
   lines: { merchandiseId: string; quantity: number }[],
+  cartId?: string,
 ): Promise<Cart> {
   if (!endpoint) {
     return emptyCart();
   }
-  const cartId = (await cookies()).get("cartId")?.value!;
+  const resolvedCartId = cartId ?? (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
     query: addToCartMutation,
     variables: {
-      cartId,
+      cartId: resolvedCartId,
       lines,
     },
   });
-  return reshapeCart(res.body.data.cartLinesAdd.cart);
+  throwIfShopifyUserErrors(res.body.data.cartLinesAdd.userErrors);
+  const cart = res.body.data.cartLinesAdd.cart;
+  if (!cart) {
+    throw new Error("Shopify cartLinesAdd returned no cart");
+  }
+
+  return reshapeCart(cart);
 }
 
 export async function removeFromCart(lineIds: string[]): Promise<Cart> {

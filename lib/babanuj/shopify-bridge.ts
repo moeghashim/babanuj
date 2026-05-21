@@ -23,7 +23,7 @@ function variantFromProduct(p: BabanujProduct): ProductVariant {
   return {
     id: `gid://babanuj/Variant/${p.id}`,
     title: "Default Title",
-    availableForSale: true,
+    availableForSale: p.availableForSale ?? true,
     selectedOptions: [{ name: "Title", value: "Default Title" }],
     price: { amount: p.price.toFixed(2), currencyCode: CURRENCY },
   };
@@ -40,13 +40,11 @@ export function toShopifyProduct(p: BabanujProduct): Product {
   return {
     id: `gid://babanuj/Product/${p.id}`,
     handle: p.handle,
-    availableForSale: true,
+    availableForSale: p.availableForSale ?? true,
     title: p.name,
     description: `${p.name} — ${p.weight}. Made by ${p.brand}.`,
     descriptionHtml: `<p>${p.name} — ${p.weight}. Made by ${p.brand}.</p>`,
-    options: [
-      { id: "default", name: "Title", values: ["Default Title"] },
-    ],
+    options: [{ id: "default", name: "Title", values: ["Default Title"] }],
     priceRange: {
       minVariantPrice: { amount: p.price.toFixed(2), currencyCode: CURRENCY },
       maxVariantPrice: { amount: p.price.toFixed(2), currencyCode: CURRENCY },
@@ -100,7 +98,11 @@ export function productsInCollection(handle: string): Product[] {
   return ALL_PRODUCTS.filter(cat.filter).map(toShopifyProduct);
 }
 
-export function searchProducts(query?: string, sortKey?: string, reverse?: boolean): Product[] {
+export function searchProducts(
+  query?: string,
+  sortKey?: string,
+  reverse?: boolean,
+): Product[] {
   let r = [...ALL_PRODUCTS];
   if (query) {
     const q = query.toLowerCase();

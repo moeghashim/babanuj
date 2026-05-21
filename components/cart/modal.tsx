@@ -54,6 +54,7 @@ export default function CartModal() {
   }, [isOpen, closeCart]);
 
   const count = cart?.totalQuantity ?? 0;
+  const visibleCount = mounted ? count : 0;
   const lines = cart?.lines ?? [];
   const subtotal = Number(cart?.cost.totalAmount.amount ?? 0);
   const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
@@ -470,7 +471,7 @@ export default function CartModal() {
           fontSize: 13,
         }}
       >
-        <CartIcon width={18} height={18} /> Bag · {count}
+        <CartIcon width={18} height={18} /> Bag · {visibleCount}
       </button>
       {mounted && createPortal(drawer, document.body)}
     </>

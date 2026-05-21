@@ -23,6 +23,7 @@ export type BabanujProduct = {
   /** Real Shopify ProductVariant GID for the default variant. Set by the
    *  adapter from live data; falls back to a synthetic ID for seed data. */
   variantId: string;
+  availableForSale?: boolean;
   handle: string;
   name: string;
   brand: string;
@@ -91,8 +92,7 @@ export const BRANDS: BabanujBrand[] = [
     origin: "Gulf",
     est: 2020,
     tag: "Premium Gulf Dates & Confections",
-    blurb:
-      "Stuffed dates, chocolate-dipped dates, and Gulf-style confections.",
+    blurb: "Stuffed dates, chocolate-dipped dates, and Gulf-style confections.",
     long: "Leen is built around the date — Medjool, Khudri, and Sukkari from family groves in the Gulf, hand-stuffed with pistachio, almond, and chocolate. Every order is packed within forty-eight hours of leaving the kitchen.",
     note: "Hand-stuffed",
     accent: "#5e3a1e",
@@ -300,16 +300,14 @@ export const CATEGORIES: BabanujCategory[] = [
     id: "cookies",
     name: "Cookies & Maamoul",
     hue: "#d6a06e",
-    blurb:
-      "Maamoul, Barazek, Petit Four. Tea-time classics worked by hand.",
+    blurb: "Maamoul, Barazek, Petit Four. Tea-time classics worked by hand.",
     filter: (p) => /maamoul|cookie|barazek|ghraybeh|petit|ka'ak/i.test(p.name),
   },
   {
     id: "turkish-delight",
     name: "Turkish Delight",
     hue: "#e8b0a8",
-    blurb:
-      "Pillowy lokum dusted in powdered sugar. Rose, pistachio, mastic.",
+    blurb: "Pillowy lokum dusted in powdered sugar. Rose, pistachio, mastic.",
     filter: (p) => /turkish delight|lokum/i.test(p.name),
   },
   {
@@ -484,7 +482,10 @@ export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {
       { year: "2023", t: "Babanuj launches as a curated import house." },
       { year: "2024", t: "First in-house gift boxes ship for Ramadan + Eid." },
       { year: "2025", t: "Holiday line expanded to 23 SKUs." },
-      { year: "2026", t: "Wholesale program opens to U.S. specialty retailers." },
+      {
+        year: "2026",
+        t: "Wholesale program opens to U.S. specialty retailers.",
+      },
     ],
   },
   leen: {
@@ -561,7 +562,9 @@ export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {
 
 export const fmtPrice = (n: number) => "$" + n.toFixed(2);
 
-export function findProductByHandle(handle: string): BabanujProduct | undefined {
+export function findProductByHandle(
+  handle: string,
+): BabanujProduct | undefined {
   return ALL_PRODUCTS.find((p) => p.handle === handle);
 }
 

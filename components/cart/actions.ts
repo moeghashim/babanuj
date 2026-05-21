@@ -14,37 +14,45 @@ import { redirect } from "next/navigation";
 
 export async function addItem(
   prevState: any,
-  selectedVariantId: string | undefined
+  selectedVariantId: string | undefined,
+  quantity: number = 1,
 ) {
   if (!selectedVariantId) {
     return "Error adding item to cart";
   }
 
+  const lineQuantity = Math.max(1, Math.floor(quantity));
+  const lines = [{ merchandiseId: selectedVariantId, quantity: lineQuantity }];
+
   try {
-    await ensureCart();
-    await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
+    const store = await cookies();
+    const cartId = store.get("cartId")?.value;
+    const cart = cartId
+      ? await addToCart(lines, cartId)
+      : await createCart(lines);
+
+    if (!cartId) {
+      store.set("cartId", cart.id!);
+    }
+
     updateTag(TAGS.cart);
+    return cart;
   } catch (e) {
+    console.error("Error adding item to cart", e);
     // If the existing cart was stale (Shopify dropped it after checkout),
     // recreate and retry once. addToCart with no cart returns a non-200 or
     // throws; either way we want a fresh cart rather than a silent failure
     // that would revert the optimistic UI to 0.
     try {
-      const fresh = await createCart();
+      const fresh = await createCart(lines);
       (await cookies()).set("cartId", fresh.id!);
-      await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
       updateTag(TAGS.cart);
-    } catch {
+      return fresh;
+    } catch (retryError) {
+      console.error("Error adding item to fresh cart", retryError);
       return "Error adding item to cart";
     }
   }
-}
-
-async function ensureCart() {
-  const store = await cookies();
-  if (store.get("cartId")?.value) return;
-  const fresh = await createCart();
-  store.set("cartId", fresh.id!);
 }
 
 export async function removeItem(prevState: any, merchandiseId: string) {
@@ -56,7 +64,7 @@ export async function removeItem(prevState: any, merchandiseId: string) {
     }
 
     const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId
+      (line) => line.merchandise.id === merchandiseId,
     );
 
     if (lineItem && lineItem.id) {
@@ -75,7 +83,7 @@ export async function updateItemQuantity(
   payload: {
     merchandiseId: string;
     quantity: number;
-  }
+  },
 ) {
   const { merchandiseId, quantity } = payload;
 
@@ -87,7 +95,7 @@ export async function updateItemQuantity(
     }
 
     const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId
+      (line) => line.merchandise.id === merchandiseId,
     );
 
     if (lineItem && lineItem.id) {
@@ -123,4 +131,3 @@ export async function redirectToCheckout() {
   }
   redirect(url);
 }
-

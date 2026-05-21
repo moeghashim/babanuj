@@ -2,10 +2,9 @@
 
 import { PlusIcon, CartIcon } from "components/babanuj/icons";
 import { useCart } from "components/cart/cart-context";
-import { addItem } from "components/cart/actions";
 import type { BabanujProduct } from "lib/babanuj/data";
 import { trackAddToCart } from "lib/meta/events";
-import type { Product, ProductVariant } from "lib/shopify/types";
+import type { Cart, Product, ProductVariant } from "lib/shopify/types";
 import { startTransition, type CSSProperties } from "react";
 
 type Variant = "icon" | "quick-add" | "full";
@@ -18,6 +17,23 @@ type Props = {
   label?: string;
 };
 
+async function addItemToCart(merchandiseId: string, quantity: number) {
+  const response = await fetch("/api/cart/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ merchandiseId, quantity }),
+  });
+
+  if (!response.ok) {
+    return "Error adding item to cart";
+  }
+
+  const data = (await response.json()) as { cart?: Cart };
+  return data.cart ?? "Error adding item to cart";
+}
+
 export function AddToBagButton({
   product,
   variant = "quick-add",
@@ -25,21 +41,22 @@ export function AddToBagButton({
   style,
   label,
 }: Props) {
-  const { addCartItem, openCart } = useCart();
+  const { addCartItem, openCart, setCart } = useCart();
+  const isAvailable = product.availableForSale !== false;
 
   // Shape a minimal Product/ProductVariant for the optimistic update so the
   // cart reducer has the data it needs. The IDs are the real Shopify GIDs.
   const shopifyVariant: ProductVariant = {
     id: product.variantId,
     title: "Default Title",
-    availableForSale: true,
+    availableForSale: isAvailable,
     selectedOptions: [{ name: "Title", value: "Default Title" }],
     price: { amount: product.price.toFixed(2), currencyCode: "USD" },
   };
   const shopifyProduct: Product = {
     id: product.id,
     handle: product.handle,
-    availableForSale: true,
+    availableForSale: isAvailable,
     title: product.name,
     description: "",
     descriptionHtml: "",
@@ -66,16 +83,18 @@ export function AddToBagButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!isAvailable) return;
     startTransition(async () => {
       // Optimistic UI: instant cart badge / drawer update.
       for (let i = 0; i < quantity; i++) {
         addCartItem(shopifyVariant, shopifyProduct);
       }
       openCart();
-      // Real Shopify cart line write. Server action invalidates cart cache
-      // on success; on failure, the optimistic state rolls back.
-      const result = await addItem(null, product.variantId);
-      if (!result) {
+      // Real Shopify cart line write. The API route returns the confirmed
+      // cart so the optimistic state can be committed without a refresh race.
+      const result = await addItemToCart(product.variantId, quantity);
+      if (typeof result !== "string") {
+        setCart(result);
         trackAddToCart({
           id: product.handle,
           name: product.name,
@@ -92,6 +111,7 @@ export function AddToBagButton({
       <button
         onClick={handleClick}
         aria-label="Quick add"
+        disabled={!isAvailable}
         style={{
           width: 36,
           height: 36,
@@ -99,7 +119,8 @@ export function AddToBagButton({
           background: "#fff",
           color: "var(--ink)",
           border: 0,
-          cursor: "pointer",
+          cursor: isAvailable ? "pointer" : "not-allowed",
+          opacity: isAvailable ? 1 : 0.55,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -117,6 +138,7 @@ export function AddToBagButton({
       <button
         onClick={handleClick}
         className="market-btn"
+        disabled={!isAvailable}
         style={{
           flex: 1,
           justifyContent: "center",
@@ -126,7 +148,9 @@ export function AddToBagButton({
         }}
       >
         <CartIcon width={16} height={16} />
-        {label ?? `Add to Bag — $${(product.price * quantity).toFixed(2)}`}
+        {isAvailable
+          ? (label ?? `Add to Bag — $${(product.price * quantity).toFixed(2)}`)
+          : "Sold out"}
       </button>
     );
   }
@@ -134,7 +158,8 @@ export function AddToBagButton({
   return (
     <button
       onClick={handleClick}
-      aria-label="Quick add"
+      aria-label={isAvailable ? "Quick add" : "Sold out"}
+      disabled={!isAvailable}
       style={{
         padding: "10px 14px",
         background: "#fff",
@@ -143,7 +168,8 @@ export function AddToBagButton({
         fontFamily: "inherit",
         fontWeight: 700,
         fontSize: 13,
-        cursor: "pointer",
+        cursor: isAvailable ? "pointer" : "not-allowed",
+        opacity: isAvailable ? 1 : 0.55,
         borderRadius: 999,
         display: "flex",
         alignItems: "center",
@@ -152,7 +178,8 @@ export function AddToBagButton({
         ...style,
       }}
     >
-      <PlusIcon width={16} height={16} /> {label ?? "Add to Bag"}
+      <PlusIcon width={16} height={16} />{" "}
+      {isAvailable ? (label ?? "Add to Bag") : "Sold out"}
     </button>
   );
 }
