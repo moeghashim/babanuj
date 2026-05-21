@@ -19,6 +19,7 @@ import {
   findBrand,
   fmtPrice,
   type BabanujProduct,
+  type BabanujProductVariant,
 } from "lib/babanuj/data";
 
 type TabId = "description" | "ingredients" | "shipping";
@@ -36,12 +37,36 @@ export function MarketPDP({
   related = [],
   galleryExtras = [],
 }: Props) {
-  const brand = findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
+  const brand =
+    findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
   const cat = categoryFor(p);
+  const productOptions = (p.options ?? []).filter(
+    (option) => option.values.length > 1,
+  );
+  const productVariants = p.variants ?? [];
+  const hasVariantOptions =
+    productOptions.length > 0 && productVariants.length > 0;
+  const initialVariant =
+    productVariants.find((variant) => variant.id === p.variantId) ??
+    productVariants.find((variant) => variant.availableForSale) ??
+    productVariants[0];
   const [qty, setQty] = useState(1);
   const [tab, setTab] = useState<TabId>("description");
   const [activeImg, setActiveImg] = useState(0);
   const [wished, setWished] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >(() => optionsFromVariant(initialVariant));
+
+  const selectedVariant = useMemo(
+    () =>
+      findVariantForOptions(productVariants, selectedOptions) ?? initialVariant,
+    [productVariants, selectedOptions, initialVariant],
+  );
+  const selectedProduct = useMemo(
+    () => productForVariant(p, selectedVariant),
+    [p, selectedVariant],
+  );
 
   const gallery = useMemo(
     () => [p.img, ...galleryExtras, brand.img].filter(Boolean),
@@ -199,7 +224,9 @@ export function MarketPDP({
                     {x.icon}
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2 }}>
+                    <div
+                      style={{ fontSize: 12, fontWeight: 700, lineHeight: 1.2 }}
+                    >
                       {x.t}
                     </div>
                     <div
@@ -267,7 +294,9 @@ export function MarketPDP({
                   fontWeight: 600,
                 }}
               >
-                ● In stock · ships in 48h
+                {selectedProduct.availableForSale
+                  ? "● In stock · ships in 48h"
+                  : "Sold out"}
               </span>
             </div>
 
@@ -284,7 +313,7 @@ export function MarketPDP({
                   className="display-heavy num"
                   style={{ fontSize: 38, color: "var(--ink)" }}
                 >
-                  {fmtPrice(p.price)}
+                  {fmtPrice(selectedProduct.price)}
                 </span>
               </div>
               {p.weight && (
@@ -299,6 +328,78 @@ export function MarketPDP({
                 </div>
               )}
             </div>
+
+            {hasVariantOptions && (
+              <div style={{ marginBottom: 20 }}>
+                {productOptions.map((option) => (
+                  <div key={option.name} style={{ marginBottom: 14 }}>
+                    <div
+                      className="micro"
+                      style={{
+                        color: "var(--ink-2)",
+                        fontSize: 10,
+                        marginBottom: 8,
+                      }}
+                    >
+                      {option.name}
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {option.values.map((value) => {
+                        const disabled = !isOptionValueAvailable(
+                          productVariants,
+                          selectedOptions,
+                          option.name,
+                          value,
+                        );
+                        const selected = selectedOptions[option.name] === value;
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => {
+                              if (disabled) return;
+                              setSelectedOptions((current) =>
+                                nextSelectedOptions(
+                                  productVariants,
+                                  current,
+                                  option.name,
+                                  value,
+                                ),
+                              );
+                            }}
+                            disabled={disabled}
+                            aria-pressed={selected}
+                            style={{
+                              minWidth: 46,
+                              padding: "10px 14px",
+                              borderRadius: 999,
+                              border: selected
+                                ? "1.5px solid var(--ink)"
+                                : "1px solid var(--rule)",
+                              background: selected ? "var(--ink)" : "#fff",
+                              color: selected ? "#fff" : "var(--ink)",
+                              fontFamily: "inherit",
+                              fontWeight: 700,
+                              fontSize: 13,
+                              cursor: disabled ? "not-allowed" : "pointer",
+                              opacity: disabled ? 0.4 : 1,
+                            }}
+                          >
+                            {value}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div
               style={{
@@ -343,10 +444,10 @@ export function MarketPDP({
                 </button>
               </div>
               <AddToBagButton
-                product={p}
+                product={selectedProduct}
                 quantity={qty}
                 variant="full"
-                label={`Add to Bag — ${fmtPrice(p.price * qty)}`}
+                label={`Add to Bag — ${fmtPrice(selectedProduct.price * qty)}`}
               />
             </div>
             <div style={{ marginBottom: 22 }} />
@@ -373,8 +474,7 @@ export function MarketPDP({
                   key={i}
                   style={{
                     padding: 14,
-                    borderRight:
-                      i % 2 === 0 ? "1px solid var(--rule)" : 0,
+                    borderRight: i % 2 === 0 ? "1px solid var(--rule)" : 0,
                     borderBottom:
                       i < arr.length - 2 ? "1px solid var(--rule)" : 0,
                   }}
@@ -400,7 +500,10 @@ export function MarketPDP({
       {/* Tabs */}
       <section style={{ padding: "24px 56px 0" }}>
         <div style={{ borderTop: "1px solid var(--rule)" }}>
-          <div style={{ display: "flex", gap: 0, marginTop: -1 }} role="tablist">
+          <div
+            style={{ display: "flex", gap: 0, marginTop: -1 }}
+            role="tablist"
+          >
             {(
               [
                 { id: "description", label: "Description" },
@@ -433,7 +536,9 @@ export function MarketPDP({
               </button>
             ))}
           </div>
-          <div style={{ padding: "32px 0", borderTop: "1px solid var(--rule)" }}>
+          <div
+            style={{ padding: "32px 0", borderTop: "1px solid var(--rule)" }}
+          >
             {tab === "description" && (
               <PDPDescription product={p} brand={brand} />
             )}
@@ -457,7 +562,10 @@ export function MarketPDP({
               <span className="micro" style={{ color: "var(--accent-dark)" }}>
                 More from {brand.name}
               </span>
-              <h2 className="display-heavy" style={{ fontSize: 32, margin: "6px 0 0" }}>
+              <h2
+                className="display-heavy"
+                style={{ fontSize: 32, margin: "6px 0 0" }}
+              >
                 From the same house
               </h2>
             </div>
@@ -497,7 +605,10 @@ export function MarketPDP({
             <span className="micro" style={{ color: "var(--accent-dark)" }}>
               Pairs well with
             </span>
-            <h2 className="display-heavy" style={{ fontSize: 32, margin: "6px 0 0" }}>
+            <h2
+              className="display-heavy"
+              style={{ fontSize: 32, margin: "6px 0 0" }}
+            >
               You might also like
             </h2>
           </div>
@@ -530,6 +641,94 @@ const qtyBtn: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
 };
+
+function optionsFromVariant(
+  variant: BabanujProductVariant | undefined,
+): Record<string, string> {
+  return Object.fromEntries(
+    variant?.selectedOptions.map((option) => [option.name, option.value]) ?? [],
+  );
+}
+
+function findVariantForOptions(
+  variants: BabanujProductVariant[],
+  selectedOptions: Record<string, string>,
+) {
+  return variants.find((variant) =>
+    variant.selectedOptions.every(
+      (option) => selectedOptions[option.name] === option.value,
+    ),
+  );
+}
+
+function variantMatchesOtherOptions(
+  variant: BabanujProductVariant,
+  selectedOptions: Record<string, string>,
+  optionName: string,
+) {
+  return variant.selectedOptions.every((option) => {
+    if (option.name === optionName) return true;
+    const selectedValue = selectedOptions[option.name];
+    return !selectedValue || selectedValue === option.value;
+  });
+}
+
+function isOptionValueAvailable(
+  variants: BabanujProductVariant[],
+  selectedOptions: Record<string, string>,
+  optionName: string,
+  value: string,
+) {
+  return variants.some(
+    (variant) =>
+      variant.availableForSale &&
+      variantMatchesOtherOptions(variant, selectedOptions, optionName) &&
+      variant.selectedOptions.some(
+        (option) => option.name === optionName && option.value === value,
+      ),
+  );
+}
+
+function nextSelectedOptions(
+  variants: BabanujProductVariant[],
+  current: Record<string, string>,
+  optionName: string,
+  value: string,
+) {
+  const next = { ...current, [optionName]: value };
+  const exactAvailable = variants.find(
+    (variant) =>
+      variant.availableForSale &&
+      variant.selectedOptions.every(
+        (option) => next[option.name] === option.value,
+      ),
+  );
+
+  if (exactAvailable) return optionsFromVariant(exactAvailable);
+
+  const fallback = variants.find(
+    (variant) =>
+      variant.availableForSale &&
+      variant.selectedOptions.some(
+        (option) => option.name === optionName && option.value === value,
+      ),
+  );
+
+  return fallback ? optionsFromVariant(fallback) : next;
+}
+
+function productForVariant(
+  product: BabanujProduct,
+  variant: BabanujProductVariant | undefined,
+): BabanujProduct {
+  if (!variant) return product;
+  return {
+    ...product,
+    variantId: variant.id,
+    availableForSale: variant.availableForSale,
+    price: Number.isFinite(variant.price) ? variant.price : product.price,
+  };
+}
 
 function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {
   return (
@@ -599,7 +798,10 @@ function PDPDescription({
         >
           {brand.long}
         </p>
-        <h3 className="display" style={{ fontSize: 18, marginTop: 28, marginBottom: 12 }}>
+        <h3
+          className="display"
+          style={{ fontSize: 18, marginTop: 28, marginBottom: 12 }}
+        >
           Tasting notes
         </h3>
         <ul
@@ -614,14 +816,21 @@ function PDPDescription({
           <li>
             Crisp top crust giving way to a yielding, syrup-soaked middle.
           </li>
-          <li>Deep pistachio, soft cardamom, a finish of orange-blossom honey.</li>
+          <li>
+            Deep pistachio, soft cardamom, a finish of orange-blossom honey.
+          </li>
           <li>
             Best with strong unsweetened tea or a small cup of Turkish coffee.
           </li>
         </ul>
       </div>
-      <div style={{ background: "var(--paper)", borderRadius: 18, padding: 24 }}>
-        <div className="micro" style={{ color: "var(--accent-dark)", marginBottom: 10 }}>
+      <div
+        style={{ background: "var(--paper)", borderRadius: 18, padding: 24 }}
+      >
+        <div
+          className="micro"
+          style={{ color: "var(--accent-dark)", marginBottom: 10 }}
+        >
           The Maker
         </div>
         <div className="display" style={{ fontSize: 22, marginBottom: 6 }}>
@@ -659,7 +868,10 @@ function PDPIngredients() {
       style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40 }}
     >
       <div>
-        <h3 className="display" style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}>
+        <h3
+          className="display"
+          style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}
+        >
           Ingredients
         </h3>
         <p
@@ -673,7 +885,10 @@ function PDPIngredients() {
           salt. Contains: tree nuts, gluten, dairy. May contain traces of
           sesame.
         </p>
-        <h3 className="display" style={{ fontSize: 18, marginTop: 24, marginBottom: 12 }}>
+        <h3
+          className="display"
+          style={{ fontSize: 18, marginTop: 24, marginBottom: 12 }}
+        >
           Storage
         </h3>
         <p
@@ -688,10 +903,19 @@ function PDPIngredients() {
         </p>
       </div>
       <div>
-        <h3 className="display" style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}>
+        <h3
+          className="display"
+          style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}
+        >
           Nutrition · per 30g serving
         </h3>
-        <div style={{ border: "1px solid var(--rule)", borderRadius: 14, overflow: "hidden" }}>
+        <div
+          style={{
+            border: "1px solid var(--rule)",
+            borderRadius: 14,
+            overflow: "hidden",
+          }}
+        >
           {rows.map(([k, v], i) => (
             <div
               key={k}
@@ -699,8 +923,7 @@ function PDPIngredients() {
                 display: "flex",
                 justifyContent: "space-between",
                 padding: "12px 16px",
-                borderBottom:
-                  i < rows.length - 1 ? "1px solid var(--rule)" : 0,
+                borderBottom: i < rows.length - 1 ? "1px solid var(--rule)" : 0,
                 fontSize: 14,
               }}
             >
@@ -813,7 +1036,15 @@ function PDPReviews() {
         >
           4.9
         </div>
-        <div style={{ display: "flex", gap: 2, color: "#d4a843", fontSize: 20, marginTop: 4 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 2,
+            color: "#d4a843",
+            fontSize: 20,
+            marginTop: 4,
+          }}
+        >
           ★★★★★
         </div>
         <div style={{ fontSize: 13, color: "var(--ink-2)", marginTop: 6 }}>
@@ -864,7 +1095,13 @@ function PDPReviews() {
         </div>
         <button
           className="market-btn outline"
-          style={{ marginTop: 22, width: "100%", justifyContent: "center", padding: 12, fontSize: 13 }}
+          style={{
+            marginTop: 22,
+            width: "100%",
+            justifyContent: "center",
+            padding: 12,
+            fontSize: 13,
+          }}
         >
           Write a review
         </button>
@@ -873,7 +1110,11 @@ function PDPReviews() {
         {reviews.map((r, i) => (
           <div
             key={i}
-            style={{ padding: 20, background: "var(--paper)", borderRadius: 14 }}
+            style={{
+              padding: 20,
+              background: "var(--paper)",
+              borderRadius: 14,
+            }}
           >
             <div
               style={{
@@ -915,7 +1156,14 @@ function PDPReviews() {
                   </span>
                 )}
               </div>
-              <div style={{ display: "flex", gap: 2, color: "#d4a843", fontSize: 14 }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 2,
+                  color: "#d4a843",
+                  fontSize: 14,
+                }}
+              >
                 {"★".repeat(r.stars)}
                 <span style={{ color: "var(--rule)" }}>
                   {"★".repeat(5 - r.stars)}
@@ -927,7 +1175,11 @@ function PDPReviews() {
         ))}
         <button
           className="market-btn cream"
-          style={{ alignSelf: "flex-start", padding: "10px 18px", fontSize: 13 }}
+          style={{
+            alignSelf: "flex-start",
+            padding: "10px 18px",
+            fontSize: 13,
+          }}
         >
           Load 12 more
         </button>
