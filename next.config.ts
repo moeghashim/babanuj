@@ -44,6 +44,56 @@ export default {
         permanent: true,
       },
       {
+        source: "/pages/:page",
+        destination: "/:page",
+        permanent: true,
+      },
+      {
+        source: "/privacy-policy",
+        destination: "/policies/privacy-policy",
+        permanent: true,
+      },
+      {
+        source: "/refund-policy",
+        destination: "/policies/refund-policy",
+        permanent: true,
+      },
+      {
+        source: "/terms-of-service",
+        destination: "/policies/terms-of-service",
+        permanent: true,
+      },
+      {
+        source: "/about-us",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/wholesale",
+        destination: "/#wholesale",
+        permanent: true,
+      },
+      {
+        source: "/blogs/news",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/sitemap_products_1.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/collections/cookiesa",
+        destination: "/collections/cookies",
+        permanent: true,
+      },
+      {
+        source: "/product/zaitoune-baklava-100g",
+        destination: "/product/zaitoune-mix-baklava-100g",
+        permanent: true,
+      },
+      {
         source: "/collections/zaitoune",
         destination: "/brand/zaitoune",
         permanent: true,
