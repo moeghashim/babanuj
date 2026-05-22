@@ -12,7 +12,10 @@ export function EditItemQuantityButton({
 }: {
   item: CartItem;
   type: "plus" | "minus";
-  optimisticUpdate: (merchandiseId: string, updateType: "plus" | "minus" | "delete") => void;
+  optimisticUpdate: (
+    merchandiseId: string,
+    updateType: "plus" | "minus" | "delete",
+  ) => void;
 }) {
   const [message, formAction] = useActionState(updateItemQuantity, null);
   const payload = {
@@ -25,14 +28,12 @@ export function EditItemQuantityButton({
     <form
       action={async () => {
         optimisticUpdate(payload.merchandiseId, type);
-        updateItemQuantityAction();
+        await updateItemQuantityAction();
       }}
     >
       <button
         type="submit"
-        aria-label={
-          type === "plus" ? "Increase quantity" : "Reduce quantity"
-        }
+        aria-label={type === "plus" ? "Increase quantity" : "Reduce quantity"}
         style={{
           width: 28,
           height: 28,

@@ -148,10 +148,14 @@ const reshapeCart = (cart: ShopifyCart): Cart => {
       currencyCode: cart.cost.totalAmount.currencyCode,
     };
   }
+  const lines = removeEdgesAndNodes(cart.lines).filter(
+    (line) => line.quantity > 0,
+  );
 
   return {
     ...cart,
-    lines: removeEdgesAndNodes(cart.lines),
+    lines,
+    totalQuantity: lines.reduce((sum, line) => sum + line.quantity, 0),
   };
 };
 
