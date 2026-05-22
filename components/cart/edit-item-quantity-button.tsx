@@ -2,8 +2,9 @@
 
 import { MinusIcon, PlusIcon } from "components/babanuj/icons";
 import { updateItemQuantity } from "components/cart/actions";
+import { useCart } from "components/cart/cart-context";
 import type { CartItem } from "lib/shopify/types";
-import { useActionState } from "react";
+import { useState, useTransition } from "react";
 
 export function EditItemQuantityButton({
   item,
@@ -17,33 +18,46 @@ export function EditItemQuantityButton({
     updateType: "plus" | "minus" | "delete",
   ) => void;
 }) {
-  const [message, formAction] = useActionState(updateItemQuantity, null);
+  const { setCart } = useCart();
+  const [message, setMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   const payload = {
     merchandiseId: item.merchandise.id,
     quantity: type === "plus" ? item.quantity + 1 : item.quantity - 1,
   };
-  const updateItemQuantityAction = formAction.bind(null, payload);
 
   return (
     <form
-      action={async () => {
-        optimisticUpdate(payload.merchandiseId, type);
-        await updateItemQuantityAction();
+      action={() => {
+        startTransition(async () => {
+          optimisticUpdate(payload.merchandiseId, type);
+          const result = await updateItemQuantity(payload);
+
+          if (typeof result === "string") {
+            setMessage(result);
+            return;
+          }
+
+          setMessage(null);
+          setCart(result);
+        });
       }}
     >
       <button
         type="submit"
         aria-label={type === "plus" ? "Increase quantity" : "Reduce quantity"}
+        disabled={isPending}
         style={{
           width: 28,
           height: 28,
           background: "transparent",
           border: 0,
           color: "var(--ink)",
-          cursor: "pointer",
+          cursor: isPending ? "wait" : "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          opacity: isPending ? 0.45 : 1,
           padding: 0,
         }}
       >
