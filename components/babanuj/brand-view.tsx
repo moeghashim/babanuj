@@ -57,10 +57,78 @@ export function BrandView({ brand, products = [] }: Props) {
         <span style={{ color: "var(--ink)" }}>{brand.name}</span>
       </nav>
 
+      {/* Product grid */}
+      <section
+        id="brand-products"
+        style={{ padding: "32px 56px 56px", background: "var(--paper)" }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            marginBottom: 28,
+          }}
+        >
+          <div>
+            <span className="micro" style={{ color: "var(--accent-dark)" }}>
+              The Collection · {brandProducts.length} products
+            </span>
+            <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
+              Everything from {brand.name}
+            </h2>
+          </div>
+          <Link
+            href="/search"
+            className="market-btn outline"
+            style={{ padding: "10px 20px", fontSize: 13 }}
+          >
+            See all sweets →
+          </Link>
+        </div>
+        {brandProducts.length > 0 ? (
+          <div
+            className="mk-brand-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 20,
+            }}
+          >
+            {brandProducts.map((p, i) => (
+              <MarketProductCard key={p.id} product={p} index={i} />
+            ))}
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "60px 20px",
+              textAlign: "center",
+              background: "#fff",
+              borderRadius: 16,
+            }}
+          >
+            <div style={{ fontSize: 16, fontWeight: 700 }}>
+              New products coming soon from {brand.name}.
+            </div>
+            <p
+              style={{
+                fontSize: 14,
+                color: "var(--ink-2)",
+                marginTop: 8,
+              }}
+            >
+              This house is currently in production. Subscribe and we&apos;ll
+              let you know the moment they land.
+            </p>
+          </div>
+        )}
+      </section>
+
       {/* Hero */}
       <section
         className="mk-brand-hero-section"
-        style={{ padding: "20px 56px 0" }}
+        style={{ padding: "56px 56px 0" }}
       >
         <div
           className="mk-brand-hero"
@@ -164,7 +232,7 @@ export function BrandView({ brand, products = [] }: Props) {
                 className="market-btn"
                 style={{ background: "#fff", color: "var(--ink)" }}
               >
-                Shop {brand.name} →
+                Back to collection
               </a>
               <a
                 href={`mailto:wholesale@babanuj.com?subject=${encodeURIComponent(
@@ -306,74 +374,6 @@ export function BrandView({ brand, products = [] }: Props) {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Product grid */}
-      <section
-        id="brand-products"
-        style={{ padding: "32px 56px 56px", background: "var(--paper)" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            marginBottom: 28,
-          }}
-        >
-          <div>
-            <span className="micro" style={{ color: "var(--accent-dark)" }}>
-              The Collection · {brandProducts.length} products
-            </span>
-            <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
-              Everything from {brand.name}
-            </h2>
-          </div>
-          <Link
-            href="/search"
-            className="market-btn outline"
-            style={{ padding: "10px 20px", fontSize: 13 }}
-          >
-            See all sweets →
-          </Link>
-        </div>
-        {brandProducts.length > 0 ? (
-          <div
-            className="mk-brand-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: 20,
-            }}
-          >
-            {brandProducts.map((p, i) => (
-              <MarketProductCard key={p.id} product={p} index={i} />
-            ))}
-          </div>
-        ) : (
-          <div
-            style={{
-              padding: "60px 20px",
-              textAlign: "center",
-              background: "#fff",
-              borderRadius: 16,
-            }}
-          >
-            <div style={{ fontSize: 16, fontWeight: 700 }}>
-              New products coming soon from {brand.name}.
-            </div>
-            <p
-              style={{
-                fontSize: 14,
-                color: "var(--ink-2)",
-                marginTop: 8,
-              }}
-            >
-              This house is currently in production. Subscribe and we&apos;ll
-              let you know the moment they land.
-            </p>
-          </div>
-        )}
       </section>
 
       {/* Timeline */}
