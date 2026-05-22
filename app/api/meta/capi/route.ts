@@ -123,7 +123,11 @@ export async function POST(request: NextRequest) {
 
   if (!response.ok) {
     const error = await response.text();
-    return NextResponse.json({ ok: false, error }, { status: 502 });
+    console.error("Meta CAPI request failed", {
+      status: response.status,
+      error,
+    });
+    return new Response(null, { status: 204 });
   }
 
   return NextResponse.json({ ok: true });

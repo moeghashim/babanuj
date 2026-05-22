@@ -24,14 +24,18 @@ type CartAction =
     }
   | {
       type: "ADD_ITEM";
-      payload: { variant: ProductVariant; product: Product };
+      payload: { variant: ProductVariant; product: Product; quantity: number };
     };
 
 type CartContextType = {
   cart: Cart | undefined;
   setCart: (cart: Cart) => void;
   updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
-  addCartItem: (variant: ProductVariant, product: Product) => void;
+  addCartItem: (
+    variant: ProductVariant,
+    product: Product,
+    quantity?: number,
+  ) => void;
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -76,8 +80,11 @@ function createOrUpdateCartItem(
   existingItem: CartItem | undefined,
   variant: ProductVariant,
   product: Product,
+  quantityToAdd: number,
 ): CartItem {
-  const quantity = existingItem ? existingItem.quantity + 1 : 1;
+  const quantity = existingItem
+    ? existingItem.quantity + quantityToAdd
+    : quantityToAdd;
   const totalAmount = calculateItemCost(quantity, variant.price.amount);
 
   return {
@@ -170,7 +177,8 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
       };
     }
     case "ADD_ITEM": {
-      const { variant, product } = action.payload;
+      const { variant, product, quantity } = action.payload;
+      const quantityToAdd = Math.max(1, Math.floor(quantity));
       const existingItem = currentCart.lines.find(
         (item) => item.merchandise.id === variant.id,
       );
@@ -178,6 +186,7 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
         existingItem,
         variant,
         product,
+        quantityToAdd,
       );
 
       const updatedLines = existingItem
@@ -219,10 +228,14 @@ export function CartProvider({
     });
   };
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
+  const addCartItem = (
+    variant: ProductVariant,
+    product: Product,
+    quantity = 1,
+  ) => {
     updateOptimisticCart({
       type: "ADD_ITEM",
-      payload: { variant, product },
+      payload: { variant, product, quantity },
     });
   };
 

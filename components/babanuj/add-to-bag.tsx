@@ -5,7 +5,7 @@ import { useCart } from "components/cart/cart-context";
 import type { BabanujProduct } from "lib/babanuj/data";
 import { trackAddToCart } from "lib/meta/events";
 import type { Cart, Product, ProductVariant } from "lib/shopify/types";
-import { startTransition, type CSSProperties } from "react";
+import { startTransition, useState, type CSSProperties } from "react";
 
 type Variant = "icon" | "quick-add" | "full";
 
@@ -42,6 +42,7 @@ export function AddToBagButton({
   label,
 }: Props) {
   const { addCartItem, openCart, setCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
   const isAvailable = product.availableForSale !== false;
 
   // Shape a minimal Product/ProductVariant for the optimistic update so the
@@ -83,25 +84,29 @@ export function AddToBagButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isAvailable) return;
+    if (!isAvailable || isAdding) return;
+    const quantityToAdd = Math.max(1, Math.floor(quantity));
+    setIsAdding(true);
     startTransition(async () => {
-      // Optimistic UI: instant cart badge / drawer update.
-      for (let i = 0; i < quantity; i++) {
-        addCartItem(shopifyVariant, shopifyProduct);
-      }
-      openCart();
-      // Real Shopify cart line write. The API route returns the confirmed
-      // cart so the optimistic state can be committed without a refresh race.
-      const result = await addItemToCart(product.variantId, quantity);
-      if (typeof result !== "string") {
-        setCart(result);
-        trackAddToCart({
-          id: product.handle,
-          name: product.name,
-          brand: product.brand,
-          price: product.price,
-          quantity,
-        });
+      try {
+        // Optimistic UI: instant cart badge / drawer update.
+        addCartItem(shopifyVariant, shopifyProduct, quantityToAdd);
+        openCart();
+        // Real Shopify cart line write. The API route returns the confirmed
+        // cart so the optimistic state can be committed without a refresh race.
+        const result = await addItemToCart(product.variantId, quantityToAdd);
+        if (typeof result !== "string") {
+          setCart(result);
+          trackAddToCart({
+            id: product.handle,
+            name: product.name,
+            brand: product.brand,
+            price: product.price,
+            quantity: quantityToAdd,
+          });
+        }
+      } finally {
+        setIsAdding(false);
       }
     });
   };
@@ -111,7 +116,8 @@ export function AddToBagButton({
       <button
         onClick={handleClick}
         aria-label="Quick add"
-        disabled={!isAvailable}
+        aria-busy={isAdding}
+        disabled={!isAvailable || isAdding}
         style={{
           width: 36,
           height: 36,
@@ -119,7 +125,7 @@ export function AddToBagButton({
           background: "#fff",
           color: "var(--ink)",
           border: 0,
-          cursor: isAvailable ? "pointer" : "not-allowed",
+          cursor: isAvailable && !isAdding ? "pointer" : "not-allowed",
           opacity: isAvailable ? 1 : 0.55,
           display: "flex",
           alignItems: "center",
@@ -138,7 +144,8 @@ export function AddToBagButton({
       <button
         onClick={handleClick}
         className="market-btn"
-        disabled={!isAvailable}
+        aria-busy={isAdding}
+        disabled={!isAvailable || isAdding}
         style={{
           flex: 1,
           justifyContent: "center",
@@ -159,7 +166,8 @@ export function AddToBagButton({
     <button
       onClick={handleClick}
       aria-label={isAvailable ? "Quick add" : "Sold out"}
-      disabled={!isAvailable}
+      aria-busy={isAdding}
+      disabled={!isAvailable || isAdding}
       style={{
         padding: "10px 14px",
         background: "#fff",
@@ -168,7 +176,7 @@ export function AddToBagButton({
         fontFamily: "inherit",
         fontWeight: 700,
         fontSize: 13,
-        cursor: isAvailable ? "pointer" : "not-allowed",
+        cursor: isAvailable && !isAdding ? "pointer" : "not-allowed",
         opacity: isAvailable ? 1 : 0.55,
         borderRadius: 999,
         display: "flex",
