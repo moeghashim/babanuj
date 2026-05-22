@@ -2,8 +2,9 @@
 
 import { CloseIcon } from "components/babanuj/icons";
 import { removeItem } from "components/cart/actions";
+import { useCart } from "components/cart/cart-context";
 import type { CartItem } from "lib/shopify/types";
-import { useActionState } from "react";
+import { useState, useTransition } from "react";
 
 export function DeleteItemButton({
   item,
@@ -15,31 +16,44 @@ export function DeleteItemButton({
     updateType: "plus" | "minus" | "delete",
   ) => void;
 }) {
-  const [message, formAction] = useActionState(removeItem, null);
+  const { setCart } = useCart();
+  const [message, setMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   const merchandiseId = item.merchandise.id;
-  const removeItemAction = formAction.bind(null, merchandiseId);
 
   return (
     <form
-      action={async () => {
-        optimisticUpdate(merchandiseId, "delete");
-        await removeItemAction();
+      action={() => {
+        startTransition(async () => {
+          optimisticUpdate(merchandiseId, "delete");
+          const result = await removeItem(merchandiseId);
+
+          if (typeof result === "string") {
+            setMessage(result);
+            return;
+          }
+
+          setMessage(null);
+          setCart(result);
+        });
       }}
     >
       <button
         type="submit"
         aria-label="Remove cart item"
+        disabled={isPending}
         style={{
           width: 22,
           height: 22,
           background: "rgba(255,255,255,0.9)",
           border: 0,
           borderRadius: 999,
-          cursor: "pointer",
+          cursor: isPending ? "wait" : "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           color: "var(--ink)",
+          opacity: isPending ? 0.45 : 1,
           boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
         }}
       >
