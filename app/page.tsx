@@ -27,8 +27,12 @@ export default async function HomePage() {
     getProducts({ sortKey: "CREATED_AT", reverse: true }).catch(() => []),
   ]);
 
-  const bestsellers = shopifyProductsToBabanuj(bestsellersRaw).slice(0, 12);
-  const newArrivals = shopifyProductsToBabanuj(newRaw).slice(0, 12);
+  const bestsellers = shopifyProductsToBabanuj(bestsellersRaw)
+    .filter((product) => product.availableForSale !== false)
+    .slice(0, 12);
+  const newArrivals = shopifyProductsToBabanuj(newRaw)
+    .filter((product) => product.availableForSale !== false)
+    .slice(0, 12);
 
   return (
     <>
