@@ -142,6 +142,12 @@ primary author must always be the identity above.
 
 Emergency bypass: `git push --no-verify` (try not to).
 
+## Website progress log
+
+Any website change must append a short entry to `progress.md` before handoff.
+Include the date, scope, files touched, verification run, and any follow-up
+needed. Keep newest entries first.
+
 ## Smoke-test checklist for UI changes
 
 Start dev server (or Preview MCP), walk through:

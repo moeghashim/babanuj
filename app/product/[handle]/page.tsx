@@ -69,11 +69,15 @@ export default async function ProductPage(props: {
   ]);
 
   const related = shopifyProductsToBabanuj(
-    recsRaw.filter((r) => r.handle !== product.handle).slice(0, 6),
-  );
+    recsRaw.filter((r) => r.handle !== product.handle),
+  )
+    .filter((item) => item.availableForSale !== false)
+    .slice(0, 6);
   const fromBrand = shopifyProductsToBabanuj(
-    sameBrandRaw.filter((r) => r.handle !== product.handle).slice(0, 4),
-  );
+    sameBrandRaw.filter((r) => r.handle !== product.handle),
+  )
+    .filter((item) => item.availableForSale !== false)
+    .slice(0, 4);
 
   const productJsonLd = {
     "@context": "https://schema.org",

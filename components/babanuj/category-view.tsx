@@ -28,28 +28,37 @@ export function CategoryView({
   searchValue,
 }: Props) {
   const cat = findCategory(categoryId);
-  const baseItems = products;
+  const baseItems = useMemo(
+    () => products.filter((p) => p.availableForSale !== false),
+    [products],
+  );
+  const maxPrice = useMemo(() => {
+    const highestPrice = Math.max(...baseItems.map((p) => p.price), 0);
+    return Math.max(5, Math.ceil(highestPrice));
+  }, [baseItems]);
 
   const brands = useMemo(
-    () => ["All", ...Array.from(new Set(products.map((p) => p.brand)))],
-    [products],
+    () => ["All", ...Array.from(new Set(baseItems.map((p) => p.brand)))],
+    [baseItems],
   );
 
   const [brand, setBrand] = useState("All");
   const [sort, setSort] = useState<SortKey>("featured");
-  const [priceMax, setPriceMax] = useState(40);
+  const [priceMax, setPriceMax] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const effectivePriceMax = priceMax ?? maxPrice;
 
   const items = useMemo(() => {
     let r = baseItems.filter(
-      (p) => (brand === "All" || p.brand === brand) && p.price <= priceMax,
+      (p) =>
+        (brand === "All" || p.brand === brand) && p.price <= effectivePriceMax,
     );
     if (sort === "price-asc") r = [...r].sort((a, b) => a.price - b.price);
     if (sort === "price-desc") r = [...r].sort((a, b) => b.price - a.price);
     if (sort === "name")
       r = [...r].sort((a, b) => a.name.localeCompare(b.name));
     return r;
-  }, [baseItems, brand, sort, priceMax]);
+  }, [baseItems, brand, sort, effectivePriceMax]);
 
   const title = searchValue
     ? `Results for "${searchValue}"`
@@ -185,7 +194,7 @@ export function CategoryView({
             >
               <FilterIcon width={14} height={14} />
               Filters
-              {(brand !== "All" || priceMax < 40) && (
+              {(brand !== "All" || priceMax !== null) && (
                 <span
                   style={{
                     background: "var(--accent)",
@@ -257,13 +266,13 @@ export function CategoryView({
                   </label>
                 ))}
               </FilterGroup>
-              <FilterGroup title={`Price · up to $${priceMax}`}>
+              <FilterGroup title={`Price · up to $${effectivePriceMax}`}>
                 <input
                   type="range"
                   min={5}
-                  max={40}
+                  max={maxPrice}
                   step={1}
-                  value={priceMax}
+                  value={effectivePriceMax}
                   onChange={(e) => setPriceMax(+e.target.value)}
                   style={{ width: "100%", accentColor: "var(--accent)" }}
                 />
@@ -277,8 +286,8 @@ export function CategoryView({
                   }}
                 >
                   <span>$5</span>
-                  <span>${priceMax}</span>
-                  <span>$40</span>
+                  <span>${effectivePriceMax}</span>
+                  <span>${maxPrice}</span>
                 </div>
               </FilterGroup>
               <FilterGroup title="Features">
@@ -300,7 +309,7 @@ export function CategoryView({
               <button
                 onClick={() => {
                   setBrand("All");
-                  setPriceMax(40);
+                  setPriceMax(null);
                 }}
                 style={{
                   marginTop: 8,

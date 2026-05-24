@@ -4,7 +4,9 @@ import type { Cart } from "lib/shopify/types";
 
 declare global {
   interface Window {
+    dataLayer?: unknown[];
     fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -24,6 +26,20 @@ type MetaEventPayload = {
   currency?: string;
   num_items?: number;
   value?: number;
+};
+
+type GaItem = {
+  item_id: string;
+  item_name: string;
+  item_brand?: string;
+  price: number;
+  quantity?: number;
+};
+
+type GaEventPayload = {
+  currency?: string;
+  value?: number;
+  items?: GaItem[];
 };
 
 function eventId(prefix: string) {
@@ -86,8 +102,35 @@ function track(eventName: string, payload: MetaEventPayload, prefix: string) {
   serverTrack(eventName, payload, dedupeId);
 }
 
+function gaTrack(eventName: string, payload: GaEventPayload) {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag =
+    window.gtag ||
+    ((...args: unknown[]) => {
+      window.dataLayer?.push(args);
+    });
+
+  window.gtag("event", eventName, payload);
+}
+
+function gaProductItem(product: MetaProductEvent): GaItem {
+  return {
+    item_id: contentId(product.id),
+    item_name: product.name,
+    item_brand: product.brand,
+    price: product.price,
+    quantity: product.quantity ?? 1,
+  };
+}
+
 export function trackViewContent(product: MetaProductEvent) {
   const id = contentId(product.id);
+
+  gaTrack("view_item", {
+    currency: "USD",
+    value: product.price,
+    items: [gaProductItem(product)],
+  });
 
   track(
     "ViewContent",
@@ -107,6 +150,12 @@ export function trackAddToCart(product: MetaProductEvent) {
   const id = contentId(product.id);
   const quantity = product.quantity ?? 1;
 
+  gaTrack("add_to_cart", {
+    currency: "USD",
+    value: product.price * quantity,
+    items: [gaProductItem({ ...product, quantity })],
+  });
+
   track(
     "AddToCart",
     {
@@ -125,6 +174,18 @@ export function trackAddToCart(product: MetaProductEvent) {
 export function trackInitiateCheckout(cart: Cart | undefined) {
   const lines = cart?.lines ?? [];
   const subtotal = Number(cart?.cost.totalAmount.amount ?? 0);
+  const currency = cart?.cost.totalAmount.currencyCode ?? "USD";
+
+  gaTrack("begin_checkout", {
+    currency,
+    value: subtotal,
+    items: lines.map((line) => ({
+      item_id: contentId(line.merchandise.product.handle),
+      item_name: line.merchandise.product.title,
+      price: Number(line.cost.totalAmount.amount) / Math.max(line.quantity, 1),
+      quantity: line.quantity,
+    })),
+  });
 
   track(
     "InitiateCheckout",
@@ -139,7 +200,7 @@ export function trackInitiateCheckout(cart: Cart | undefined) {
         item_price:
           Number(line.cost.totalAmount.amount) / Math.max(line.quantity, 1),
       })),
-      currency: cart?.cost.totalAmount.currencyCode ?? "USD",
+      currency,
       num_items: cart?.totalQuantity ?? 0,
       value: subtotal,
     },
