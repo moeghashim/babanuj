@@ -6,6 +6,22 @@ needed.
 
 ## 2026-05-24
 
+- Fixed production customer account setup by adding the Shopify Customer Account
+  API env vars in Vercel and aligning Shopify's OAuth application setup with
+  the live `www.babanuj.com` domain.
+- Redeployed production so `/account` uses the new env vars and no longer shows
+  the setup fallback page.
+- Files touched: `progress.md` only; Vercel and Shopify Admin configuration
+  changed outside git.
+- Verification: production deploy completed and `https://www.babanuj.com/account`
+  redirects to Shopify customer sign-in with the
+  `https://www.babanuj.com/account/authorize` callback; no browser console
+  errors on the verified auth page.
+- Follow-up: complete a real customer login e2e when credentials/test customer
+  access is available.
+
+## 2026-05-24
+
 - Added the in-app customer account foundation using Shopify Customer Account
   API auth, encrypted customer session cookies, account overview, order,
   address, and profile routes.
