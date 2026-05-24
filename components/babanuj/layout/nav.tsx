@@ -2,9 +2,22 @@ import CartModal from "components/cart/modal";
 import { HeartIcon, UserIcon } from "components/babanuj/icons";
 import { MobileMenu } from "components/babanuj/layout/mobile-menu";
 import { SearchBar } from "components/babanuj/layout/search-bar";
+import {
+  getCustomerSession,
+  isCustomerAccountConfigured,
+} from "lib/shopify/customer-account";
 import Link from "next/link";
 
-export function MarketNav() {
+export async function MarketNav() {
+  const configured = isCustomerAccountConfigured();
+  const session = await getCustomerSession();
+  const accountHref = session
+    ? "/account"
+    : configured
+      ? "/account/login"
+      : "/account";
+  const accountLabel = session ? "Account" : "Sign in";
+
   return (
     <div
       className="mk-nav-wrap"
@@ -59,14 +72,16 @@ export function MarketNav() {
             justifyContent: "flex-end",
           }}
         >
-          <MobileMenu />
+          <MobileMenu accountHref={accountHref} accountLabel={accountLabel} />
           <a
-            aria-label="Sign in to your account"
-            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "babanuj.myshopify.com"}/account/login`}
+            aria-label={
+              session ? "Open your account" : "Sign in to your account"
+            }
+            href={accountHref}
             style={navIconBtn as React.CSSProperties}
           >
             <UserIcon width={22} height={22} />
-            Sign in
+            {accountLabel}
           </a>
           <button
             type="button"

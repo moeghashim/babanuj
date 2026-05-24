@@ -27,7 +27,13 @@ const UTILITY = [
   { label: "Help", href: "#" },
 ];
 
-export function MobileMenu() {
+export function MobileMenu({
+  accountHref = "/account/login",
+  accountLabel = "Sign in",
+}: {
+  accountHref?: string;
+  accountLabel?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -181,7 +187,7 @@ export function MobileMenu() {
           }}
         >
           <a
-            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN ?? "babanuj.myshopify.com"}/account/login`}
+            href={accountHref}
             onClick={close}
             className="market-btn"
             style={{
@@ -191,7 +197,7 @@ export function MobileMenu() {
               fontSize: 13,
             }}
           >
-            Sign in
+            {accountLabel}
           </a>
         </footer>
       </aside>

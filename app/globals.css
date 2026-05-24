@@ -701,6 +701,17 @@ button:focus-visible {
   .mk-timeline-line {
     display: none !important;
   }
+  .mk-account-grid,
+  .mk-account-setup-grid,
+  .mk-account-form-grid,
+  .mk-account-address-grid,
+  .mk-account-order-row,
+  .mk-account-address-item {
+    grid-template-columns: 1fr !important;
+  }
+  .mk-account-stats {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 480px) {
