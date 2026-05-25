@@ -4,6 +4,23 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-05-25
+
+- Checked Google Search Console Page indexing for `sc-domain:babanuj.com`:
+  82 indexed pages, 128 not indexed as of the 2026-05-21 report update.
+- Added explicit canonical metadata to public indexable routes and redirected
+  legacy duplicate URLs (`/collections/all`, collection `.atom` feeds, old
+  `/v1/produce`, and stale Shopify product handles) to current pages.
+- Files touched: `next.config.ts`, `lib/babanuj/redirects.ts`, `app/page.tsx`,
+  `app/search/page.tsx`, `app/product/[handle]/page.tsx`,
+  `app/collections/[handle]/page.tsx`, `app/brand/[brandId]/page.tsx`,
+  `app/[page]/page.tsx`, `app/policies/[policy]/page.tsx`, `progress.md`.
+- Verification: `pnpm exec tsc --noEmit`, `pnpm build`, targeted Prettier
+  check, and local production-server `curl` checks for canonical tags plus 308
+  redirects.
+- Follow-up: deploy, then use Search Console's Validate Fix for the website
+  owned buckets after Google sees the new production responses.
+
 ## 2026-05-24
 
 - Fixed production customer account setup by adding the Shopify Customer Account

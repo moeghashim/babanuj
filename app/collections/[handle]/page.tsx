@@ -1,18 +1,20 @@
 import { CategoryView } from "components/babanuj/category-view";
 import { CATEGORIES, categoryShopifyQuery } from "lib/babanuj/data";
 import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
-import {
-  getCollection,
-  getCollectionProducts,
-  getProducts,
-} from "lib/shopify";
+import { getCollection, getCollectionProducts, getProducts } from "lib/shopify";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
+
+function redirectLegacyCollectionHandle(handle: string) {
+  if (handle === "all") permanentRedirect("/search");
+}
 
 export async function generateMetadata(props: {
   params: Promise<{ handle: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
+  redirectLegacyCollectionHandle(params.handle);
+
   const known = CATEGORIES.some((c) => c.id === params.handle);
   const collection = await getCollection(params.handle);
 
@@ -22,17 +24,28 @@ export async function generateMetadata(props: {
     return {
       title: collection.seo?.title || collection.title,
       description: collection.seo?.description || collection.description,
+      alternates: {
+        canonical: `/collections/${params.handle}`,
+      },
     };
   }
 
   const cat = CATEGORIES.find((c) => c.id === params.handle)!;
-  return { title: cat.name, description: cat.blurb };
+  return {
+    title: cat.name,
+    description: cat.blurb,
+    alternates: {
+      canonical: `/collections/${params.handle}`,
+    },
+  };
 }
 
 export default async function CategoryPage(props: {
   params: Promise<{ handle: string }>;
 }) {
   const params = await props.params;
+  redirectLegacyCollectionHandle(params.handle);
+
   const known = CATEGORIES.some((c) => c.id === params.handle);
   const collection = await getCollection(params.handle);
 

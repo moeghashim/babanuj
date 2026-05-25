@@ -4,6 +4,7 @@ import {
   shopifyProductToBabanuj,
   shopifyProductsToBabanuj,
 } from "lib/babanuj/from-shopify";
+import { STALE_PRODUCT_HANDLE_REDIRECTS } from "lib/babanuj/redirects";
 import {
   getProduct,
   getProductRecommendations,
@@ -12,13 +13,9 @@ import {
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 
-const PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
-  "honey-tube-mixed-honey-25g": "mixed-honey-packets-25g",
-};
-
 function redirectStaleProductHandle(handle: string) {
-  const target = PRODUCT_HANDLE_REDIRECTS[handle];
-  if (target) permanentRedirect(`/product/${target}`);
+  const target = STALE_PRODUCT_HANDLE_REDIRECTS[handle];
+  if (target) permanentRedirect(target);
 }
 
 export async function generateMetadata(props: {
@@ -34,6 +31,9 @@ export async function generateMetadata(props: {
   return {
     title: product.seo?.title || product.title,
     description: product.seo?.description || product.description,
+    alternates: {
+      canonical: `/product/${product.handle}`,
+    },
     openGraph: product.featuredImage?.url
       ? {
           images: [
