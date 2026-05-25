@@ -19,6 +19,9 @@ export async function generateMetadata(props: {
   return {
     title: `${brand.name} — ${brand.tag}`,
     description: brand.blurb,
+    alternates: {
+      canonical: `/brand/${brand.id}`,
+    },
     openGraph: {
       images: [
         {

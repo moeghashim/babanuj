@@ -5,6 +5,9 @@ import { getProducts } from "lib/shopify";
 export const metadata = {
   title: "Search the pantry",
   description: "Browse every brand and line in the Babanuj pantry.",
+  alternates: {
+    canonical: "/search",
+  },
 };
 
 export const experimental_ppr = true;
@@ -18,7 +21,5 @@ export default async function SearchPage(props: {
   const raw = await getProducts({ query: q });
   const products = shopifyProductsToBabanuj(raw);
 
-  return (
-    <CategoryView categoryId="all" products={products} searchValue={q} />
-  );
+  return <CategoryView categoryId="all" products={products} searchValue={q} />;
 }

@@ -1,3 +1,20 @@
+import { STALE_PRODUCT_HANDLE_REDIRECTS } from "./lib/babanuj/redirects";
+
+const staleProductRedirects = Object.entries(
+  STALE_PRODUCT_HANDLE_REDIRECTS,
+).flatMap(([handle, destination]) => [
+  {
+    source: `/products/${handle}`,
+    destination,
+    permanent: true,
+  },
+  {
+    source: `/product/${handle}`,
+    destination,
+    permanent: true,
+  },
+]);
+
 export default {
   experimental: {
     ppr: "incremental",
@@ -33,6 +50,22 @@ export default {
         destination: "https://www.babanuj.com/:path*",
         permanent: true,
       },
+      {
+        source: "/v1/produce",
+        destination: "/search",
+        permanent: true,
+      },
+      {
+        source: "/collections/all",
+        destination: "/search",
+        permanent: true,
+      },
+      {
+        source: "/collections/:handle.atom",
+        destination: "/collections/:handle",
+        permanent: true,
+      },
+      ...staleProductRedirects,
       {
         source: "/products/:handle",
         destination: "/product/:handle",

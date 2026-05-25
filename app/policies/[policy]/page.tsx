@@ -14,6 +14,9 @@ export async function generateMetadata(props: {
 
   return {
     title: policy.title,
+    alternates: {
+      canonical: `/policies/${params.policy}`,
+    },
     openGraph: {
       type: "article",
     },
