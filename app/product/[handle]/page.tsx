@@ -5,6 +5,7 @@ import {
   shopifyProductsToBabanuj,
 } from "lib/babanuj/from-shopify";
 import { STALE_PRODUCT_HANDLE_REDIRECTS } from "lib/babanuj/redirects";
+import { openGraph, seoDescription, seoTitle } from "lib/babanuj/seo";
 import {
   getProduct,
   getProductRecommendations,
@@ -27,25 +28,24 @@ export async function generateMetadata(props: {
   const product = await getProduct(params.handle);
 
   if (!product) return notFound();
+  const title = seoTitle(product.seo?.title || product.title, 46);
+  const description = seoDescription(
+    product.seo?.description || product.description,
+    `${product.title} from Babanuj ships fresh from Houston with curated Middle Eastern sweets, pantry staples, and gift-ready treats for U.S. delivery.`,
+  );
 
   return {
-    title: product.seo?.title || product.title,
-    description: product.seo?.description || product.description,
+    title,
+    description,
     alternates: {
       canonical: `/product/${product.handle}`,
     },
-    openGraph: product.featuredImage?.url
-      ? {
-          images: [
-            {
-              url: product.featuredImage.url,
-              width: product.featuredImage.width,
-              height: product.featuredImage.height,
-              alt: product.featuredImage.altText,
-            },
-          ],
-        }
-      : null,
+    openGraph: openGraph({
+      title: `${title} | Babanuj`,
+      description,
+      url: `/product/${product.handle}`,
+      image: product.featuredImage,
+    }),
   };
 }
 

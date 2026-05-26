@@ -18,3 +18,11 @@ export const STALE_PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
   "zaitoune-walnut-maamoul-snack-600g-tiktok":
     "/product/zaitoune-sweets-maamoul-with-walnut-500g",
 };
+
+export const LEGACY_COLLECTION_REDIRECTS: Record<string, string> = {
+  all: "/search",
+  frontpage: "/",
+  "crush-chocolate": "/brand/crush",
+  "bab-sharqi-sweets": "/collections/cookies",
+  zaitoune: "/brand/zaitoune",
+};

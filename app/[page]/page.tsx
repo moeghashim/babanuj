@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import Prose from "components/prose";
+import { openGraph, seoDescription } from "lib/babanuj/seo";
 import { getPage } from "lib/shopify";
 import { notFound } from "next/navigation";
 
@@ -11,14 +12,20 @@ export async function generateMetadata(props: {
   const page = await getPage(params.page);
 
   if (!page) return notFound();
+  const description = seoDescription(page.seo?.description, page.bodySummary);
 
   return {
     title: page.seo?.title || page.title,
-    description: page.seo?.description || page.bodySummary,
+    description,
     alternates: {
       canonical: `/${params.page}`,
     },
     openGraph: {
+      ...openGraph({
+        title: `${page.seo?.title || page.title} | Babanuj`,
+        description,
+        url: `/${params.page}`,
+      }),
       publishedTime: page.createdAt,
       modifiedTime: page.updatedAt,
       type: "article",

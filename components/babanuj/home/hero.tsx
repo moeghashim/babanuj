@@ -126,14 +126,15 @@ export function MarketHero() {
                 priority={i === 0}
                 fetchPriority={i === 0 ? "high" : "auto"}
                 quality={i === 0 ? 60 : 75}
-                sizes="(max-width: 768px) 100vw, 100vw"
+                sizes="(max-width: 768px) 50vw, 100vw"
                 style={{
                   position: "absolute",
                   inset: 0,
-                  transform: i === idx ? "scale(1.06)" : "scale(1)",
+                  transform:
+                    !isMobile && i === idx ? "scale(1.06)" : "scale(1)",
                   transformOrigin:
                     s.align === "left" ? "right center" : "left center",
-                  transition: "transform 6.5s ease",
+                  transition: isMobile ? "none" : "transform 6.5s ease",
                 }}
               />
             )}
@@ -179,32 +180,33 @@ export function MarketHero() {
               >
                 {s.chip}
               </span>
-              <h1
-                className="display-heavy"
-                style={{
-                  fontSize: 68,
-                  margin: "20px 0 0",
-                  color: "#fff",
-                  lineHeight: 1,
-                }}
-              >
-                {s.titleParts.map((p, j) =>
-                  typeof p === "string" ? (
-                    <span key={j}>
-                      {p}
-                      <br />
-                    </span>
-                  ) : (
-                    <span
-                      key={j}
-                      className="editorial"
-                      style={{ color: "var(--cream)" }}
-                    >
-                      {p.italic}
-                    </span>
-                  ),
-                )}
-              </h1>
+              {i === 0 ? (
+                <h1
+                  className="display-heavy"
+                  style={{
+                    fontSize: 68,
+                    margin: "20px 0 0",
+                    color: "#fff",
+                    lineHeight: 1,
+                  }}
+                >
+                  <HeroTitleParts parts={s.titleParts} />
+                </h1>
+              ) : (
+                <div
+                  className="display-heavy"
+                  role="heading"
+                  aria-level={2}
+                  style={{
+                    fontSize: 68,
+                    margin: "20px 0 0",
+                    color: "#fff",
+                    lineHeight: 1,
+                  }}
+                >
+                  <HeroTitleParts parts={s.titleParts} />
+                </div>
+              )}
               <p
                 style={{
                   fontSize: 16,
@@ -279,16 +281,16 @@ export function MarketHero() {
             <button
               key={i}
               onClick={() => go(i)}
-              aria-label={`Slide ${i + 1}`}
+              aria-label={`Go to slide ${i + 1}`}
               style={{
-                width: i === idx ? 28 : 8,
+                width: i === idx ? 26 : 8,
                 height: 8,
-                borderRadius: 999,
-                background: i === idx ? "#fff" : "rgba(255,255,255,0.45)",
+                borderRadius: 99,
                 border: 0,
+                background:
+                  i === idx ? "var(--cream)" : "rgba(255,255,255,0.5)",
+                transition: "all .25s",
                 cursor: "pointer",
-                transition: "width .3s, background .3s",
-                padding: 0,
               }}
             />
           ))}
@@ -353,6 +355,25 @@ export function MarketHero() {
         </div>
       </div>
     </section>
+  );
+}
+
+function HeroTitleParts({ parts }: { parts: Slide["titleParts"] }) {
+  return (
+    <>
+      {parts.map((p, j) =>
+        typeof p === "string" ? (
+          <span key={j}>
+            {p}
+            <br />
+          </span>
+        ) : (
+          <span key={j} className="editorial" style={{ color: "var(--cream)" }}>
+            {p.italic}
+          </span>
+        ),
+      )}
+    </>
   );
 }
 

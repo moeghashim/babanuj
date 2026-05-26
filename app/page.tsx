@@ -8,18 +8,26 @@ import { MarketPromo } from "components/babanuj/home/promo";
 import { MarketReviews } from "components/babanuj/home/reviews";
 import { MarketTrust } from "components/babanuj/home/trust";
 import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
+import { openGraph } from "lib/babanuj/seo";
 import { getProducts } from "lib/shopify";
+
+const title = "Buy Baklava, Maamoul & Turkish Delight Online | Babanuj";
+const description =
+  "Shop Middle Eastern sweets online: baklava, maamoul, Turkish delight, Dubai chocolate, dates, honey, coffee, and gift boxes shipped fresh from Houston.";
 
 export const metadata = {
   title: {
-    absolute: "Buy Baklava, Maamoul & Turkish Delight Online | Babanuj",
+    absolute: title,
   },
-  description:
-    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight and Dubai chocolate from Türkish, Syrian and Gulf bakers. Shipped fresh from Houston. Free U.S. shipping over $70.",
+  description,
   alternates: {
     canonical: "/",
   },
-  openGraph: { type: "website" },
+  openGraph: openGraph({
+    title,
+    description,
+    url: "/",
+  }),
 };
 
 export const experimental_ppr = true;

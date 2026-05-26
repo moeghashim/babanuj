@@ -4,6 +4,38 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-05-26
+
+- Fixed Ahrefs audit errors after the Shopify theme to Next.js migration:
+  completed Open Graph metadata, shortened titles/descriptions, removed
+  redirecting collection URLs from sitemap, redirected legacy orphan
+  collections, removed internal links to redirect targets, and reduced the
+  homepage carousel to one real H1.
+- Files touched: `lib/babanuj/seo.ts`, `lib/babanuj/redirects.ts`,
+  `next.config.ts`, `app/layout.tsx`, `app/page.tsx`, `app/search/page.tsx`,
+  `app/product/[handle]/page.tsx`, `app/collections/[handle]/page.tsx`,
+  `app/brand/[brandId]/page.tsx`, `app/[page]/page.tsx`,
+  `app/policies/[policy]/page.tsx`, `app/sitemap.ts`,
+  `app/account/sign-in/page.tsx`, `components/babanuj/home/hero.tsx`,
+  `components/babanuj/layout/nav.tsx`,
+  `components/babanuj/layout/mobile-menu.tsx`, `components/babanuj/pdp.tsx`,
+  `progress.md`.
+- Verification: Chrome/Ahrefs review of the 2026-05-26 Site Audit, Prettier on
+  touched files, `pnpm exec tsc --noEmit`, `pnpm build`, local
+  production-server targeted checks, and a local sitemap crawl covering 78 URLs
+  with zero remaining metadata/H1/redirect-link findings.
+- Follow-up: deploy and rerun the Ahrefs crawl; historical change alerts,
+  IndexNow submission prompts, and expected old-URL redirects were left alone.
+
+## 2026-05-26
+
+- Tightened the mobile homepage hero image candidate size and disabled the
+  desktop zoom transition on mobile to clear the PR Lighthouse LCP threshold.
+- Files touched: `components/babanuj/home/hero.tsx`, `progress.md`.
+- Verification: `pnpm exec prettier --write` on touched files, `pnpm exec tsc
+--noEmit`, `pnpm build`, and local Lighthouse CI.
+- Follow-up: confirm GitHub Actions reruns cleanly on the amended PR branch.
+
 ## 2026-05-25
 
 - Checked Google Search Console Page indexing for `sc-domain:babanuj.com`:

@@ -1,6 +1,7 @@
 import { getCollections, getProducts } from "lib/shopify";
 import { baseUrl } from "lib/utils";
 import { BRANDS } from "lib/babanuj/data";
+import { LEGACY_COLLECTION_REDIRECTS } from "lib/babanuj/redirects";
 import { MetadataRoute } from "next";
 
 type Route = {
@@ -17,10 +18,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const collectionsPromise = getCollections().then((collections) =>
-    collections.map((collection) => ({
-      url: `${baseUrl}${collection.path}`,
-      lastModified: collection.updatedAt,
-    })),
+    collections
+      .filter(
+        (collection) => !(collection.handle in LEGACY_COLLECTION_REDIRECTS),
+      )
+      .map((collection) => ({
+        url: `${baseUrl}${collection.path}`,
+        lastModified: collection.updatedAt,
+      })),
   );
 
   const productsPromise = getProducts({}).then((products) =>
