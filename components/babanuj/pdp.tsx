@@ -30,11 +30,7 @@ type Props = {
   related?: BabanujProduct[];
 };
 
-export function MarketPDP({
-  product: p,
-  fromBrand = [],
-  related = [],
-}: Props) {
+export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
   const brand =
     findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
   const cat = categoryFor(p);
@@ -83,7 +79,10 @@ export function MarketPDP({
       <Breadcrumb
         items={[
           { label: "Home", href: "/" },
-          { label: cat.name, href: `/collections/${cat.id}` },
+          {
+            label: cat.name,
+            href: cat.id === "all" ? "/search" : `/collections/${cat.id}`,
+          },
           { label: p.name },
         ]}
       />
@@ -736,7 +735,9 @@ function productForVariant(
 }
 
 function uniqueImages(images: (string | undefined)[]) {
-  return [...new Set(images.filter((image): image is string => Boolean(image)))];
+  return [
+    ...new Set(images.filter((image): image is string => Boolean(image))),
+  ];
 }
 
 function Breadcrumb({ items }: { items: { label: string; href?: string }[] }) {

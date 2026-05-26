@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import Prose from "components/prose";
+import { openGraph } from "lib/babanuj/seo";
 import { getPolicy } from "lib/shopify";
 
 export async function generateMetadata(props: {
@@ -18,6 +19,11 @@ export async function generateMetadata(props: {
       canonical: `/policies/${params.policy}`,
     },
     openGraph: {
+      ...openGraph({
+        title: `${policy.title} | Babanuj`,
+        description: `Read the ${policy.title.toLowerCase()} for Babanuj, including current customer terms, store policies, shipping details, and account information for online orders.`,
+        url: `/policies/${params.policy}`,
+      }),
       type: "article",
     },
   };

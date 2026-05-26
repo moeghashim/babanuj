@@ -14,7 +14,7 @@ export async function MarketNav() {
   const accountHref = session
     ? "/account"
     : configured
-      ? "/account/login"
+      ? "/account/sign-in"
       : "/account";
   const accountLabel = session ? "Account" : "Sign in";
 
@@ -78,6 +78,7 @@ export async function MarketNav() {
               session ? "Open your account" : "Sign in to your account"
             }
             href={accountHref}
+            rel={session ? undefined : "nofollow"}
             style={navIconBtn as React.CSSProperties}
           >
             <UserIcon width={22} height={22} />

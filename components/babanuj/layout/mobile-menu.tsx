@@ -28,7 +28,7 @@ const UTILITY = [
 ];
 
 export function MobileMenu({
-  accountHref = "/account/login",
+  accountHref = "/account/sign-in",
   accountLabel = "Sign in",
 }: {
   accountHref?: string;
@@ -189,6 +189,7 @@ export function MobileMenu({
           <a
             href={accountHref}
             onClick={close}
+            rel={accountHref.includes("sign-in") ? "nofollow" : undefined}
             className="market-btn"
             style={{
               flex: 1,

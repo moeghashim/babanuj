@@ -1,4 +1,7 @@
-import { STALE_PRODUCT_HANDLE_REDIRECTS } from "./lib/babanuj/redirects";
+import {
+  LEGACY_COLLECTION_REDIRECTS,
+  STALE_PRODUCT_HANDLE_REDIRECTS,
+} from "./lib/babanuj/redirects";
 
 const staleProductRedirects = Object.entries(
   STALE_PRODUCT_HANDLE_REDIRECTS,
@@ -14,6 +17,14 @@ const staleProductRedirects = Object.entries(
     permanent: true,
   },
 ]);
+
+const legacyCollectionRedirects = Object.entries(
+  LEGACY_COLLECTION_REDIRECTS,
+).map(([handle, destination]) => ({
+  source: `/collections/${handle}`,
+  destination,
+  permanent: true,
+}));
 
 export default {
   experimental: {
@@ -55,11 +66,7 @@ export default {
         destination: "/search",
         permanent: true,
       },
-      {
-        source: "/collections/all",
-        destination: "/search",
-        permanent: true,
-      },
+      ...legacyCollectionRedirects,
       {
         source: "/collections/:handle.atom",
         destination: "/collections/:handle",
@@ -124,11 +131,6 @@ export default {
       {
         source: "/product/zaitoune-baklava-100g",
         destination: "/product/zaitoune-mix-baklava-100g",
-        permanent: true,
-      },
-      {
-        source: "/collections/zaitoune",
-        destination: "/brand/zaitoune",
         permanent: true,
       },
       {

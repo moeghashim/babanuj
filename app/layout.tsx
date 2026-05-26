@@ -11,6 +11,7 @@ import { getCart } from "lib/shopify";
 import { ReactNode } from "react";
 import "./globals.css";
 import { baseUrl } from "lib/utils";
+import { openGraph } from "lib/babanuj/seo";
 
 const SITE_NAME = process.env.SITE_NAME ?? "Babanuj";
 
@@ -21,7 +22,13 @@ export const metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Shop authentic Middle Eastern sweets online — baklava, maamoul, Turkish delight and Dubai chocolate from Türkish, Syrian and Gulf bakers. Shipped fresh from Houston. Free U.S. shipping over $70.",
+    "Shop Middle Eastern sweets online: baklava, maamoul, Turkish delight, Dubai chocolate, dates, honey, coffee, and gift boxes shipped fresh from Houston.",
+  openGraph: openGraph({
+    title: `${SITE_NAME} — Middle Eastern Sweets, Baklava & Maamoul Online`,
+    description:
+      "Shop Middle Eastern sweets online: baklava, maamoul, Turkish delight, Dubai chocolate, dates, honey, coffee, and gift boxes shipped fresh from Houston.",
+    url: "/",
+  }),
   robots: {
     follow: true,
     index: true,
