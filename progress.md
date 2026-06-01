@@ -4,6 +4,27 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-05-31
+
+- Fixed the failed Google Search Console "Not found (404)" fix validation
+  (`sc-domain:babanuj.com`, item `CAMYDSAC`, failed 2026-05-29). 7 of the 17
+  tracked legacy `/products/...` URLs still 404'd because they fell through the
+  generic `/products/:handle → /product/:handle` redirect onto a product handle
+  that no longer exists; added explicit redirects for them.
+- Mapped the stale Amazon/TikTok channel SKUs and discontinued `bab-sharqi`
+  items to their closest live collection/product, and the orphaned
+  `lacto-microbiome…exosome` product (no live equivalent) to home — matching the
+  existing `frontpage`/`about-us` → `/` convention. Both `next.config.ts` and
+  the PDP runtime safety net share the same `STALE_PRODUCT_HANDLE_REDIRECTS`
+  map, so the single edit covers both layers.
+- Files touched: `lib/babanuj/redirects.ts`, `progress.md`.
+- Verification: `pnpm exec tsc --noEmit`, `pnpm build`, and local
+  production-server `curl` confirming all 7 handles now return 308 to a live 200
+  destination (both `/products/` and `/product/` forms), with genuinely unknown
+  handles still falling through unchanged.
+- Follow-up: merge + deploy, then click "Start new validation" on the Not found
+  (404) issue in Search Console; a recrawl of all 17 URLs should then pass.
+
 ## 2026-05-26
 
 - Fixed Ahrefs audit errors after the Shopify theme to Next.js migration:
