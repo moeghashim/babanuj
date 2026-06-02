@@ -46,6 +46,25 @@ export default {
       },
     ],
   },
+  // PostHog requires that we don't strip/append trailing slashes on its
+  // ingestion paths, or the proxied requests below break.
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    // First-party reverse proxy for PostHog so ad/tracker blockers (common on
+    // a consumer storefront) don't drop analytics. `api_host: "/ingest"` in
+    // posthog-provider.tsx points here. Hosts are the US cloud — switch to
+    // eu-assets.i.posthog.com / eu.i.posthog.com if the project lives in EU.
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+    ];
+  },
   async redirects() {
     // Old category URL pattern moved from /search/<handle> → /collections/<handle>
     // to match Shopify's native convention. 301 so any cached/external links

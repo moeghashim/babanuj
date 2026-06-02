@@ -6,6 +6,7 @@ import { MarketCatBar } from "components/babanuj/layout/cat-bar";
 import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
+import { PostHogProvider } from "components/babanuj/posthog-provider";
 import { DeferredToaster } from "components/babanuj/deferred-toaster";
 import { getCart } from "lib/shopify";
 import { ReactNode } from "react";
@@ -71,17 +72,19 @@ export default async function RootLayout({
         />
       </head>
       <body className="market-root">
-        <CartProvider cartPromise={cart}>
-          <MarketAnnounce />
-          <MarketUtility />
-          <MarketNav />
-          <MarketCatBar />
-          <main>{children}</main>
-          <MarketNewsletter />
-          <MarketFooter />
-          <DeferredToaster />
-          <ThirdPartyScripts />
-        </CartProvider>
+        <PostHogProvider>
+          <CartProvider cartPromise={cart}>
+            <MarketAnnounce />
+            <MarketUtility />
+            <MarketNav />
+            <MarketCatBar />
+            <main>{children}</main>
+            <MarketNewsletter />
+            <MarketFooter />
+            <DeferredToaster />
+            <ThirdPartyScripts />
+          </CartProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

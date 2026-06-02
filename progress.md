@@ -4,6 +4,40 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-01
+
+- Added PostHog product analytics to the headless storefront, slotted into the
+  existing analytics layer (GA4 + Meta) rather than bolted on. A new
+  `PostHogProvider` initializes the browser SDK once on mount (env-gated on
+  `NEXT_PUBLIC_POSTHOG_KEY`, so it stays inert until the key is set) with
+  `capture_pageview: "history_change"` (auto-captures the initial load + every
+  App Router client navigation, no per-route effect), `capture_pageleave`, and
+  `person_profiles: "identified_only"` (no person profile minted per anonymous
+  shopper — checkout is off-domain on checkout.babanuj.com, so we never
+  identify here).
+- Wired the three ecommerce funnel events into the shared
+  `lib/meta/events.ts` so PostHog fires alongside GA4/Meta from one call site:
+  `Product Viewed` (PDP), `Product Added to Cart` (add-to-bag), `Checkout
+  Started` (cart → checkout).
+- Added a first-party reverse proxy (`/ingest/*` → us-assets / us.i.posthog.com
+  via `next.config.ts` rewrites + `skipTrailingSlashRedirect`) so ad/tracker
+  blockers don't drop events. Switch the two rewrite hosts to the EU cloud if
+  the PostHog project is EU-region.
+- Files touched: `package.json`, `pnpm-lock.yaml`,
+  `components/babanuj/posthog-provider.tsx` (new), `app/layout.tsx`,
+  `lib/meta/events.ts`, `next.config.ts`, `.env.example`, `progress.md`.
+- Verification: `pnpm exec tsc --noEmit` clean, `pnpm build` clean (24/24
+  pages). Local dev smoke test: homepage renders with the provider mounted,
+  zero console errors, PostHog stays inert with no key set, and the `/ingest`
+  reverse proxy returns 200 with the real PostHog `array.js` bundle (confirms
+  the proxy chain end-to-end).
+- Follow-up: create the PostHog project, add `NEXT_PUBLIC_POSTHOG_KEY` (phc_…)
+  to `.env.local` and the Vercel project env, then redeploy. Enable session
+  replay + heatmaps in the PostHog project settings if wanted. Optional later:
+  server-side capture of the Shopify `orders/paid` webhook for true
+  `Order Completed` revenue (the storefront can only see Checkout Started since
+  payment happens on Shopify's domain).
+
 ## 2026-05-31
 
 - Fixed the failed Google Search Console "Not found (404)" fix validation
