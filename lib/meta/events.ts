@@ -1,5 +1,6 @@
 "use client";
 
+import posthog from "posthog-js";
 import type { Cart } from "lib/shopify/types";
 
 declare global {
@@ -102,6 +103,11 @@ function track(eventName: string, payload: MetaEventPayload, prefix: string) {
   serverTrack(eventName, payload, dedupeId);
 }
 
+function phTrack(eventName: string, payload: Record<string, unknown>) {
+  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
+  posthog.capture(eventName, payload);
+}
+
 function gaTrack(eventName: string, payload: GaEventPayload) {
   window.dataLayer = window.dataLayer || [];
   window.gtag =
@@ -126,6 +132,14 @@ function gaProductItem(product: MetaProductEvent): GaItem {
 export function trackViewContent(product: MetaProductEvent) {
   const id = contentId(product.id);
 
+  phTrack("Product Viewed", {
+    product_id: product.id,
+    name: product.name,
+    brand: product.brand,
+    price: product.price,
+    currency: "USD",
+  });
+
   gaTrack("view_item", {
     currency: "USD",
     value: product.price,
@@ -149,6 +163,16 @@ export function trackViewContent(product: MetaProductEvent) {
 export function trackAddToCart(product: MetaProductEvent) {
   const id = contentId(product.id);
   const quantity = product.quantity ?? 1;
+
+  phTrack("Product Added to Cart", {
+    product_id: product.id,
+    name: product.name,
+    brand: product.brand,
+    price: product.price,
+    quantity,
+    value: product.price * quantity,
+    currency: "USD",
+  });
 
   gaTrack("add_to_cart", {
     currency: "USD",
@@ -175,6 +199,18 @@ export function trackInitiateCheckout(cart: Cart | undefined) {
   const lines = cart?.lines ?? [];
   const subtotal = Number(cart?.cost.totalAmount.amount ?? 0);
   const currency = cart?.cost.totalAmount.currencyCode ?? "USD";
+
+  phTrack("Checkout Started", {
+    currency,
+    value: subtotal,
+    num_items: cart?.totalQuantity ?? 0,
+    products: lines.map((line) => ({
+      product_id: line.merchandise.product.handle,
+      name: line.merchandise.product.title,
+      price: Number(line.cost.totalAmount.amount) / Math.max(line.quantity, 1),
+      quantity: line.quantity,
+    })),
+  });
 
   gaTrack("begin_checkout", {
     currency,
