@@ -34,6 +34,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# posthog observer — runtime state lives on the `observer-state` branch / locally, never main
+# (a FINDINGS.json commit to main would trigger a Vercel production deploy)
+observer/FINDINGS.json
+observer/FINDINGS.next.json
+observer/DIGEST.md
+observer/.observer.lock
+observer/*.log
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
