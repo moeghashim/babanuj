@@ -1,5 +1,6 @@
 import { AccountOverview } from "components/babanuj/account/overview";
 import { AccountSetup } from "components/babanuj/account/setup";
+import { PostHogIdentify } from "components/babanuj/posthog-identify";
 import {
   getCustomerAccount,
   getCustomerSession,
@@ -28,7 +29,16 @@ export default async function AccountPage({
 
   try {
     const customer = await getCustomerAccount(session);
-    return <AccountOverview customer={customer} />;
+    return (
+      <>
+        <PostHogIdentify
+          distinctId={customer.id}
+          email={customer.emailAddress?.emailAddress}
+          name={customer.displayName}
+        />
+        <AccountOverview customer={customer} />
+      </>
+    );
   } catch (err) {
     console.error("Error loading customer account", err);
     redirect("/account/login?redirect=/account");

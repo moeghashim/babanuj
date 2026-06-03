@@ -9,6 +9,27 @@ type AddCartBody = {
   quantity?: number;
 };
 
+// posthog-js stores the anonymous distinct_id in a first-party cookie
+// (`ph_<key>_posthog`). Stamping it onto the Shopify cart as an attribute lets
+// the off-domain `orders/paid` webhook (app/api/shopify/order) attribute the
+// purchase back to the same PostHog person. Read-only, best-effort.
+function posthogCartAttributes(
+  store: Awaited<ReturnType<typeof cookies>>,
+): { key: string; value: string }[] | undefined {
+  const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+  if (!key) return undefined;
+  const raw = store.get(`ph_${key}_posthog`)?.value;
+  if (!raw) return undefined;
+  try {
+    const parsed = JSON.parse(decodeURIComponent(raw));
+    const distinctId = parsed?.distinct_id;
+    if (typeof distinctId !== "string" || !distinctId) return undefined;
+    return [{ key: "posthog_distinct_id", value: distinctId }];
+  } catch {
+    return undefined;
+  }
+}
+
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => ({}))) as AddCartBody;
   const { merchandiseId } = body;
@@ -26,9 +47,10 @@ export async function POST(request: NextRequest) {
   try {
     const store = await cookies();
     const cartId = store.get("cartId")?.value;
+    const attributes = posthogCartAttributes(store);
     const cart = cartId
       ? await addToCart(lines, cartId)
-      : await createCart(lines);
+      : await createCart(lines, attributes);
 
     revalidateTag(TAGS.cart, "seconds");
 
@@ -44,7 +66,8 @@ export async function POST(request: NextRequest) {
     console.error("Error adding item to cart", error);
 
     try {
-      const cart = await createCart(lines);
+      const attributes = posthogCartAttributes(await cookies());
+      const cart = await createCart(lines, attributes);
       revalidateTag(TAGS.cart, "seconds");
 
       const response = NextResponse.json({ cart });

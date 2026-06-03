@@ -253,6 +253,7 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
 
 export async function createCart(
   lineItems?: { merchandiseId: string; quantity: number }[],
+  attributes?: { key: string; value: string }[],
 ): Promise<Cart> {
   if (!endpoint) {
     return emptyCart();
@@ -261,6 +262,7 @@ export async function createCart(
     query: createCartMutation,
     variables: {
       lineItems,
+      attributes,
     },
   });
 
