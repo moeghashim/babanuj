@@ -625,7 +625,10 @@ button:focus-visible {
     gap: 12px !important;
   }
   .mk-pdp-grid {
-    grid-template-columns: 1fr !important;
+    /* minmax(0, 1fr) (not 1fr) so the single column can shrink below its
+       content's min-content — otherwise a wide child (e.g. the trust-badge
+       row) balloons the track past the viewport and body overflow-x clips it. */
+    grid-template-columns: minmax(0, 1fr) !important;
     gap: 28px !important;
   }
   .mk-pdp-info .display-heavy {
@@ -738,6 +741,12 @@ button:focus-visible {
   }
   .mk-cats {
     grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Trust badges: three icon+text cards can't fit side-by-side on a phone
+     (each needs ~125px for icon + an unbreakable word like "guaranteed"),
+     so stack them into a single column. Tablets (>480px) keep the 3-up row. */
+  .mk-pdp-trust {
+    grid-template-columns: 1fr !important;
   }
   .mk-hero-box {
     height: 420px !important;
