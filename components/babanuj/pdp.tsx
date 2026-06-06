@@ -176,10 +176,11 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             </div>
 
             <div
+              className="mk-pdp-trust"
               style={{
                 marginTop: 24,
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                 gap: 12,
               }}
             >
