@@ -427,7 +427,23 @@ button:focus-visible {
     grid-template-columns: 1fr auto !important;
     gap: 12px !important;
   }
+  .mk-nav-logo {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+  .mk-nav-actions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  /* Search drops onto its own full-width row under the logo on mobile. */
   .mk-nav-search {
+    display: flex !important;
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  /* The ⌘K hint is meaningless on touch — hide it on mobile. */
+  .mk-search-kbd {
     display: none !important;
   }
   .mk-nav-actions > button:not(.mk-bag):not(.mk-hamburger),

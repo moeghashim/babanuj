@@ -47,9 +47,7 @@ export function SearchBar() {
     setLoading(true);
     const t = setTimeout(async () => {
       try {
-        const res = await fetch(
-          `/api/search?q=${encodeURIComponent(q)}`,
-        );
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
         if (!res.ok) throw new Error(String(res.status));
         const data: { products: BabanujProduct[] } = await res.json();
         setResults(data.products);
@@ -195,7 +193,7 @@ export function SearchBar() {
           }}
         />
         <span
-          className="micro"
+          className="micro mk-search-kbd"
           aria-hidden
           style={{
             fontSize: 10,

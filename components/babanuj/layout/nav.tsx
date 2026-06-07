@@ -41,6 +41,7 @@ export async function MarketNav() {
       >
         <Link
           href="/"
+          className="mk-nav-logo"
           style={{
             display: "inline-flex",
             alignItems: "center",
