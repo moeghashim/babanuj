@@ -22,6 +22,37 @@ needed.
 - Follow-up: none required. Optional enhancement — promote to a live typeahead on
   mobile (the drawer field currently goes straight to the results page).
 
+## 2026-06-02
+
+- PostHog enhancements (3 of 5 follow-ups from the setup review; the other two —
+  the internal/test-user filter and pinning the Store Performance dashboard —
+  were PostHog project-side settings, not code):
+  - **Order revenue (server-side):** new `app/api/shopify/order/route.ts`
+    receives the Shopify `orders/paid` webhook, verifies the HMAC, and captures
+    an `Order Completed` event (value, currency, products) to PostHog via a new
+    `lib/posthog/server.ts` helper. Closes the funnel — checkout completes
+    off-domain on Shopify so the browser SDK never sees the purchase. Attributed
+    to the same PostHog person via a `posthog_distinct_id` cart attribute: the
+    `/api/cart/add` route reads posthog-js's first-party cookie server-side and
+    stamps it onto the cart at creation (`createCart` now takes `attributes`),
+    which rides through to the order's `note_attributes`. No change to the
+    optimistic add-to-cart client path. Inert until `SHOPIFY_WEBHOOK_SECRET` is
+    set and the webhook is registered.
+  - **Customer identify:** `components/babanuj/posthog-identify.tsx` (rendered on
+    the account page) promotes the anonymous person to an identified customer on
+    sign-in, tying replays/funnel/revenue to one profile across sessions.
+  - **SDK bump:** posthog-js 1.378.1 → 1.379.0.
+- Files: `app/api/shopify/order/route.ts` (new), `lib/posthog/server.ts` (new),
+  `components/babanuj/posthog-identify.tsx` (new), `app/api/cart/add/route.ts`,
+  `app/account/page.tsx`, `lib/shopify/index.ts`, `lib/shopify/mutations/cart.ts`,
+  `lib/shopify/types.ts`, `.env.example`, `package.json`, `pnpm-lock.yaml`.
+- Verification: `pnpm exec tsc --noEmit` clean, `pnpm build` clean (the new
+  `/api/shopify/order` route is in the route table), prettier clean.
+- Follow-up: register the Shopify `orders/paid` webhook → `/api/shopify/order`
+  and set `SHOPIFY_WEBHOOK_SECRET` (in `.env.local` + Vercel). Optionally add an
+  `Order Completed` / revenue tile to the Store Performance dashboard and extend
+  the funnel to a 4th step once orders start flowing.
+
 ## 2026-06-01
 
 - Added PostHog product analytics to the headless storefront, slotted into the

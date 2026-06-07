@@ -173,6 +173,7 @@ export type ShopifyCreateCartOperation = {
       merchandiseId: string;
       quantity: number;
     }[];
+    attributes?: { key: string; value: string }[];
   };
 };
 
