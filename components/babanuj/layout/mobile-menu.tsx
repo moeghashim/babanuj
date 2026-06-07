@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { CloseIcon, MenuIcon } from "components/babanuj/icons";
+import { CloseIcon, MenuIcon, SearchIcon } from "components/babanuj/icons";
 import { BRANDS } from "lib/babanuj/data";
 import { useMountEffect } from "lib/use-mount-effect";
 
@@ -36,6 +37,8 @@ export function MobileMenu({
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [query, setQuery] = useState("");
+  const router = useRouter();
 
   // Only render the portal client-side.
   useMountEffect(() => {
@@ -64,6 +67,15 @@ export function MobileMenu({
   }, [open]);
 
   const close = () => setOpen(false);
+
+  const submitSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const trimmed = query.trim();
+    setOpen(false);
+    router.push(
+      trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : "/search",
+    );
+  };
 
   const drawer = (
     <>
@@ -141,6 +153,48 @@ export function MobileMenu({
             <CloseIcon width={22} height={22} />
           </button>
         </header>
+
+        <form
+          role="search"
+          action="/search"
+          onSubmit={submitSearch}
+          style={{ padding: "16px 16px 6px" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              background: "var(--paper)",
+              border: "1px solid var(--rule)",
+              borderRadius: 999,
+              padding: "12px 16px",
+            }}
+          >
+            <SearchIcon width={18} height={18} />
+            <input
+              name="q"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search sweets, brands, gifts…"
+              autoComplete="off"
+              spellCheck={false}
+              enterKeyHint="search"
+              aria-label="Search products"
+              style={{
+                flex: 1,
+                minWidth: 0,
+                background: "transparent",
+                border: 0,
+                outline: "none",
+                fontFamily: "inherit",
+                fontSize: 15,
+                color: "var(--ink)",
+              }}
+            />
+          </div>
+        </form>
 
         <nav style={{ padding: "8px 12px 24px", flex: 1 }}>
           <Section label="Shop">
