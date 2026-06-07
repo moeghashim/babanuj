@@ -4,6 +4,24 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-06
+
+- Restored search on mobile. The nav typeahead (`.mk-nav-search`) is hidden at
+  `≤900px` via `display:none` in `globals.css`, and the mobile menu drawer had no
+  replacement — so phone/tablet users had no way to search at all. Added a search
+  field to the top of the mobile drawer (above the Shop section): a `role="search"`
+  form with `action="/search"` (no-JS fallback) whose `onSubmit` pushes to
+  `/search?q=…` via the App Router and closes the drawer. Desktop is untouched —
+  `.mk-hamburger` is `display:none` above 900px, so the drawer (and this field)
+  only ever shows on mobile; no double search on any viewport.
+- Files: `components/babanuj/layout/mobile-menu.tsx`.
+- Verification: `pnpm exec tsc --noEmit` clean. Preview MCP at 375px — opened the
+  drawer, typed "baklava", submitted → landed on `/search?q=baklava` ("Results for
+  \"baklava\"", 9 products), drawer auto-closed. Reused the existing, working
+  `/search` page + `/api/search` data path; no data-layer changes.
+- Follow-up: none required. Optional enhancement — promote to a live typeahead on
+  mobile (the drawer field currently goes straight to the results page).
+
 ## 2026-06-02
 
 - PostHog enhancements (3 of 5 follow-ups from the setup review; the other two —
@@ -49,7 +67,7 @@ needed.
 - Wired the three ecommerce funnel events into the shared
   `lib/meta/events.ts` so PostHog fires alongside GA4/Meta from one call site:
   `Product Viewed` (PDP), `Product Added to Cart` (add-to-bag), `Checkout
-  Started` (cart → checkout).
+Started` (cart → checkout).
 - Added a first-party reverse proxy (`/ingest/*` → us-assets / us.i.posthog.com
   via `next.config.ts` rewrites + `skipTrailingSlashRedirect`) so ad/tracker
   blockers don't drop events. Switch the two rewrite hosts to the EU cloud if
@@ -62,7 +80,7 @@ needed.
   zero console errors, PostHog stays inert with no key set, and the `/ingest`
   reverse proxy returns 200 with the real PostHog `array.js` bundle (confirms
   the proxy chain end-to-end).
-- Follow-up: create the PostHog project, add `NEXT_PUBLIC_POSTHOG_KEY` (phc_…)
+- Follow-up: create the PostHog project, add `NEXT_PUBLIC_POSTHOG_KEY` (phc\_…)
   to `.env.local` and the Vercel project env, then redeploy. Enable session
   replay + heatmaps in the PostHog project settings if wanted. Optional later:
   server-side capture of the Shopify `orders/paid` webhook for true
