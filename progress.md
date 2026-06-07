@@ -6,6 +6,27 @@ needed.
 
 ## 2026-06-06
 
+- Moved the mobile search from the slide-in menu to a persistent bar at the top of
+  the page. The previous fix put search only inside the hamburger drawer; this
+  surfaces it as a full-width row directly under the logo on mobile (`≤900px`),
+  always visible in the sticky header. Implemented by relaying out the existing nav
+  grid on mobile — logo + actions on row 1, the single existing `<SearchBar>` (full
+  typeahead) spanning row 2 via `grid-column: 1 / -1; grid-row: 2` — rather than
+  rendering a second `<SearchBar>` instance (which would duplicate the ⌘K key
+  listener and the debounced fetch). Hid the ⌘K hint on touch (`.mk-search-kbd`),
+  and removed the now-redundant search field from the drawer so the menu is
+  navigation-only. Desktop nav is unchanged (single row, search in the middle).
+- Files: `app/globals.css`, `components/babanuj/layout/nav.tsx`,
+  `components/babanuj/layout/search-bar.tsx`,
+  `components/babanuj/layout/mobile-menu.tsx`.
+- Verification: `pnpm exec tsc --noEmit` clean. Preview MCP at 375px — search is a
+  full-width row under the logo; typing "baklava" opens the typeahead (6 products +
+  "See all results"); the drawer opens as pure navigation with no search field. At
+  ~956px the nav is a single row with search in the middle and the ⌘K hint visible.
+- Follow-up: none.
+
+## 2026-06-06
+
 - Restored search on mobile. The nav typeahead (`.mk-nav-search`) is hidden at
   `≤900px` via `display:none` in `globals.css`, and the mobile menu drawer had no
   replacement — so phone/tablet users had no way to search at all. Added a search
