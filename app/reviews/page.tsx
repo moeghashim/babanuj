@@ -1,4 +1,4 @@
-import { JudgemeAllReviews } from "components/babanuj/reviews/judgeme-widgets";
+import { JudgemeFeaturedCarousel } from "components/babanuj/reviews/judgeme-widgets";
 import { openGraph } from "lib/babanuj/seo";
 
 const title = "Customer Reviews | Babanuj";
@@ -34,7 +34,7 @@ export default function ReviewsPage() {
           What customers are saying
         </h1>
       </div>
-      <JudgemeAllReviews />
+      <JudgemeFeaturedCarousel />
     </section>
   );
 }

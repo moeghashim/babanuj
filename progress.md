@@ -6,6 +6,30 @@ needed.
 
 ## 2026-06-09
 
+- Fixed the live Judge.me duplicate-injection issue after support switched the
+  store back to the legacy/cache-compatible Review Widget. `refreshJudgemeWidgets()`
+  now skips manual `reloadAll()` while Judge.me's cache server is still doing its
+  initial boot, avoiding the race that appended two preview badges/review-widget
+  bodies on first load. Swapped the homepage from the unsupported
+  `.jdgm-all-reviews-widget` cache path (returned no `all_reviews` payload and
+  left a spinner) to a cache-backed `.jdgm-carousel-wrapper` filtered to exact
+  Judge.me store/company reviews; `/reviews` keeps the mixed cache-backed
+  featured carousel as the "all reviews" fallback.
+- Files: `components/babanuj/reviews/judgeme-loader.tsx`,
+  `components/babanuj/reviews/judgeme-widgets.tsx`,
+  `components/babanuj/home/reviews.tsx`, `app/reviews/page.tsx`,
+  `app/globals.css`.
+- Verification: direct Judge.me cache checks showed `featured_carousel` returns
+  review HTML while `all_reviews_page=1` omits `all_reviews`/`all_reviews_header`.
+  Chrome on production confirmed the old state: each preview wrapper had two
+  injected `.jdgm-prev-badge` children and the homepage all-reviews widget had an
+  empty body plus spinner. Local dev with the public Judge.me token confirmed the
+  fixed PDP has one injected preview child per wrapper, one `.jdgm-rev-widg`, and
+  the homepage company-review carousel is visible with product-review carousel
+  items hidden. `pnpm exec tsc --noEmit` clean; `pnpm build` clean.
+- Follow-up: deploy the storefront change, then re-check the live PDP and
+  homepage after Vercel finishes.
+
 - **Homepage "Shop by brand" card fixes.** Three issues: (1) the Leen card
   showed a Bab Sharqi arch logo — Leen's `img` pointed at the wrong asset.
   Copied the real Leen brand mark into the repo at `public/brands/leen.png`
