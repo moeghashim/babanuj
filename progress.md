@@ -4,6 +4,98 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-09
+
+- **Phase 3 of the PDP "wrong product info" fix — remove remaining fabricated
+  content.** (1) Deleted the dead, unused `PDPReviews` (fabricated 4.9★/248
+  reviews + invented testimonials) from the PDP. (2) The homepage Wholesale
+  catalog and seed data listed a **"Bab Sharqi"** brand that doesn't exist in
+  the store — those lines (Maamoul, Barazek, Petit Four, Mixed Cookies) are
+  actually Zaitoune products, so reassigned all six `brand: "Bab Sharqi"`
+  occurrences to `"Zaitoune"`. (3) Per the brand-owner decision, stripped the
+  four curated brand pages to factual: emptied `BRAND_DETAILS` (removed the
+  invented founder names + quotes, year-by-year timelines, and fake metrics
+  like "4.9★ on 2,400 reviews", "600+ U.S. retailers", "~28,000 kg/yr"). The
+  `BabanujBrandDetail` type and BrandView's quote/timeline rendering are kept
+  as a capability for future *real* content; with the data gone, all brands now
+  render the same lean factual page (truthful description + live product grid +
+  derived facts). Homepage "What customers are saying" was intentionally left
+  as-is per the owner's decision.
+- Files: `components/babanuj/pdp.tsx`, `lib/babanuj/data.ts`.
+- Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP — `/brand/
+  zaitoune` renders the lean page (facts ORIGIN/CATEGORY/FOUNDED/LINES 24
+  products/NOTE, real description) with no timeline, founder quote, or fake
+  review/retailer/output stats; the homepage wholesale table now lists Zaitoune
+  (not Bab Sharqi) for those lines; "Bab Sharqi" appears nowhere on the page. No
+  console errors.
+- Deliberately skipped: sourcing `weight` from the Shopify variant. Variant
+  weight is the shipping weight, not the net display weight; the product titles
+  already carry the net weight ("500g", "240ml"), so the existing title parse
+  is the more accurate display source. Left as-is to avoid a regression.
+
+- **Phase 2 of the PDP "wrong product info" fix — brand mapping.** The 6
+  products from vendors that weren't in `VENDOR_TO_BRAND_ID` (Bal Coffee ×3,
+  Milaf, VAL, Reeq Alnahel) had no brand page; Phase 1 stopped mislabeling
+  them but left their chip non-linking. Mapped all four as real brands so they
+  get correct chips, brand pages, search, sitemap, and footer entries. Brand
+  facts were researched and kept truthful (Milaf — Saudi Arabia, est. 2024,
+  world's first date cola by Al Madinah Heritage Co.; VAL & Reeq Alnahel —
+  Saudi; Bal Coffee — date-seed coffee, country/year not publicly stated, so
+  left blank rather than invented). Crucially, did **not** fabricate the
+  founder quotes / year-by-year timelines / output stats the existing four
+  brands carry — instead made `BrandView` degrade gracefully: it no longer
+  falls back to Zaitoune's story when `BRAND_DETAILS` is missing, omits the
+  quote and timeline sections for brands without sourced editorial content,
+  derives an honest facts strip (Origin/Category/Founded/Lines/Note) from live
+  data, and guards the `Est.`/origin labels. Added a `featured` flag so the
+  image-heavy homepage "Shop by brand" grid and the brand-page "Other houses"
+  cross-sell stay at the 4 curated houses. Softened the wholesale CTA's
+  unverifiable "exclusive U.S. distributor" line. Fixed "1 products" → "1
+  product".
+- Files: `lib/babanuj/data.ts`, `lib/babanuj/from-shopify.ts`,
+  `components/babanuj/brand-view.tsx`, `components/babanuj/home/brands.tsx`,
+  `components/babanuj/layout/mobile-menu.tsx`.
+- Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP — `/brand/
+  bal-coffee` renders a lean honest page (3 real products, derived facts, no
+  Est. badge, no fabricated quote/timeline); `/brand/milaf` shows "Saudi
+  Arabia · Est. 2024", "From Saudi Arabia, with care.", "1 product"; homepage
+  still shows exactly 4 brand cards; footer lists all 8 brands. No console
+  errors.
+- Follow-up: Phase 3 — replace the fabricated stats/timelines/quotes on the
+  original four brands and the dead `PDPReviews`/seed "Bab Sharqi" data; source
+  weight from the variant instead of the title regex.
+
+- **Phase 1 of the PDP "wrong product info" fix.** The PDP was fabricating
+  product content instead of showing the real Shopify data: every product's
+  Description tab was templated brand copy ("…hand-rolled, slow-baked… Crisp
+  top crust… pistachio, cardamom…"), the Ingredients & nutrition tab was a
+  fixed wheat-flour/142-kcal block, and the spec grid invented allergens and
+  shelf life — even though all 63 products carry real `description`/
+  `descriptionHtml` from Shopify (the adapter just dropped them). Brand also
+  silently fell back to the first curated house, so the 6 products from
+  unmapped vendors (Bal Coffee ×3, Reeq Alnahel, Milaf, VAL) rendered as
+  "Zaitoune · Gaziantep" with Zaitoune's story.
+  Fixes: carry `brandId`/`description`/`descriptionHtml` on `BabanujProduct`
+  and populate them in the adapter; render the real `descriptionHtml` on the
+  PDP; add `resolveProductBrand()` (resolve by id, then name, then a minimal
+  synthetic brand from the real vendor — no more Zaitoune default); guard the
+  brand chip + "Visit brand" link so unmapped vendors don't link to a missing
+  `/brand/` page; drop the fabricated Ingredients & nutrition tab and the
+  invented Allergens/Shelf-life spec cells.
+- Files: `lib/babanuj/data.ts`, `lib/babanuj/from-shopify.ts`,
+  `components/babanuj/pdp.tsx`.
+- Verification: `pnpm exec tsc --noEmit` and `pnpm build` clean. Preview MCP —
+  the BAL Coffee PDP now shows brand "BAL COFFEE", a Coffee breadcrumb, the
+  real "…roasted date seeds…" description, real sibling Bal Coffee products,
+  and no Origin/Allergens/Shelf-life invented fields; the Zaitoune baklava PDP
+  shows its real Shopify description plus the correct Maker card. No console
+  errors.
+- Follow-up: Phase 2 — add the 4 unmapped vendors as real curated brands
+  (BRANDS / VENDOR_TO_BRAND_ID / vendorFromBrandId / BRAND_DETAILS) so they get
+  correct chips + brand pages; optionally wire real ingredient/nutrition
+  metafields. Phase 3 — replace fabricated brand-page stats/timelines and the
+  dead `PDPReviews`/seed "Bab Sharqi" data; source weight from the variant.
+
 ## 2026-06-06
 
 - Fixed the PDP tab strip on mobile. The three tab labels ("Description",

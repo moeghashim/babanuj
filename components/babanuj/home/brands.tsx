@@ -4,6 +4,9 @@ import { Photo } from "components/babanuj/photo";
 import { BRANDS } from "lib/babanuj/data";
 
 export function MarketBrands() {
+  // Curated "houses" only — the secondary Shopify vendors mapped as brands
+  // get pages + chips but aren't shown in this image-heavy homepage grid.
+  const featured = BRANDS.filter((b) => b.featured);
   return (
     <section
       style={{
@@ -42,11 +45,11 @@ export function MarketBrands() {
         className="mk-brands"
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${BRANDS.length}, 1fr)`,
+          gridTemplateColumns: `repeat(${featured.length}, 1fr)`,
           gap: 16,
         }}
       >
-        {BRANDS.map((b) => (
+        {featured.map((b) => (
           <Link
             key={b.id}
             href={`/brand/${b.id}`}
