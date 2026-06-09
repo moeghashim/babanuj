@@ -6,6 +6,59 @@ needed.
 
 ## 2026-06-09
 
+- Integrated **Judge.me** reviews — product reviews (PDP + product cards) and
+  company/shop reviews (homepage + a new `/reviews` page). Deliberately did NOT
+  use `@judgeme/shopify-hydrogen` (hard peer-deps on `@shopify/hydrogen`, targets
+  React 18 — wrong for this Next.js 15 / React 19 app). Instead used Judge.me's
+  documented **platform-independent widgets**: a client loader that injects the
+  `window.jdgm` settings + CDN preloader (`next/script`, `afterInteractive`), and
+  thin wrappers that render Judge.me's `.jdgm-widget` divs. Everything renders
+  nothing until `NEXT_PUBLIC_JUDGEME_*` is configured, so unconfigured envs stay
+  clean. SPA soft-navigation re-scan handled by calling Judge.me's re-init from
+  each widget's `useMountEffect`. Widgets key on the numeric Shopify product id,
+  derived from the Storefront GID via `numericProductId()` (no GraphQL change).
+  Removed the dead `PDPReviews()` mock and the hardcoded homepage testimonials /
+  "4.9★ on 2,400 reviews" brand-timeline line (AGENTS.md: no hardcoded ratings).
+- Files: new `components/babanuj/reviews/{config.ts,judgeme-loader.tsx,judgeme-widgets.tsx}`,
+  new `app/reviews/page.tsx`; edited `app/layout.tsx`, `components/babanuj/product-card.tsx`,
+  `components/babanuj/pdp.tsx`, `components/babanuj/home/reviews.tsx`,
+  `components/babanuj/layout/footer.tsx`, `lib/babanuj/data.ts`, `.env.example`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean (26/26 pages,
+  `/reviews` in route table). Preview MCP, unconfigured: `/`, a real PDP, and
+  `/reviews` render with zero widget shells and no console errors; old hardcoded
+  eyebrow gone; 34 product cards intact. Preview MCP, enabled via temporary dummy
+  creds (then reverted): both loader scripts inject, `window.jdgm` settings apply,
+  24 preview badges render, the live Shopify GID is correctly stripped to the
+  numeric id (`8871751483650`), homepage + `/reviews` all-reviews widgets mount,
+  and after a **client-side soft-navigation** the PDP header badge + review widget
+  (`#judgeme_product_reviews`, numeric `data-id`, product title) re-mount with no
+  uncaught errors. The only console `warn`s were Judge.me's own script reporting
+  it can't fetch content with the dummy token — expected, resolves with real creds.
+- Follow-up (Phase 0, user actions in Judge.me/Shopify admin, NOT done here):
+  confirm the store is on the **Awesome plan** with products synced; enable the
+  Platform-independent Review Widget and set `NEXT_PUBLIC_JUDGEME_SHOP_DOMAIN` +
+  `NEXT_PUBLIC_JUDGEME_PUBLIC_TOKEN` (local + Vercel); confirm the admin loader
+  snippet matches `judgeme-loader.tsx` (script src + the re-scan global name —
+  `jdgmSetup`/`jdgm.batchSetup` — verify in browser). Optional later phases:
+  server-side `AggregateRating` JSON-LD for SEO (uses `JUDGEME_PRIVATE_TOKEN`);
+  tune widget styling via Judge.me's customizer to match the v2 look.
+- **Post-upgrade fixes (after store moved to Awesome + real public token tested):**
+  inspecting the live preloader at `cdnwidget.judge.me/widget_preloader.js`
+  surfaced three corrections. (1) Default loader host → `cdnwidget.judge.me`
+  (the old `cdn.judge.me/widget_preloader.js` 308-redirects there). (2) The
+  cache-server loader exposes `window.jdgmCacheServer.reloadAll()`, not the
+  `jdgmSetup()` I'd guessed — fixed `refreshJudgemeWidgets()` to call it
+  (debounced, so a grid of badges triggers one reload). (3) Switched the review
+  widget off the legacy `jdgm-outside-widget` class to the canonical
+  `jdgm-review-widget` markup (`data-product-id` + `data-widget="review"`).
+  Verified with the real token: preview badges hydrate with live data
+  (`jdgm--done-setup`, "1 review"/"No reviews", real stars); no console errors.
+  The full review-widget body is currently empty because Judge.me's cache
+  returns `review_widgets: "<div></div>"` for the just-enabled store (badge HTML
+  generates first, the widget lags) — confirmed by querying
+  `cache.judge.me/widgets/...` directly. Self-resolves on Judge.me's side within
+  minutes; no code change needed. Both `NEXT_PUBLIC_JUDGEME_*` vars are set in
+  Vercel (all 3 environments).
 - **Phase 3 of the PDP "wrong product info" fix — remove remaining fabricated
   content.** (1) Deleted the dead, unused `PDPReviews` (fabricated 4.9★/248
   reviews + invented testimonials) from the PDP. (2) The homepage Wholesale

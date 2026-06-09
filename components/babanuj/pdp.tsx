@@ -14,6 +14,10 @@ import { Photo } from "components/babanuj/photo";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import {
+  JudgemePreviewBadge,
+  JudgemeReviewWidget,
+} from "components/babanuj/reviews/judgeme-widgets";
+import {
   categoryFor,
   fmtPrice,
   resolveProductBrand,
@@ -285,6 +289,12 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             >
               {p.name}
             </h1>
+
+            {/* Star summary — links down to the full review widget below. */}
+            <JudgemePreviewBadge
+              productId={p.id}
+              style={{ margin: "0 0 12px" }}
+            />
 
             <div
               style={{
@@ -560,6 +570,11 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             {tab === "shipping" && <PDPShipping />}
           </div>
         </div>
+      </section>
+
+      {/* Customer reviews (Judge.me) */}
+      <section style={{ padding: "8px 56px 24px" }}>
+        <JudgemeReviewWidget productId={p.id} productTitle={p.name} />
       </section>
 
       {fromBrand.length > 0 && (
