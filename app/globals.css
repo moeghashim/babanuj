@@ -305,6 +305,10 @@ button {
   padding: 10px 56px;
   scroll-padding-inline: 56px;
   scrollbar-width: none;
+  /* Dedicated horizontal scroller: keep slides crisp by claiming the
+     horizontal pan instead of letting diagonal swipes fall through to
+     vertical page scroll. Taps are unaffected. */
+  touch-action: pan-x;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -327,6 +331,19 @@ button {
   user-select: none;
   white-space: nowrap;
   -webkit-user-drag: none;
+}
+
+/* Invisible tap-target expander. The visible label keeps its tight spacing,
+   but the hit area grows to fill the bar's full height and half of each gap
+   on either side, so taps in the gaps and along the bar's top/bottom edge
+   still select the nearest item instead of falling through to dead space. */
+.mk-catbar-link::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -12px;
+  right: -12px;
 }
 
 .mk-catbar-link-active {
