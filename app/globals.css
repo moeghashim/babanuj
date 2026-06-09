@@ -650,6 +650,26 @@ button:focus-visible {
   .mk-pdp-info .display-heavy {
     font-size: 32px !important;
   }
+  /* PDP tabs: the three labels (esp. "Ingredients & nutrition") don't fit on
+     one row on phones, so the flex items shrank and the text wrapped into
+     ragged 2-3 line tabs jammed against the edge. Make the strip scroll
+     horizontally with each label intact on a single line — same pattern as
+     .mk-catbar. Above 900px the tabs fit, so the track never scrolls. */
+  .mk-pdp-tabs {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 20px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .mk-pdp-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .mk-pdp-tab-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+  }
   .mk-pdp-tab {
     grid-template-columns: 1fr !important;
     gap: 24px !important;
@@ -763,6 +783,12 @@ button:focus-visible {
      so stack them into a single column. Tablets (>480px) keep the 3-up row. */
   .mk-pdp-trust {
     grid-template-columns: 1fr !important;
+  }
+  /* Tighten tab padding on phones so the strip is more compact and the next
+     tab peeks in, signalling the row scrolls. */
+  .mk-pdp-tab-btn {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
   .mk-hero-box {
     height: 420px !important;
