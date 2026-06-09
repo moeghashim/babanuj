@@ -90,12 +90,9 @@ export function CategoryView({
       {/* Category header — single column. Category switching lives in the
          sticky cat-bar above, so there's no duplicate chip list here. */}
       <section style={{ padding: "16px 56px 20px" }}>
-        <span className="micro" style={{ color: "var(--accent-dark)" }}>
-          {baseItems.length} products · {brands.length - 1} brands
-        </span>
         <h1
           className="display-heavy"
-          style={{ fontSize: 64, margin: "6px 0 10px", lineHeight: 1 }}
+          style={{ fontSize: 64, margin: "0 0 10px", lineHeight: 1 }}
         >
           {title}
         </h1>
