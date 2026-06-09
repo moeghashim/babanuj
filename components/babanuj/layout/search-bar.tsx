@@ -178,6 +178,10 @@ export function SearchBar() {
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          inputMode="search"
+          enterKeyHint="search"
           spellCheck={false}
           aria-autocomplete="list"
           aria-controls="search-typeahead"
@@ -188,7 +192,9 @@ export function SearchBar() {
             border: 0,
             outline: "none",
             fontFamily: "inherit",
-            fontSize: 14,
+            // Keep at >=16px: iOS Safari auto-zooms (and shifts the page out
+            // of the viewport) when a focused input is smaller than 16px.
+            fontSize: 16,
             color: "var(--ink)",
           }}
         />
