@@ -636,9 +636,14 @@ button:focus-visible {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
+  /* Keep Filters (left) and Sort (right) on one row on mobile. The product
+     count is the ~110px that forced Sort to wrap, so it's hidden here (it
+     stays on desktop, where there's room). */
   .mk-cat-toolbar {
-    flex-wrap: wrap !important;
     gap: 8px !important;
+  }
+  .mk-cat-count {
+    display: none !important;
   }
   .mk-cat-main {
     grid-template-columns: 1fr !important;
