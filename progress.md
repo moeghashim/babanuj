@@ -6,6 +6,30 @@ needed.
 
 ## 2026-06-09
 
+- **Homepage "Shop by brand" card fixes.** Three issues: (1) the Leen card
+  showed a Bab Sharqi arch logo — Leen's `img` pointed at the wrong asset.
+  Copied the real Leen brand mark into the repo at `public/brands/leen.png`
+  (gold Arabic "لين / تمور فاخرة") and pointed Leen's `img` at it. Because
+  it's a transparent logo (not a full-bleed photo), render local `/brands/*`
+  images with `object-fit: contain` + padding on the accent panel instead of
+  `cover` — applied on the homepage card and the brand page hero / "other
+  houses" cards. (2) Every card read "3 products" — that was `b.products.length`
+  (the hardcoded 3-item preview list). `MarketBrands` is now an async server
+  component that fetches the live per-vendor count (cached) and renders it, so
+  the cards show the real catalog size. (3) The "All 32 brands →" link was
+  hardcoded; made it `All {BRANDS.length} brands` so it reflects the real
+  total.
+- Files: `lib/babanuj/data.ts`, `components/babanuj/home/brands.tsx`,
+  `components/babanuj/brand-view.tsx`, `public/brands/leen.png` (new).
+- Verification: `tsc --noEmit` + `pnpm build` clean. Ran the dev server and
+  inspected the rendered homepage — the cards now read Zaitoune 24, Babanuj 18,
+  Leen 13, Crush 2; the header reads "All 8 brands"; the Leen card shows the
+  gold Leen logo contained on its brown panel. Headless screenshot confirmed
+  the logo renders cleanly. (Done in a worktree off main since the main tree
+  was mid-merge.)
+- Follow-up: the footer and the homepage trust strip still say "32 … brands" —
+  out of scope here, worth aligning later.
+
 - **Phase 3 of the PDP "wrong product info" fix — remove remaining fabricated
   content.** (1) Deleted the dead, unused `PDPReviews` (fabricated 4.9★/248
   reviews + invented testimonials) from the PDP. (2) The homepage Wholesale
