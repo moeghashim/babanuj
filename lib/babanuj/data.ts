@@ -134,7 +134,7 @@ export const BRANDS: BabanujBrand[] = [
     note: "Hand-stuffed",
     accent: "#5e3a1e",
     color2: "#d6a06e",
-    img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
+    img: "/brands/leen.png",
     products: ["Stuffed Dates", "Chocolate Dates", "Premium Date Gift Boxes"],
     featured: true,
   },

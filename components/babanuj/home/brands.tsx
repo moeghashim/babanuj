@@ -1,12 +1,25 @@
 import Link from "next/link";
 import { ArrowRight } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
-import { BRANDS } from "lib/babanuj/data";
+import { BRANDS, vendorFromBrandId } from "lib/babanuj/data";
+import { getProducts } from "lib/shopify";
 
-export function MarketBrands() {
+export async function MarketBrands() {
   // Curated "houses" only — the secondary Shopify vendors mapped as brands
   // get pages + chips but aren't shown in this image-heavy homepage grid.
   const featured = BRANDS.filter((b) => b.featured);
+  // Live product count per house (cached), so the card matches the store
+  // instead of the length of the hardcoded `products` preview list.
+  const counts = await Promise.all(
+    featured.map(async (b) => {
+      const vendor = vendorFromBrandId(b.id);
+      if (!vendor) return 0;
+      const products = await getProducts({
+        query: `vendor:"${vendor}"`,
+      }).catch(() => []);
+      return products.length;
+    }),
+  );
   return (
     <section
       style={{
@@ -38,7 +51,7 @@ export function MarketBrands() {
           href="/brand/zaitoune"
           style={{ color: "var(--accent)", fontWeight: 600, fontSize: 14 }}
         >
-          All 32 brands →
+          All {BRANDS.length} brands →
         </Link>
       </div>
       <div
@@ -49,7 +62,12 @@ export function MarketBrands() {
           gap: 16,
         }}
       >
-        {featured.map((b) => (
+        {featured.map((b, i) => {
+          const count = counts[i] ?? 0;
+          // Local brand marks are transparent logos — contain them on the
+          // accent panel rather than cropping (cover) like a photo.
+          const isLogo = b.img.startsWith("/brands/");
+          return (
           <Link
             key={b.id}
             href={`/brand/${b.id}`}
@@ -68,7 +86,12 @@ export function MarketBrands() {
                 alt={b.name}
                 quality={60}
                 sizes="(max-width: 900px) 96px, 140px"
-                style={{ position: "absolute", inset: 0 }}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  objectFit: isLogo ? "contain" : "cover",
+                  padding: isLogo ? 16 : 0,
+                }}
               />
             </div>
             <div style={{ padding: 18 }}>
@@ -106,7 +129,7 @@ export function MarketBrands() {
                   className="market-chip chip-soft"
                   style={{ fontSize: 11 }}
                 >
-                  {b.products.length} products
+                  {count} {count === 1 ? "product" : "products"}
                 </span>
                 <span
                   style={{
@@ -123,7 +146,8 @@ export function MarketBrands() {
               </div>
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

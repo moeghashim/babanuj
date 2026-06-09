@@ -158,7 +158,12 @@ export function BrandView({ brand, products = [] }: Props) {
           <Photo
             src={brand.img}
             alt={brand.name}
-            style={{ position: "absolute", inset: 0 }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              objectFit: brand.img.startsWith("/brands/") ? "contain" : "cover",
+              padding: brand.img.startsWith("/brands/") ? 48 : 0,
+            }}
           />
           <div
             style={{
@@ -638,7 +643,14 @@ export function BrandView({ brand, products = [] }: Props) {
                 <Photo
                   src={b.img}
                   alt={b.name}
-                  style={{ position: "absolute", inset: 0 }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    objectFit: b.img.startsWith("/brands/")
+                      ? "contain"
+                      : "cover",
+                    padding: b.img.startsWith("/brands/") ? 16 : 0,
+                  }}
                 />
               </div>
               <div style={{ padding: 18 }}>
