@@ -360,6 +360,25 @@ button {
   right: 0;
 }
 
+/* The logo wordmark is a wide but only ~28px-tall tap target with no padding,
+   so thumb taps that land just above or below the text hit the nav background
+   and never reach the home link — clicks work, touch often misses. This
+   invisible expander grows the hit area vertically to fill the nav's top row,
+   staying clear of the search row below and the menu/bag actions to the right
+   (no layout shift, since it's an absolutely-positioned pseudo-element). */
+.mk-nav-logo {
+  position: relative;
+}
+
+.mk-nav-logo::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+}
+
 /* ============ FOCUS ============ */
 a,
 input,
