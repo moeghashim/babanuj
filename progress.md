@@ -42,6 +42,23 @@ needed.
   `jdgmSetup`/`jdgm.batchSetup` — verify in browser). Optional later phases:
   server-side `AggregateRating` JSON-LD for SEO (uses `JUDGEME_PRIVATE_TOKEN`);
   tune widget styling via Judge.me's customizer to match the v2 look.
+- **Post-upgrade fixes (after store moved to Awesome + real public token tested):**
+  inspecting the live preloader at `cdnwidget.judge.me/widget_preloader.js`
+  surfaced three corrections. (1) Default loader host → `cdnwidget.judge.me`
+  (the old `cdn.judge.me/widget_preloader.js` 308-redirects there). (2) The
+  cache-server loader exposes `window.jdgmCacheServer.reloadAll()`, not the
+  `jdgmSetup()` I'd guessed — fixed `refreshJudgemeWidgets()` to call it
+  (debounced, so a grid of badges triggers one reload). (3) Switched the review
+  widget off the legacy `jdgm-outside-widget` class to the canonical
+  `jdgm-review-widget` markup (`data-product-id` + `data-widget="review"`).
+  Verified with the real token: preview badges hydrate with live data
+  (`jdgm--done-setup`, "1 review"/"No reviews", real stars); no console errors.
+  The full review-widget body is currently empty because Judge.me's cache
+  returns `review_widgets: "<div></div>"` for the just-enabled store (badge HTML
+  generates first, the widget lags) — confirmed by querying
+  `cache.judge.me/widgets/...` directly. Self-resolves on Judge.me's side within
+  minutes; no code change needed. Both `NEXT_PUBLIC_JUDGEME_*` vars are set in
+  Vercel (all 3 environments).
 
 ## 2026-06-06
 

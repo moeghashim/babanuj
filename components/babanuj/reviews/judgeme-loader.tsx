@@ -34,20 +34,33 @@ import {
  */
 
 /**
- * Re-run Judge.me's DOM scan. The preloader scans for `.jdgm-widget` elements
- * once on load; App Router soft-navigation doesn't re-trigger that, so widget
- * wrappers call this on mount. No-op before the script has loaded (the
- * preloader's own onload scan covers the first paint) and if the global name
- * differs in your account's snippet — confirm it in the Preview smoke test.
+ * Re-render Judge.me widgets after an App Router soft-navigation. The
+ * Awesome-plan cache-server preloader auto-renders on first load, but doesn't
+ * re-scan when Next.js swaps the page client-side — so each widget calls this
+ * on mount. Calls are debounced into one reload, so a grid of badges triggers a
+ * single batched re-render rather than one network round-trip per card.
+ *
+ * The cache-server loader exposes `window.jdgmCacheServer.reloadAll()` (verified
+ * against cdnwidget.judge.me/widget_preloader.js); `jdgmSetup()` is kept as a
+ * fallback for the older loader. Safe no-op before the preloader has loaded —
+ * first paint is covered by its own auto-render.
  */
+let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+
 export function refreshJudgemeWidgets() {
   if (typeof window === "undefined") return;
-  const w = window as unknown as {
-    jdgmSetup?: () => void;
-    jdgm?: { batchSetup?: () => void };
-  };
-  if (typeof w.jdgmSetup === "function") w.jdgmSetup();
-  else if (typeof w.jdgm?.batchSetup === "function") w.jdgm.batchSetup();
+  if (refreshTimer) clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(() => {
+    refreshTimer = null;
+    const w = window as unknown as {
+      jdgmCacheServer?: { reloadAll?: () => void; reloadAllWidgets?: () => void };
+      jdgmSetup?: () => void;
+    };
+    if (typeof w.jdgmCacheServer?.reloadAll === "function") w.jdgmCacheServer.reloadAll();
+    else if (typeof w.jdgmCacheServer?.reloadAllWidgets === "function")
+      w.jdgmCacheServer.reloadAllWidgets();
+    else if (typeof w.jdgmSetup === "function") w.jdgmSetup();
+  }, 50);
 }
 
 export function JudgemeLoader() {

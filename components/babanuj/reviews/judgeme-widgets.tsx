@@ -54,12 +54,18 @@ export function JudgemeReviewWidget({
 }) {
   useJudgemeRefresh();
   if (!JUDGEME_ENABLED) return null;
+  // Canonical inline review-widget markup. NOT `jdgm-outside-widget` — that's a
+  // relocation placeholder that renders empty without a paired primary widget.
+  const id = numericProductId(productId);
   return (
     <div
       id="judgeme_product_reviews"
-      className="jdgm-widget jdgm-review-widget jdgm-outside-widget"
-      data-id={numericProductId(productId)}
+      className="jdgm-widget jdgm-review-widget"
+      data-id={id}
+      data-product-id={id}
       data-product-title={productTitle}
+      data-widget="review"
+      data-auto-install="false"
     />
   );
 }
