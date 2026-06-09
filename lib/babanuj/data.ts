@@ -285,7 +285,7 @@ export const PRODUCTS: BabanujProduct[] = [
     variantId: "p3",
     handle: "maamoul-date-cookies",
     name: "Maamoul Date Cookies",
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     price: 16.99,
     weight: "480g · 24 pieces",
     tag: "Traditional",
@@ -362,7 +362,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     variantId: "e5",
     handle: "maamoul-large-tray",
     name: "Maamoul 500g Tray",
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     price: 21.6,
     weight: "500g · large tray",
     tag: "Family",
@@ -485,25 +485,25 @@ export const CATALOG: BabanujCatalogRow[] = [
     channels: ["Grocery", "Specialty", "Foodservice"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Petit Four",
     formats: "12 pcs Box · 18 pcs Box",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Maamoul",
     formats: "12 pcs · 24 pcs · 480g",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Barazek",
     formats: "12 pcs · 24 pcs · 500g",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Mixed Cookies",
     formats: "500g · 1kg · 2kg",
     channels: ["Grocery", "Wholesale", "Foodservice"],
@@ -528,148 +528,12 @@ export type BabanujBrandDetail = {
   timeline: { year: string; t: string }[];
 };
 
-export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {
-  zaitoune: {
-    founder: "Mehmet & Ayşe Demir",
-    region: "Gaziantep, Türkiye",
-    yearLabel: "Three generations",
-    signature: "Pistachio Baklava",
-    quote: `"Our grandfather's recipe is on the wall. We've never written it down — we hand it from one pair of fingers to the next."`,
-    quoteBy: "Ayşe Demir, head baker",
-    longStory: [
-      "Zaitoune began in 1991 in a stone-floored kitchen in Gaziantep, six blocks from the pistachio market. The Demir family had been baking sweets out of that same room since 1953 — Zaitoune is just the name they finally gave it.",
-      "Everything is rolled by hand on a marble slab. The phyllo is so thin you can read a newspaper through it. The pistachios are bought from the same farm cooperative their grandfather worked with, in Şanlıurfa.",
-      `Every tray of baklava is rolled, layered and baked the same morning it leaves the kitchen. By the time it reaches our Houston warehouse, it's typically less than 96 hours from the oven.`,
-    ],
-    facts: [
-      { k: "Founded", v: "1991" },
-      { k: "Region", v: "Gaziantep, Türkiye" },
-      { k: "Maker", v: "Demir family · 3rd gen" },
-      { k: "Signature", v: "Pistachio Baklava" },
-      { k: "Lines", v: "14 products" },
-      { k: "Annual output", v: "~28,000 kg" },
-    ],
-    timeline: [
-      {
-        year: "1953",
-        t: "Grandfather Hasan starts selling baklava from a market stall in Gaziantep.",
-      },
-      {
-        year: "1991",
-        t: "The shop takes the name Zaitoune. First catalog printed.",
-      },
-      {
-        year: "2009",
-        t: "Ayşe & Mehmet take over from their father, modernize the kitchen.",
-      },
-      { year: "2022", t: "Babanuj signs as exclusive U.S. distributor." },
-      {
-        year: "2026",
-        t: "In-stock across 600+ U.S. retailers; 4.9★ on 2,400 reviews.",
-      },
-    ],
-  },
-  babanuj: {
-    founder: "The Babanuj team",
-    region: "Houston, Texas",
-    yearLabel: "Founded 2023",
-    signature: "House Gift Boxes",
-    quote: `"We started Babanuj to put heirloom sweets in the hands of people who grew up with them — and the people about to discover them."`,
-    quoteBy: "The Babanuj team",
-    longStory: [
-      "Babanuj is the umbrella house. We curate the heritage brands you see in the pantry — Zaitoune, Leen, Crush, and others — and we also make our own things: gift assortments, holiday boxes, and seasonal blends you won't find anywhere else.",
-      "Every Babanuj-branded product is assembled in Houston, from components sourced through our partner houses. The work is done in-house so we can move quickly on holidays, Eid, and pop-up collaborations.",
-      "Our goal is simple: never compromise on the originals, and use Babanuj's house line to fill the gaps the heritage houses don't.",
-    ],
-    facts: [
-      { k: "Founded", v: "2023" },
-      { k: "Region", v: "Houston, TX" },
-      { k: "Role", v: "House line + curator" },
-      { k: "Signature", v: "Gift Boxes" },
-      { k: "Lines", v: "23 products" },
-      { k: "Assembly", v: "Houston, TX" },
-    ],
-    timeline: [
-      { year: "2023", t: "Babanuj launches as a curated import house." },
-      { year: "2024", t: "First in-house gift boxes ship for Ramadan + Eid." },
-      { year: "2025", t: "Holiday line expanded to 23 SKUs." },
-      {
-        year: "2026",
-        t: "Wholesale program opens to U.S. specialty retailers.",
-      },
-    ],
-  },
-  leen: {
-    founder: "Leen family",
-    region: "Gulf",
-    yearLabel: "Family-run",
-    signature: "Stuffed Dates",
-    quote: `"A date is a small thing. Done right, it carries a whole season of sun, water, and patience."`,
-    quoteBy: "Leen family",
-    longStory: [
-      "Leen is a Gulf-based confectionary built around the date — Medjool, Khudri, Sukkari — grown on family-owned groves and hand-finished with pistachios, almonds, and single-origin chocolate.",
-      "Every variety is selected by hand. Stuffing happens the same week the dates leave the grove. Babanuj is Leen's exclusive U.S. distributor, which means every order ships from our Houston warehouse within 48 hours of arrival.",
-      "Stuffed dates, chocolate-coated dates, and tray gift boxes anchor the line. Each piece is a small bite, and the trays are designed to share.",
-    ],
-    facts: [
-      { k: "Founded", v: "2020" },
-      { k: "Region", v: "Gulf" },
-      { k: "Maker", v: "Leen family" },
-      { k: "Signature", v: "Stuffed Dates" },
-      { k: "Lines", v: "13 products" },
-      { k: "Variety", v: "Medjool · Khudri · Sukkari" },
-    ],
-    timeline: [
-      { year: "2020", t: "Leen launches with hand-stuffed Medjool dates." },
-      { year: "2022", t: "Chocolate-coated line introduced." },
-      { year: "2024", t: "First Leen shipment lands in Houston." },
-      { year: "2026", t: "Premium gift-box line expands to 13 SKUs." },
-    ],
-  },
-  crush: {
-    founder: "Omar Al-Hashimi",
-    region: "Dubai, UAE",
-    yearLabel: "Modern · 3 years young",
-    signature: "Dubai Chocolate Bar",
-    quote: `"I'd lived in Dubai my whole life and never seen people queue for chocolate. Then we put it on TikTok and the line went around the block."`,
-    quoteBy: "Omar Al-Hashimi, founder",
-    longStory: [
-      "Crush is the youngest house in our pantry. Founded in 2023 by Omar Al-Hashimi, the brand built itself around a single idea — kataifi pastry and pistachio cream, layered into single-origin chocolate, finished by hand.",
-      "The bar went viral on TikTok in 2024 and has been chasing demand ever since. Crush keeps the recipe tight, the run limited, and the price honest. Every bar is stamped with the Crush seal before it leaves the kitchen.",
-      "In two years, Crush has shipped chocolate to 38 countries. Babanuj is its exclusive U.S. partner.",
-    ],
-    facts: [
-      { k: "Founded", v: "2023" },
-      { k: "Region", v: "Dubai, UAE" },
-      { k: "Maker", v: "Omar Al-Hashimi" },
-      { k: "Signature", v: "Dubai Chocolate Bar" },
-      { k: "Lines", v: "7 products" },
-      { k: "Output", v: "Limited · 1,200 bars/wk" },
-    ],
-    timeline: [
-      {
-        year: "2021",
-        t: "Omar tests the recipe out of a rented commercial kitchen.",
-      },
-      {
-        year: "2023",
-        t: "Crush launches with one product: the Dubai Chocolate Bar.",
-      },
-      {
-        year: "2024",
-        t: "TikTok virality. Production triples in 4 months.",
-      },
-      {
-        year: "2025",
-        t: "New flavors added; international shipping begins.",
-      },
-      {
-        year: "2026",
-        t: "Crush lands in 600+ U.S. retailers via Babanuj.",
-      },
-    ],
-  },
-};
+// Rich editorial detail (founder quote, year-by-year timeline, output
+// stats) is intentionally empty: the prior entries were fabricated. BrandView
+// renders a lean, factual page (description + live product grid + derived
+// facts) for any brand without an entry here. Add one only with real,
+// sourced content.
+export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {};
 
 export const fmtPrice = (n: number) => "$" + n.toFixed(2);
 

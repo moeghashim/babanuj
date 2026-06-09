@@ -6,6 +6,33 @@ needed.
 
 ## 2026-06-09
 
+- **Phase 3 of the PDP "wrong product info" fix — remove remaining fabricated
+  content.** (1) Deleted the dead, unused `PDPReviews` (fabricated 4.9★/248
+  reviews + invented testimonials) from the PDP. (2) The homepage Wholesale
+  catalog and seed data listed a **"Bab Sharqi"** brand that doesn't exist in
+  the store — those lines (Maamoul, Barazek, Petit Four, Mixed Cookies) are
+  actually Zaitoune products, so reassigned all six `brand: "Bab Sharqi"`
+  occurrences to `"Zaitoune"`. (3) Per the brand-owner decision, stripped the
+  four curated brand pages to factual: emptied `BRAND_DETAILS` (removed the
+  invented founder names + quotes, year-by-year timelines, and fake metrics
+  like "4.9★ on 2,400 reviews", "600+ U.S. retailers", "~28,000 kg/yr"). The
+  `BabanujBrandDetail` type and BrandView's quote/timeline rendering are kept
+  as a capability for future *real* content; with the data gone, all brands now
+  render the same lean factual page (truthful description + live product grid +
+  derived facts). Homepage "What customers are saying" was intentionally left
+  as-is per the owner's decision.
+- Files: `components/babanuj/pdp.tsx`, `lib/babanuj/data.ts`.
+- Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP — `/brand/
+  zaitoune` renders the lean page (facts ORIGIN/CATEGORY/FOUNDED/LINES 24
+  products/NOTE, real description) with no timeline, founder quote, or fake
+  review/retailer/output stats; the homepage wholesale table now lists Zaitoune
+  (not Bab Sharqi) for those lines; "Bab Sharqi" appears nowhere on the page. No
+  console errors.
+- Deliberately skipped: sourcing `weight` from the Shopify variant. Variant
+  weight is the shipping weight, not the net display weight; the product titles
+  already carry the net weight ("500g", "240ml"), so the existing title parse
+  is the more accurate display source. Left as-is to avoid a regression.
+
 - **Phase 2 of the PDP "wrong product info" fix — brand mapping.** The 6
   products from vendors that weren't in `VENDOR_TO_BRAND_ID` (Bal Coffee ×3,
   Milaf, VAL, Reeq Alnahel) had no brand page; Phase 1 stopped mislabeling
