@@ -1,0 +1,99 @@
+name: PostHog observer
+
+# Read-only, scheduled analytics pass. Runs the headless observer (observer/run-observer.sh),
+# which fail-closes unless every finding traces to a real PostHog MCP result.
+#
+# State (FINDINGS.json + DIGEST.md) lives on a dedicated `observer-state` branch — NOT main —
+# so the daily commits never trigger a Vercel production deploy.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ANTHROPIC_API_KEY   for the `claude` CLI
+#   POSTHOG_MCP_TOKEN   PostHog personal API key (Settings -> Personal API keys; read scopes)
+# Optional:
+#   SLACK_WEBHOOK_URL   to post the digest to Slack
+
+on:
+  schedule:
+    - cron: "0 9 * * *"        # daily 09:00 UTC (GitHub cron is UTC and may lag a few min)
+  workflow_dispatch: {}        # manual "Run workflow" button
+
+concurrency:
+  group: posthog-observer
+  cancel-in-progress: false
+
+permissions:
+  contents: write              # push the observer-state branch
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout (main — scripts, spec, config)
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Restore prior FINDINGS.json from observer-state
+        run: |
+          if git fetch origin observer-state --depth=1 2>/dev/null \
+             && git show origin/observer-state:FINDINGS.json > observer/FINDINGS.json 2>/dev/null; then
+            echo "Restored prior FINDINGS.json from observer-state."
+          else
+            echo "No prior state — first run (everything will be 'new')."
+          fi
+
+      - name: Run observer (read-only, fail-closed)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          POSTHOG_MCP_TOKEN: ${{ secrets.POSTHOG_MCP_TOKEN }}
+        run: bash observer/run-observer.sh
+
+      - name: Publish digest to run summary
+        if: success()
+        run: |
+          {
+            echo '## PostHog observer digest'
+            echo '```'
+            cat observer/DIGEST.md
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Persist state to observer-state branch
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          STATE_DIR="$RUNNER_TEMP/observer-state"
+          REMOTE="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git clone --quiet --depth=1 --branch observer-state "$REMOTE" "$STATE_DIR" 2>/dev/null; then
+            echo "Cloned existing observer-state branch."
+          else
+            echo "Creating observer-state branch."
+            mkdir -p "$STATE_DIR"
+            git -C "$STATE_DIR" init --quiet
+            git -C "$STATE_DIR" remote add origin "$REMOTE"
+            git -C "$STATE_DIR" checkout --quiet --orphan observer-state
+          fi
+          cp observer/FINDINGS.json "$STATE_DIR/FINDINGS.json"
+          cp observer/DIGEST.md "$STATE_DIR/DIGEST.md" 2>/dev/null || true
+          git -C "$STATE_DIR" add FINDINGS.json DIGEST.md
+          git -C "$STATE_DIR" \
+            -c user.name="posthog-observer[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit --quiet -m "observer: $(date -u +%FT%TZ)" || { echo "No changes to persist."; exit 0; }
+          git -C "$STATE_DIR" push --quiet origin HEAD:observer-state
+
+      - name: Post digest to Slack (optional)
+        if: success() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          payload="$(node -e 'const fs=require("fs");process.stdout.write(JSON.stringify({text:"*PostHog observer*\n```"+fs.readFileSync("observer/DIGEST.md","utf8")+"```"}))')"
+          curl -sS -X POST -H 'content-type: application/json' -d "$payload" "$SLACK_WEBHOOK_URL" >/dev/null

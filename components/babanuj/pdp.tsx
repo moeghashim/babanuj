@@ -505,6 +505,7 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
       <section style={{ padding: "24px 56px 0" }}>
         <div style={{ borderTop: "1px solid var(--rule)" }}>
           <div
+            className="mk-pdp-tabs"
             style={{ display: "flex", gap: 0, marginTop: -1 }}
             role="tablist"
           >
@@ -517,6 +518,7 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             ).map((t) => (
               <button
                 key={t.id}
+                className="mk-pdp-tab-btn"
                 role="tab"
                 aria-selected={tab === t.id}
                 onClick={() => setTab(t.id)}

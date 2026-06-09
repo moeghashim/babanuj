@@ -6,6 +6,27 @@ needed.
 
 ## 2026-06-06
 
+- Fixed the PDP tab strip on mobile. The three tab labels ("Description",
+  "Ingredients & nutrition", "Shipping & returns") don't fit on one row on
+  phones, so the flex items shrank below their content and the text wrapped
+  into ragged 2–3-line tabs of uneven height jammed against the right edge.
+  Made the strip scroll horizontally instead — each label stays on a single
+  line (`white-space: nowrap` + `flex: 0 0 auto`) inside an `overflow-x: auto`
+  track with the scrollbar hidden, mirroring the existing `.mk-catbar` pattern.
+  Tightened tab padding at `≤480px` so the next tab peeks in as a scroll
+  affordance. Scoped to `≤900px`; desktop renders the static row unchanged.
+  (Note: this is separate from the earlier horizontal-overflow fix — no PDP
+  content clips at 360–375px; this was the remaining ragged-tab defect.)
+- Files: `components/babanuj/pdp.tsx`, `app/globals.css`.
+- Verification: `pnpm exec tsc --noEmit` clean. Preview MCP at 375/360px — all
+  three tabs render on one line at equal height, the strip scrolls to reveal
+  "Shipping & returns" which is tappable and switches the panel, and a clip
+  scan found zero PDP content past the viewport edge. At ~956px the tab row is
+  unchanged (static, original 22px padding, no scroll).
+- Follow-up: none.
+
+## 2026-06-06
+
 - Moved the mobile search from the slide-in menu to a persistent bar at the top of
   the page. The previous fix put search only inside the hamburger drawer; this
   surfaces it as a full-width row directly under the logo on mobile (`≤900px`),
