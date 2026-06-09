@@ -537,6 +537,12 @@ export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {};
 
 export const fmtPrice = (n: number) => "$" + n.toFixed(2);
 
+/** Judge.me widgets key on the numeric Shopify product id (the `external_id`
+ *  they sync), but `BabanujProduct.id` is the Storefront GID
+ *  (`gid://shopify/Product/12345678`). Strip everything but the trailing
+ *  numeric id. Returns the input unchanged if it isn't a GID (e.g. seed data). */
+export const numericProductId = (gid: string) => gid.split("/").pop() ?? gid;
+
 export function findProductByHandle(
   handle: string,
 ): BabanujProduct | undefined {

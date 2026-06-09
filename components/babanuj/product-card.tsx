@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import { HeartIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
+import { JudgemePreviewBadge } from "components/babanuj/reviews/judgeme-widgets";
 import { fmtPrice, type BabanujProduct } from "lib/babanuj/data";
 
 type Props = {
@@ -124,6 +125,14 @@ export function MarketProductCard({
         <div style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 4 }}>
           {p.weight}
         </div>
+        {/* Decorative on cards — clicks fall through to the card link, which
+            opens the PDP where the full review widget lives. */}
+        <span
+          aria-hidden="true"
+          style={{ display: "block", marginTop: 6, pointerEvents: "none" }}
+        >
+          <JudgemePreviewBadge productId={p.id} />
+        </span>
         <div
           style={{
             display: "flex",
