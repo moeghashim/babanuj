@@ -14,6 +14,10 @@ import { Photo } from "components/babanuj/photo";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import {
+  JudgemePreviewBadge,
+  JudgemeReviewWidget,
+} from "components/babanuj/reviews/judgeme-widgets";
+import {
   BRANDS,
   categoryFor,
   findBrand,
@@ -282,6 +286,12 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             >
               {p.name}
             </h1>
+
+            {/* Star summary — links down to the full review widget below. */}
+            <JudgemePreviewBadge
+              productId={p.id}
+              style={{ margin: "0 0 12px" }}
+            />
 
             <div
               style={{
@@ -552,6 +562,11 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             {tab === "shipping" && <PDPShipping />}
           </div>
         </div>
+      </section>
+
+      {/* Customer reviews (Judge.me) */}
+      <section style={{ padding: "8px 56px 24px" }}>
+        <JudgemeReviewWidget productId={p.id} productTitle={p.name} />
       </section>
 
       {fromBrand.length > 0 && (
@@ -993,210 +1008,6 @@ function PDPShipping() {
           </p>
         </div>
       ))}
-    </div>
-  );
-}
-
-function PDPReviews() {
-  const summary: [number, number][] = [
-    [5, 92],
-    [4, 6],
-    [3, 1],
-    [2, 0.5],
-    [1, 0.5],
-  ];
-  const reviews = [
-    {
-      name: "Layla A.",
-      city: "Brooklyn, NY",
-      stars: 5,
-      when: "2 weeks ago",
-      verified: true,
-      q: "Tastes exactly like the box my mom used to bring back from Antep. I cried a little. Will reorder for every family gathering.",
-    },
-    {
-      name: "Marcus W.",
-      city: "Austin, TX",
-      stars: 5,
-      when: "1 month ago",
-      verified: true,
-      q: "I run a coffee shop and these are flying off the counter. Lead times are reliable; packaging holds up to shipping.",
-    },
-    {
-      name: "Priya R.",
-      city: "Chicago, IL",
-      stars: 4,
-      when: "6 weeks ago",
-      verified: true,
-      q: "Excellent flavor, slightly drier than I remember from a Damascus trip but the closest I've found stateside.",
-    },
-  ];
-  return (
-    <div
-      className="mk-pdp-tab"
-      style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: 40 }}
-    >
-      <div>
-        <div
-          style={{
-            fontSize: 64,
-            fontWeight: 800,
-            fontFamily: "var(--font-bricolage), sans-serif",
-            color: "var(--ink)",
-            lineHeight: 1,
-            fontVariantNumeric: "tabular-nums",
-          }}
-        >
-          4.9
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 2,
-            color: "#d4a843",
-            fontSize: 20,
-            marginTop: 4,
-          }}
-        >
-          ★★★★★
-        </div>
-        <div style={{ fontSize: 13, color: "var(--ink-2)", marginTop: 6 }}>
-          Based on 248 verified reviews
-        </div>
-        <div style={{ marginTop: 18 }}>
-          {summary.map(([s, pct]) => (
-            <div
-              key={s}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "4px 0",
-                fontSize: 12,
-              }}
-            >
-              <span style={{ width: 18 }}>{s}★</span>
-              <div
-                style={{
-                  flex: 1,
-                  height: 6,
-                  background: "var(--paper)",
-                  borderRadius: 999,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${pct}%`,
-                    height: "100%",
-                    background: "var(--accent)",
-                  }}
-                />
-              </div>
-              <span
-                style={{
-                  width: 36,
-                  textAlign: "right",
-                  color: "var(--ink-2)",
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {pct}%
-              </span>
-            </div>
-          ))}
-        </div>
-        <button
-          className="market-btn outline"
-          style={{
-            marginTop: 22,
-            width: "100%",
-            justifyContent: "center",
-            padding: 12,
-            fontSize: 13,
-          }}
-        >
-          Write a review
-        </button>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        {reviews.map((r, i) => (
-          <div
-            key={i}
-            style={{
-              padding: 20,
-              background: "var(--paper)",
-              borderRadius: 14,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: 10,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 999,
-                    background: "var(--accent-soft)",
-                    color: "var(--accent-dark)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontWeight: 700,
-                    fontSize: 13,
-                  }}
-                >
-                  {r.name[0]}
-                </div>
-                <div style={{ lineHeight: 1.2 }}>
-                  <div style={{ fontSize: 13, fontWeight: 700 }}>{r.name}</div>
-                  <div style={{ fontSize: 11, color: "var(--ink-2)" }}>
-                    {r.city} · {r.when}
-                  </div>
-                </div>
-                {r.verified && (
-                  <span
-                    className="market-chip chip-soft"
-                    style={{ fontSize: 10 }}
-                  >
-                    ✓ Verified buyer
-                  </span>
-                )}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 2,
-                  color: "#d4a843",
-                  fontSize: 14,
-                }}
-              >
-                {"★".repeat(r.stars)}
-                <span style={{ color: "var(--rule)" }}>
-                  {"★".repeat(5 - r.stars)}
-                </span>
-              </div>
-            </div>
-            <p style={{ fontSize: 14.5, lineHeight: 1.6, margin: 0 }}>{r.q}</p>
-          </div>
-        ))}
-        <button
-          className="market-btn cream"
-          style={{
-            alignSelf: "flex-start",
-            padding: "10px 18px",
-            fontSize: 13,
-          }}
-        >
-          Load 12 more
-        </button>
-      </div>
     </div>
   );
 }

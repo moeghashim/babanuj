@@ -4,6 +4,45 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-09
+
+- Integrated **Judge.me** reviews — product reviews (PDP + product cards) and
+  company/shop reviews (homepage + a new `/reviews` page). Deliberately did NOT
+  use `@judgeme/shopify-hydrogen` (hard peer-deps on `@shopify/hydrogen`, targets
+  React 18 — wrong for this Next.js 15 / React 19 app). Instead used Judge.me's
+  documented **platform-independent widgets**: a client loader that injects the
+  `window.jdgm` settings + CDN preloader (`next/script`, `afterInteractive`), and
+  thin wrappers that render Judge.me's `.jdgm-widget` divs. Everything renders
+  nothing until `NEXT_PUBLIC_JUDGEME_*` is configured, so unconfigured envs stay
+  clean. SPA soft-navigation re-scan handled by calling Judge.me's re-init from
+  each widget's `useMountEffect`. Widgets key on the numeric Shopify product id,
+  derived from the Storefront GID via `numericProductId()` (no GraphQL change).
+  Removed the dead `PDPReviews()` mock and the hardcoded homepage testimonials /
+  "4.9★ on 2,400 reviews" brand-timeline line (AGENTS.md: no hardcoded ratings).
+- Files: new `components/babanuj/reviews/{config.ts,judgeme-loader.tsx,judgeme-widgets.tsx}`,
+  new `app/reviews/page.tsx`; edited `app/layout.tsx`, `components/babanuj/product-card.tsx`,
+  `components/babanuj/pdp.tsx`, `components/babanuj/home/reviews.tsx`,
+  `components/babanuj/layout/footer.tsx`, `lib/babanuj/data.ts`, `.env.example`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean (26/26 pages,
+  `/reviews` in route table). Preview MCP, unconfigured: `/`, a real PDP, and
+  `/reviews` render with zero widget shells and no console errors; old hardcoded
+  eyebrow gone; 34 product cards intact. Preview MCP, enabled via temporary dummy
+  creds (then reverted): both loader scripts inject, `window.jdgm` settings apply,
+  24 preview badges render, the live Shopify GID is correctly stripped to the
+  numeric id (`8871751483650`), homepage + `/reviews` all-reviews widgets mount,
+  and after a **client-side soft-navigation** the PDP header badge + review widget
+  (`#judgeme_product_reviews`, numeric `data-id`, product title) re-mount with no
+  uncaught errors. The only console `warn`s were Judge.me's own script reporting
+  it can't fetch content with the dummy token — expected, resolves with real creds.
+- Follow-up (Phase 0, user actions in Judge.me/Shopify admin, NOT done here):
+  confirm the store is on the **Awesome plan** with products synced; enable the
+  Platform-independent Review Widget and set `NEXT_PUBLIC_JUDGEME_SHOP_DOMAIN` +
+  `NEXT_PUBLIC_JUDGEME_PUBLIC_TOKEN` (local + Vercel); confirm the admin loader
+  snippet matches `judgeme-loader.tsx` (script src + the re-scan global name —
+  `jdgmSetup`/`jdgm.batchSetup` — verify in browser). Optional later phases:
+  server-side `AggregateRating` JSON-LD for SEO (uses `JUDGEME_PRIVATE_TOKEN`);
+  tune widget styling via Judge.me's customizer to match the v2 look.
+
 ## 2026-06-06
 
 - Fixed the PDP tab strip on mobile. The three tab labels ("Description",

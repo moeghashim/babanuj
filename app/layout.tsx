@@ -6,6 +6,7 @@ import { MarketCatBar } from "components/babanuj/layout/cat-bar";
 import { MarketFooter } from "components/babanuj/layout/footer";
 import { MarketNewsletter } from "components/babanuj/layout/newsletter";
 import { ThirdPartyScripts } from "components/babanuj/third-party";
+import { JudgemeLoader } from "components/babanuj/reviews/judgeme-loader";
 import { PostHogProvider } from "components/babanuj/posthog-provider";
 import { DeferredToaster } from "components/babanuj/deferred-toaster";
 import { getCart } from "lib/shopify";
@@ -83,6 +84,7 @@ export default async function RootLayout({
             <MarketFooter />
             <DeferredToaster />
             <ThirdPartyScripts />
+            <JudgemeLoader />
           </CartProvider>
         </PostHogProvider>
       </body>

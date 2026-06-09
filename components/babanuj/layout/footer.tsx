@@ -173,6 +173,7 @@ export function MarketFooter() {
       >
         <span>© 2026 Babanuj Inc. · 10099 Westpark Dr, Houston TX 77042</span>
         <div style={{ display: "flex", gap: 18 }}>
+          <Link href="/reviews">Reviews</Link>
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
           <a href="#">Accessibility</a>
