@@ -6,7 +6,9 @@ export type BabanujBrand = {
   id: string;
   name: string;
   sub: string;
+  /** Best-known region. Empty when not publicly verifiable. */
   origin: string;
+  /** Founding year, or 0 when not publicly verifiable. */
   est: number;
   tag: string;
   blurb: string;
@@ -16,6 +18,10 @@ export type BabanujBrand = {
   color2: string;
   img: string;
   products: string[];
+  /** Curated "house" shown in the image-heavy homepage grid + cross-sell.
+   *  Secondary houses (mapped from real Shopify vendors but without full
+   *  editorial content) are not featured, so they don't crowd those grids. */
+  featured?: boolean;
 };
 
 export type BabanujProduct = {
@@ -30,6 +36,14 @@ export type BabanujProduct = {
   handle: string;
   name: string;
   brand: string;
+  /** Curated brand slug resolved from the Shopify vendor, or null when the
+   *  vendor isn't one of the curated houses. Lets consumers resolve the brand
+   *  by id instead of fuzzy-matching the display name. */
+  brandId?: string | null;
+  /** Plain-text product description from Shopify (snippets/fallbacks). */
+  description?: string;
+  /** Rich product description HTML from Shopify, rendered on the PDP. */
+  descriptionHtml?: string;
   price: number;
   weight: string;
   tag: string;
@@ -89,6 +103,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#caa55a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141151.774.png?v=1734606721&width=1600",
     products: ["Turkish Delight", "Baklava", "Pistachio Bites"],
+    featured: true,
   },
   {
     id: "babanuj",
@@ -105,6 +120,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#caa55a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600",
     products: ["Gift Boxes", "Seasonal Drops", "Holiday Collections"],
+    featured: true,
   },
   {
     id: "leen",
@@ -120,6 +136,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#d6a06e",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
     products: ["Stuffed Dates", "Chocolate Dates", "Premium Date Gift Boxes"],
+    featured: true,
   },
   {
     id: "crush",
@@ -136,6 +153,71 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#e6a85a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=1600",
     products: ["Dubai Chocolate Bar", "Pistachio Praline", "Kataifi Crunch"],
+    featured: true,
+  },
+  {
+    id: "bal-coffee",
+    name: "Bal Coffee",
+    sub: "Coffee",
+    origin: "",
+    est: 0,
+    tag: "Roasted Date-Seed Coffee",
+    blurb:
+      "Caffeine-free, acid-free coffee alternatives brewed from roasted date seeds.",
+    long: "Bal Coffee makes a caffeine-free, acid-free coffee alternative from roasted date seeds — upcycling a part of the fruit that's usually thrown away. It brews, looks, and tastes like coffee, without the caffeine or the acidity.",
+    note: "Caffeine-free",
+    accent: "#3a2618",
+    color2: "#caa55a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/BALCoffee_sEasternBrew.jpg?v=1757874557",
+    products: ["Eastern Brew", "DateSpresso", "GrounDate"],
+  },
+  {
+    id: "milaf",
+    name: "Milaf",
+    sub: "Cola",
+    origin: "Saudi Arabia",
+    est: 2024,
+    tag: "Date-Based Cola",
+    blurb:
+      "The world's first cola made from real dates — no added sugar, no sweeteners.",
+    long: "Milaf Cola is the world's first cola made entirely from date extract, created by the Al Madinah Heritage Company in Saudi Arabia. Brewed from Ajwa and Sukkari dates with no added sugar or sweeteners.",
+    note: "No added sugar",
+    accent: "#2a1712",
+    color2: "#caa55a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/41gllxLXI7L._SX679.jpg?v=1757873500",
+    products: ["Date Cola"],
+  },
+  {
+    id: "val",
+    name: "VAL",
+    sub: "Dates",
+    origin: "Saudi Arabia",
+    est: 0,
+    tag: "Stuffed Date Snacks",
+    blurb:
+      "Premium soft dates stuffed with tahini and rolled in sesame — 100% natural.",
+    long: "VAL makes bite-sized snacks from premium Saudi dates — soft dates filled with a velvety tahini center and rolled in roasted sesame or coconut. Made from 100% natural ingredients with no added sugar.",
+    note: "100% natural",
+    accent: "#5e3a1e",
+    color2: "#d6a06e",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/VAl_Date_Balls_Stuffed_With_Tahini_500g_Main.jpg?v=1771438021",
+    products: ["Date Balls with Tahini"],
+  },
+  {
+    id: "reeq-alnahel",
+    name: "Reeq Alnahel",
+    sub: "Honey",
+    origin: "Saudi Arabia",
+    est: 0,
+    tag: "Wild Saudi Honey",
+    blurb:
+      "Natural wild honey and bee-product blends from apiaries across Saudi Arabia.",
+    long: "Reeq Alnahel is a Saudi honey house producing natural wild honey from its own apiaries inside and beyond the Kingdom. Its blends combine pure honey with bee products and natural botanicals.",
+    note: "Wild-harvested",
+    accent: "#6e4f1a",
+    color2: "#e6c05a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/a083ea8d-0474-4999-93bd-2e1e9fad37e5_18b66674-228b-4936-9546-e17ea91db7a7.jpg?v=1757873470",
+    products: ["Kings Food Honey"],
   },
 ];
 
@@ -147,6 +229,10 @@ export const VENDOR_TO_BRAND_ID: Record<string, string> = {
   Babanuj: "babanuj",
   Leen: "leen",
   Crush: "crush",
+  "Bal Coffee": "bal-coffee",
+  Milaf: "milaf",
+  VAL: "val",
+  "Reeq Alnahel": "reeq-alnahel",
 };
 
 export function brandIdFromVendor(vendor: string | undefined): string | null {
@@ -160,6 +246,10 @@ export function vendorFromBrandId(id: string): string | undefined {
   if (id === "babanuj") return "Babanuj";
   if (id === "leen") return "Leen";
   if (id === "crush") return "Crush";
+  if (id === "bal-coffee") return "Bal Coffee";
+  if (id === "milaf") return "Milaf";
+  if (id === "val") return "VAL";
+  if (id === "reeq-alnahel") return "Reeq Alnahel";
   return undefined;
 }
 
@@ -195,7 +285,7 @@ export const PRODUCTS: BabanujProduct[] = [
     variantId: "p3",
     handle: "maamoul-date-cookies",
     name: "Maamoul Date Cookies",
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     price: 16.99,
     weight: "480g · 24 pieces",
     tag: "Traditional",
@@ -272,7 +362,7 @@ export const EXTRA_PRODUCTS: BabanujProduct[] = [
     variantId: "e5",
     handle: "maamoul-large-tray",
     name: "Maamoul 500g Tray",
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     price: 21.6,
     weight: "500g · large tray",
     tag: "Family",
@@ -395,25 +485,25 @@ export const CATALOG: BabanujCatalogRow[] = [
     channels: ["Grocery", "Specialty", "Foodservice"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Petit Four",
     formats: "12 pcs Box · 18 pcs Box",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Maamoul",
     formats: "12 pcs · 24 pcs · 480g",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Barazek",
     formats: "12 pcs · 24 pcs · 500g",
     channels: ["Grocery", "Specialty", "Gift"],
   },
   {
-    brand: "Bab Sharqi",
+    brand: "Zaitoune",
     line: "Mixed Cookies",
     formats: "500g · 1kg · 2kg",
     channels: ["Grocery", "Wholesale", "Foodservice"],
@@ -438,148 +528,12 @@ export type BabanujBrandDetail = {
   timeline: { year: string; t: string }[];
 };
 
-export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {
-  zaitoune: {
-    founder: "Mehmet & Ayşe Demir",
-    region: "Gaziantep, Türkiye",
-    yearLabel: "Three generations",
-    signature: "Pistachio Baklava",
-    quote: `"Our grandfather's recipe is on the wall. We've never written it down — we hand it from one pair of fingers to the next."`,
-    quoteBy: "Ayşe Demir, head baker",
-    longStory: [
-      "Zaitoune began in 1991 in a stone-floored kitchen in Gaziantep, six blocks from the pistachio market. The Demir family had been baking sweets out of that same room since 1953 — Zaitoune is just the name they finally gave it.",
-      "Everything is rolled by hand on a marble slab. The phyllo is so thin you can read a newspaper through it. The pistachios are bought from the same farm cooperative their grandfather worked with, in Şanlıurfa.",
-      `Every tray of baklava is rolled, layered and baked the same morning it leaves the kitchen. By the time it reaches our Houston warehouse, it's typically less than 96 hours from the oven.`,
-    ],
-    facts: [
-      { k: "Founded", v: "1991" },
-      { k: "Region", v: "Gaziantep, Türkiye" },
-      { k: "Maker", v: "Demir family · 3rd gen" },
-      { k: "Signature", v: "Pistachio Baklava" },
-      { k: "Lines", v: "14 products" },
-      { k: "Annual output", v: "~28,000 kg" },
-    ],
-    timeline: [
-      {
-        year: "1953",
-        t: "Grandfather Hasan starts selling baklava from a market stall in Gaziantep.",
-      },
-      {
-        year: "1991",
-        t: "The shop takes the name Zaitoune. First catalog printed.",
-      },
-      {
-        year: "2009",
-        t: "Ayşe & Mehmet take over from their father, modernize the kitchen.",
-      },
-      { year: "2022", t: "Babanuj signs as exclusive U.S. distributor." },
-      {
-        year: "2026",
-        t: "In-stock across 600+ U.S. retailers nationwide.",
-      },
-    ],
-  },
-  babanuj: {
-    founder: "The Babanuj team",
-    region: "Houston, Texas",
-    yearLabel: "Founded 2023",
-    signature: "House Gift Boxes",
-    quote: `"We started Babanuj to put heirloom sweets in the hands of people who grew up with them — and the people about to discover them."`,
-    quoteBy: "The Babanuj team",
-    longStory: [
-      "Babanuj is the umbrella house. We curate the heritage brands you see in the pantry — Zaitoune, Leen, Crush, and others — and we also make our own things: gift assortments, holiday boxes, and seasonal blends you won't find anywhere else.",
-      "Every Babanuj-branded product is assembled in Houston, from components sourced through our partner houses. The work is done in-house so we can move quickly on holidays, Eid, and pop-up collaborations.",
-      "Our goal is simple: never compromise on the originals, and use Babanuj's house line to fill the gaps the heritage houses don't.",
-    ],
-    facts: [
-      { k: "Founded", v: "2023" },
-      { k: "Region", v: "Houston, TX" },
-      { k: "Role", v: "House line + curator" },
-      { k: "Signature", v: "Gift Boxes" },
-      { k: "Lines", v: "23 products" },
-      { k: "Assembly", v: "Houston, TX" },
-    ],
-    timeline: [
-      { year: "2023", t: "Babanuj launches as a curated import house." },
-      { year: "2024", t: "First in-house gift boxes ship for Ramadan + Eid." },
-      { year: "2025", t: "Holiday line expanded to 23 SKUs." },
-      {
-        year: "2026",
-        t: "Wholesale program opens to U.S. specialty retailers.",
-      },
-    ],
-  },
-  leen: {
-    founder: "Leen family",
-    region: "Gulf",
-    yearLabel: "Family-run",
-    signature: "Stuffed Dates",
-    quote: `"A date is a small thing. Done right, it carries a whole season of sun, water, and patience."`,
-    quoteBy: "Leen family",
-    longStory: [
-      "Leen is a Gulf-based confectionary built around the date — Medjool, Khudri, Sukkari — grown on family-owned groves and hand-finished with pistachios, almonds, and single-origin chocolate.",
-      "Every variety is selected by hand. Stuffing happens the same week the dates leave the grove. Babanuj is Leen's exclusive U.S. distributor, which means every order ships from our Houston warehouse within 48 hours of arrival.",
-      "Stuffed dates, chocolate-coated dates, and tray gift boxes anchor the line. Each piece is a small bite, and the trays are designed to share.",
-    ],
-    facts: [
-      { k: "Founded", v: "2020" },
-      { k: "Region", v: "Gulf" },
-      { k: "Maker", v: "Leen family" },
-      { k: "Signature", v: "Stuffed Dates" },
-      { k: "Lines", v: "13 products" },
-      { k: "Variety", v: "Medjool · Khudri · Sukkari" },
-    ],
-    timeline: [
-      { year: "2020", t: "Leen launches with hand-stuffed Medjool dates." },
-      { year: "2022", t: "Chocolate-coated line introduced." },
-      { year: "2024", t: "First Leen shipment lands in Houston." },
-      { year: "2026", t: "Premium gift-box line expands to 13 SKUs." },
-    ],
-  },
-  crush: {
-    founder: "Omar Al-Hashimi",
-    region: "Dubai, UAE",
-    yearLabel: "Modern · 3 years young",
-    signature: "Dubai Chocolate Bar",
-    quote: `"I'd lived in Dubai my whole life and never seen people queue for chocolate. Then we put it on TikTok and the line went around the block."`,
-    quoteBy: "Omar Al-Hashimi, founder",
-    longStory: [
-      "Crush is the youngest house in our pantry. Founded in 2023 by Omar Al-Hashimi, the brand built itself around a single idea — kataifi pastry and pistachio cream, layered into single-origin chocolate, finished by hand.",
-      "The bar went viral on TikTok in 2024 and has been chasing demand ever since. Crush keeps the recipe tight, the run limited, and the price honest. Every bar is stamped with the Crush seal before it leaves the kitchen.",
-      "In two years, Crush has shipped chocolate to 38 countries. Babanuj is its exclusive U.S. partner.",
-    ],
-    facts: [
-      { k: "Founded", v: "2023" },
-      { k: "Region", v: "Dubai, UAE" },
-      { k: "Maker", v: "Omar Al-Hashimi" },
-      { k: "Signature", v: "Dubai Chocolate Bar" },
-      { k: "Lines", v: "7 products" },
-      { k: "Output", v: "Limited · 1,200 bars/wk" },
-    ],
-    timeline: [
-      {
-        year: "2021",
-        t: "Omar tests the recipe out of a rented commercial kitchen.",
-      },
-      {
-        year: "2023",
-        t: "Crush launches with one product: the Dubai Chocolate Bar.",
-      },
-      {
-        year: "2024",
-        t: "TikTok virality. Production triples in 4 months.",
-      },
-      {
-        year: "2025",
-        t: "New flavors added; international shipping begins.",
-      },
-      {
-        year: "2026",
-        t: "Crush lands in 600+ U.S. retailers via Babanuj.",
-      },
-    ],
-  },
-};
+// Rich editorial detail (founder quote, year-by-year timeline, output
+// stats) is intentionally empty: the prior entries were fabricated. BrandView
+// renders a lean, factual page (description + live product grid + derived
+// facts) for any brand without an entry here. Add one only with real,
+// sourced content.
+export const BRAND_DETAILS: Record<string, BabanujBrandDetail> = {};
 
 export const fmtPrice = (n: number) => "$" + n.toFixed(2);
 
@@ -601,6 +555,37 @@ export function findProductById(id: string): BabanujProduct | undefined {
 
 export function findBrand(id: string): BabanujBrand | undefined {
   return BRANDS.find((b) => b.id === id);
+}
+
+/**
+ * Resolve the brand object for a product. Prefers the curated brand id set by
+ * the Shopify adapter, then a display-name match, and finally synthesizes a
+ * minimal brand from the real Shopify vendor string. The synthetic fallback
+ * carries no invented origin/story, so an unmapped vendor is never mislabeled
+ * as one of the curated houses (previously it defaulted to the first brand).
+ */
+export function resolveProductBrand(
+  p: Pick<BabanujProduct, "brand" | "brandId">,
+): BabanujBrand {
+  const byId = p.brandId ? BRANDS.find((b) => b.id === p.brandId) : undefined;
+  if (byId) return byId;
+  const byName = BRANDS.find((b) => b.name === p.brand);
+  if (byName) return byName;
+  return {
+    id: "",
+    name: p.brand || "Babanuj",
+    sub: "",
+    origin: "",
+    est: 0,
+    tag: "",
+    blurb: "",
+    long: "",
+    note: "",
+    accent: "#3a5c3a",
+    color2: "#caa55a",
+    img: "",
+    products: [],
+  };
 }
 
 export function findCategory(id: string): BabanujCategory {
