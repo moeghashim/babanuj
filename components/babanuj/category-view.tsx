@@ -152,7 +152,10 @@ export function CategoryView({
                 </span>
               )}
             </button>
-            <span style={{ fontSize: 13, color: "var(--ink-2)" }}>
+            <span
+              className="mk-cat-count"
+              style={{ fontSize: 13, color: "var(--ink-2)" }}
+            >
               {items.length} of {baseItems.length} products
             </span>
           </div>
