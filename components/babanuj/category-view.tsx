@@ -4,11 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { FilterIcon } from "components/babanuj/icons";
-import {
-  CATEGORIES,
-  findCategory,
-  type BabanujProduct,
-} from "lib/babanuj/data";
+import { findCategory, type BabanujProduct } from "lib/babanuj/data";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "name";
 
@@ -91,78 +87,26 @@ export function CategoryView({
         <span style={{ color: "var(--ink)" }}>{title}</span>
       </nav>
 
-      {/* Category header */}
-      <section style={{ padding: "24px 56px 32px" }}>
-        <div
-          className="mk-cat-header"
+      {/* Category header — single column. Category switching lives in the
+         sticky cat-bar above, so there's no duplicate chip list here. */}
+      <section style={{ padding: "16px 56px 20px" }}>
+        <h1
+          className="display-heavy"
+          style={{ fontSize: 64, margin: "0 0 10px", lineHeight: 1 }}
+        >
+          {title}
+        </h1>
+        <p
           style={{
-            display: "grid",
-            gridTemplateColumns: "1.4fr 1fr",
-            gap: 32,
-            alignItems: "end",
+            fontSize: 17,
+            lineHeight: 1.55,
+            color: "var(--ink-2)",
+            maxWidth: 520,
+            margin: 0,
           }}
         >
-          <div>
-            <span className="micro" style={{ color: "var(--accent-dark)" }}>
-              {baseItems.length} products · {brands.length - 1} brands
-            </span>
-            <h1
-              className="display-heavy"
-              style={{
-                fontSize: 64,
-                margin: "10px 0 12px",
-                lineHeight: 1,
-              }}
-            >
-              {title}
-            </h1>
-            <p
-              style={{
-                fontSize: 17,
-                lineHeight: 1.55,
-                color: "var(--ink-2)",
-                maxWidth: 520,
-                margin: 0,
-              }}
-            >
-              {blurb}
-            </p>
-          </div>
-          <div
-            className="mk-cat-chips"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 8,
-              justifyContent: "flex-end",
-            }}
-          >
-            {CATEGORIES.filter((c) => c.id !== "pantry").map((c) => (
-              <Link
-                key={c.id}
-                href={c.id === "all" ? "/search" : `/collections/${c.id}`}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: 999,
-                  border:
-                    c.id === cat.id
-                      ? "1.5px solid var(--ink)"
-                      : "1px solid var(--rule)",
-                  background: c.id === cat.id ? "var(--ink)" : "#fff",
-                  color: c.id === cat.id ? "#fff" : "var(--ink)",
-                  fontFamily: "inherit",
-                  fontWeight: 600,
-                  fontSize: 12,
-                  cursor: "pointer",
-                  transition: "all .15s",
-                  textDecoration: "none",
-                }}
-              >
-                {c.name}
-              </Link>
-            ))}
-          </div>
-        </div>
+          {blurb}
+        </p>
       </section>
 
       {/* Toolbar */}
@@ -229,7 +173,7 @@ export function CategoryView({
       </section>
 
       {/* Main grid */}
-      <section style={{ padding: "32px 56px 56px" }}>
+      <section style={{ padding: "20px 56px 56px" }}>
         <div
           className="mk-cat-main"
           style={{
