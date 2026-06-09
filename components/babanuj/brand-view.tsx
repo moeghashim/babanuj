@@ -19,19 +19,34 @@ type Props = {
 };
 
 export function BrandView({ brand, products = [] }: Props) {
-  const baseDetail: BabanujBrandDetail =
-    BRAND_DETAILS[brand.id] ?? BRAND_DETAILS.zaitoune!;
-  // Override the static "Lines" fact with the live product count.
-  const detail: BabanujBrandDetail = {
-    ...baseDetail,
-    facts: baseDetail.facts.map((f) =>
-      f.k === "Lines"
-        ? { k: "Lines", v: `${products.length} products` }
-        : f,
-    ),
-  };
+  // Editorial detail (quote, timeline, multi-paragraph story) only exists for
+  // the curated houses. Secondary houses render a lean, factual page instead —
+  // never the old behavior of borrowing Zaitoune's story as a fallback.
+  const detail: BabanujBrandDetail | undefined = BRAND_DETAILS[brand.id];
+  const lineCount = `${products.length} ${
+    products.length === 1 ? "product" : "products"
+  }`;
+  // Facts: use the curated set (with a live "Lines" count) when present;
+  // otherwise derive an honest set from the brand fields + live catalog.
+  const facts: { k: string; v: string }[] = detail
+    ? detail.facts.map((f) =>
+        f.k === "Lines" ? { k: "Lines", v: lineCount } : f,
+      )
+    : (
+        [
+          brand.origin ? { k: "Origin", v: brand.origin } : null,
+          brand.sub ? { k: "Category", v: brand.sub } : null,
+          brand.est > 0 ? { k: "Founded", v: String(brand.est) } : null,
+          { k: "Lines", v: lineCount },
+          brand.note ? { k: "Note", v: brand.note } : null,
+        ].filter(Boolean) as { k: string; v: string }[]
+      );
+  const story: string[] =
+    detail?.longStory ?? (brand.long ? [brand.long] : []);
+  const storyRegion = (detail?.region ?? brand.origin ?? "").split(",")[0];
   const brandProducts = products;
-  const otherBrands = BRANDS.filter((b) => b.id !== brand.id);
+  // Cross-sell only the curated houses, keeping this grid at a fixed width.
+  const otherBrands = BRANDS.filter((b) => b.id !== brand.id && b.featured);
 
   return (
     <div>
@@ -72,7 +87,7 @@ export function BrandView({ brand, products = [] }: Props) {
         >
           <div>
             <span className="micro" style={{ color: "var(--accent-dark)" }}>
-              The Collection · {brandProducts.length} products
+              The Collection · {lineCount}
             </span>
             <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
               Everything from {brand.name}
@@ -152,32 +167,36 @@ export function BrandView({ brand, products = [] }: Props) {
               background: `linear-gradient(135deg, ${brand.accent}cc 0%, rgba(0,0,0,0.25) 60%, transparent 100%)`,
             }}
           />
-          <div
-            style={{
-              position: "absolute",
-              top: 28,
-              right: 28,
-              background: "rgba(255,255,255,0.92)",
-              color: "var(--ink)",
-              padding: "8px 14px",
-              borderRadius: 999,
-              fontSize: 12,
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <span
+          {(brand.origin || brand.est > 0) && (
+            <div
               style={{
-                width: 8,
-                height: 8,
+                position: "absolute",
+                top: 28,
+                right: 28,
+                background: "rgba(255,255,255,0.92)",
+                color: "var(--ink)",
+                padding: "8px 14px",
                 borderRadius: 999,
-                background: "var(--accent-dark)",
+                fontSize: 12,
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
               }}
-            />
-            {brand.origin} · Est. {brand.est}
-          </div>
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 999,
+                  background: "var(--accent-dark)",
+                }}
+              />
+              {[brand.origin, brand.est > 0 ? `Est. ${brand.est}` : ""]
+                .filter(Boolean)
+                .join(" · ")}
+            </div>
+          )}
           <div
             className="mk-brand-hero-copy"
             style={{
@@ -258,13 +277,13 @@ export function BrandView({ brand, products = [] }: Props) {
           className="mk-brand-facts"
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(6, 1fr)",
+            gridTemplateColumns: `repeat(${facts.length}, 1fr)`,
             background: "var(--paper)",
             borderRadius: 20,
             padding: "24px 0",
           }}
         >
-          {detail.facts.map((f, i, arr) => (
+          {facts.map((f, i, arr) => (
             <div
               key={f.k}
               style={{
@@ -312,53 +331,69 @@ export function BrandView({ brand, products = [] }: Props) {
               className="display-heavy"
               style={{ fontSize: 48, margin: "12px 0 0", lineHeight: 1 }}
             >
-              From{" "}
-              <span
-                className="editorial"
-                style={{ color: "var(--accent-dark)" }}
-              >
-                {detail.region.split(",")[0]}
-              </span>
-              , with care.
+              {storyRegion ? (
+                <>
+                  From{" "}
+                  <span
+                    className="editorial"
+                    style={{ color: "var(--accent-dark)" }}
+                  >
+                    {storyRegion}
+                  </span>
+                  , with care.
+                </>
+              ) : (
+                <>
+                  Made{" "}
+                  <span
+                    className="editorial"
+                    style={{ color: "var(--accent-dark)" }}
+                  >
+                    with care.
+                  </span>
+                </>
+              )}
             </h2>
-            <div
-              style={{
-                marginTop: 28,
-                padding: 24,
-                background: "var(--paper)",
-                borderRadius: 18,
-              }}
-            >
-              <QuoteIcon
-                width={22}
-                height={22}
-                style={{ color: "var(--accent-dark)", opacity: 0.4 }}
-              />
-              <p
-                className="editorial"
-                style={{
-                  fontSize: 19,
-                  lineHeight: 1.4,
-                  color: "var(--ink)",
-                  marginTop: 8,
-                }}
-              >
-                {detail.quote}
-              </p>
+            {detail?.quote && (
               <div
                 style={{
-                  fontSize: 12,
-                  color: "var(--ink-2)",
-                  marginTop: 12,
-                  fontWeight: 600,
+                  marginTop: 28,
+                  padding: 24,
+                  background: "var(--paper)",
+                  borderRadius: 18,
                 }}
               >
-                — {detail.quoteBy}
+                <QuoteIcon
+                  width={22}
+                  height={22}
+                  style={{ color: "var(--accent-dark)", opacity: 0.4 }}
+                />
+                <p
+                  className="editorial"
+                  style={{
+                    fontSize: 19,
+                    lineHeight: 1.4,
+                    color: "var(--ink)",
+                    marginTop: 8,
+                  }}
+                >
+                  {detail.quote}
+                </p>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-2)",
+                    marginTop: 12,
+                    fontWeight: 600,
+                  }}
+                >
+                  — {detail.quoteBy}
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div>
-            {detail.longStory.map((para, i) => (
+            {story.map((para, i) => (
               <p
                 key={i}
                 style={{
@@ -376,7 +411,8 @@ export function BrandView({ brand, products = [] }: Props) {
         </div>
       </section>
 
-      {/* Timeline */}
+      {/* Timeline — only for curated houses with a real, sourced history */}
+      {detail?.timeline && detail.timeline.length > 0 && (
       <section style={{ padding: "64px 56px" }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <span className="micro" style={{ color: "var(--accent-dark)" }}>
@@ -470,6 +506,7 @@ export function BrandView({ brand, products = [] }: Props) {
           })}
         </div>
       </section>
+      )}
 
       {/* CTA strip */}
       <section style={{ padding: "32px 56px" }}>
@@ -522,9 +559,9 @@ export function BrandView({ brand, products = [] }: Props) {
                 maxWidth: 480,
               }}
             >
-              Babanuj is the exclusive U.S. distributor. Flexible MOQs,
-              label-ready packaging, U.S.-warehoused inventory. Most accounts
-              go live within two weeks.
+              Babanuj imports and ships these from our Houston, TX warehouse.
+              Flexible MOQs, label-ready packaging, U.S.-warehoused inventory.
+              Most accounts go live within two weeks.
             </p>
           </div>
           <div

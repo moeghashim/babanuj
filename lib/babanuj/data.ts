@@ -6,7 +6,9 @@ export type BabanujBrand = {
   id: string;
   name: string;
   sub: string;
+  /** Best-known region. Empty when not publicly verifiable. */
   origin: string;
+  /** Founding year, or 0 when not publicly verifiable. */
   est: number;
   tag: string;
   blurb: string;
@@ -16,6 +18,10 @@ export type BabanujBrand = {
   color2: string;
   img: string;
   products: string[];
+  /** Curated "house" shown in the image-heavy homepage grid + cross-sell.
+   *  Secondary houses (mapped from real Shopify vendors but without full
+   *  editorial content) are not featured, so they don't crowd those grids. */
+  featured?: boolean;
 };
 
 export type BabanujProduct = {
@@ -97,6 +103,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#caa55a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141151.774.png?v=1734606721&width=1600",
     products: ["Turkish Delight", "Baklava", "Pistachio Bites"],
+    featured: true,
   },
   {
     id: "babanuj",
@@ -113,6 +120,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#caa55a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/High_Res-76_1.jpg?v=1734937605&width=1600",
     products: ["Gift Boxes", "Seasonal Drops", "Holiday Collections"],
+    featured: true,
   },
   {
     id: "leen",
@@ -128,6 +136,7 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#d6a06e",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T140953.250.png?v=1734606623&width=1600",
     products: ["Stuffed Dates", "Chocolate Dates", "Premium Date Gift Boxes"],
+    featured: true,
   },
   {
     id: "crush",
@@ -144,6 +153,71 @@ export const BRANDS: BabanujBrand[] = [
     color2: "#e6a85a",
     img: "https://babanuj.myshopify.com/cdn/shop/files/Untitled_design_-_2024-12-19T141008.277.png?v=1734606627&width=1600",
     products: ["Dubai Chocolate Bar", "Pistachio Praline", "Kataifi Crunch"],
+    featured: true,
+  },
+  {
+    id: "bal-coffee",
+    name: "Bal Coffee",
+    sub: "Coffee",
+    origin: "",
+    est: 0,
+    tag: "Roasted Date-Seed Coffee",
+    blurb:
+      "Caffeine-free, acid-free coffee alternatives brewed from roasted date seeds.",
+    long: "Bal Coffee makes a caffeine-free, acid-free coffee alternative from roasted date seeds — upcycling a part of the fruit that's usually thrown away. It brews, looks, and tastes like coffee, without the caffeine or the acidity.",
+    note: "Caffeine-free",
+    accent: "#3a2618",
+    color2: "#caa55a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/BALCoffee_sEasternBrew.jpg?v=1757874557",
+    products: ["Eastern Brew", "DateSpresso", "GrounDate"],
+  },
+  {
+    id: "milaf",
+    name: "Milaf",
+    sub: "Cola",
+    origin: "Saudi Arabia",
+    est: 2024,
+    tag: "Date-Based Cola",
+    blurb:
+      "The world's first cola made from real dates — no added sugar, no sweeteners.",
+    long: "Milaf Cola is the world's first cola made entirely from date extract, created by the Al Madinah Heritage Company in Saudi Arabia. Brewed from Ajwa and Sukkari dates with no added sugar or sweeteners.",
+    note: "No added sugar",
+    accent: "#2a1712",
+    color2: "#caa55a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/41gllxLXI7L._SX679.jpg?v=1757873500",
+    products: ["Date Cola"],
+  },
+  {
+    id: "val",
+    name: "VAL",
+    sub: "Dates",
+    origin: "Saudi Arabia",
+    est: 0,
+    tag: "Stuffed Date Snacks",
+    blurb:
+      "Premium soft dates stuffed with tahini and rolled in sesame — 100% natural.",
+    long: "VAL makes bite-sized snacks from premium Saudi dates — soft dates filled with a velvety tahini center and rolled in roasted sesame or coconut. Made from 100% natural ingredients with no added sugar.",
+    note: "100% natural",
+    accent: "#5e3a1e",
+    color2: "#d6a06e",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/VAl_Date_Balls_Stuffed_With_Tahini_500g_Main.jpg?v=1771438021",
+    products: ["Date Balls with Tahini"],
+  },
+  {
+    id: "reeq-alnahel",
+    name: "Reeq Alnahel",
+    sub: "Honey",
+    origin: "Saudi Arabia",
+    est: 0,
+    tag: "Wild Saudi Honey",
+    blurb:
+      "Natural wild honey and bee-product blends from apiaries across Saudi Arabia.",
+    long: "Reeq Alnahel is a Saudi honey house producing natural wild honey from its own apiaries inside and beyond the Kingdom. Its blends combine pure honey with bee products and natural botanicals.",
+    note: "Wild-harvested",
+    accent: "#6e4f1a",
+    color2: "#e6c05a",
+    img: "https://cdn.shopify.com/s/files/1/0673/0216/2690/files/a083ea8d-0474-4999-93bd-2e1e9fad37e5_18b66674-228b-4936-9546-e17ea91db7a7.jpg?v=1757873470",
+    products: ["Kings Food Honey"],
   },
 ];
 
@@ -155,6 +229,10 @@ export const VENDOR_TO_BRAND_ID: Record<string, string> = {
   Babanuj: "babanuj",
   Leen: "leen",
   Crush: "crush",
+  "Bal Coffee": "bal-coffee",
+  Milaf: "milaf",
+  VAL: "val",
+  "Reeq Alnahel": "reeq-alnahel",
 };
 
 export function brandIdFromVendor(vendor: string | undefined): string | null {
@@ -168,6 +246,10 @@ export function vendorFromBrandId(id: string): string | undefined {
   if (id === "babanuj") return "Babanuj";
   if (id === "leen") return "Leen";
   if (id === "crush") return "Crush";
+  if (id === "bal-coffee") return "Bal Coffee";
+  if (id === "milaf") return "Milaf";
+  if (id === "val") return "VAL";
+  if (id === "reeq-alnahel") return "Reeq Alnahel";
   return undefined;
 }
 

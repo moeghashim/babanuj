@@ -155,16 +155,18 @@ export function MobileMenu({
             {BRANDS.map((b) => (
               <DrawerLink key={b.id} href={`/brand/${b.id}`} onSelect={close}>
                 {b.name}
-                <span
-                  style={{
-                    marginLeft: 8,
-                    fontSize: 11,
-                    color: "var(--ink-2)",
-                    fontWeight: 400,
-                  }}
-                >
-                  · {b.origin}
-                </span>
+                {b.origin && (
+                  <span
+                    style={{
+                      marginLeft: 8,
+                      fontSize: 11,
+                      color: "var(--ink-2)",
+                      fontWeight: 400,
+                    }}
+                  >
+                    · {b.origin}
+                  </span>
+                )}
               </DrawerLink>
             ))}
           </Section>

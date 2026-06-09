@@ -13,6 +13,10 @@ const HUE_BY_BRAND: Record<string, string> = {
   babanuj: "#3a5c3a",
   leen: "#5e3a1e",
   crush: "#7a4a2e",
+  "bal-coffee": "#3a2618",
+  milaf: "#2a1712",
+  val: "#5e3a1e",
+  "reeq-alnahel": "#6e4f1a",
 };
 
 const HUE_FALLBACK = "#caa55a";
