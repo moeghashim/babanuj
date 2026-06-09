@@ -636,13 +636,6 @@ button:focus-visible {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
-  .mk-cat-header {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-  .mk-cat-chips {
-    justify-content: flex-start !important;
-  }
   .mk-cat-toolbar {
     flex-wrap: wrap !important;
     gap: 8px !important;
