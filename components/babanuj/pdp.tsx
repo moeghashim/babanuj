@@ -14,15 +14,15 @@ import { Photo } from "components/babanuj/photo";
 import { MarketProductCard } from "components/babanuj/product-card";
 import { AddToBagButton } from "components/babanuj/add-to-bag";
 import {
-  BRANDS,
   categoryFor,
-  findBrand,
   fmtPrice,
+  resolveProductBrand,
+  type BabanujBrand,
   type BabanujProduct,
   type BabanujProductVariant,
 } from "lib/babanuj/data";
 
-type TabId = "description" | "ingredients" | "shipping";
+type TabId = "description" | "shipping";
 
 type Props = {
   product: BabanujProduct;
@@ -31,8 +31,8 @@ type Props = {
 };
 
 export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
-  const brand =
-    findBrand(BRANDS.find((b) => b.name === p.brand)?.id ?? "") ?? BRANDS[0]!;
+  const brand = resolveProductBrand(p);
+  const brandLabel = brand.origin ? `${brand.name} · ${brand.origin}` : brand.name;
   const cat = categoryFor(p);
   const productOptions = (p.options ?? []).filter(
     (option) => option.values.length > 1,
@@ -250,32 +250,35 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
 
           {/* Info */}
           <div className="mk-pdp-info">
-            <Link
-              href={`/brand/${brand.id}`}
-              style={{
-                background: "transparent",
-                border: 0,
-                padding: 0,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                color: "var(--accent-dark)",
-                textDecoration: "none",
-              }}
-            >
-              <div
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 999,
-                  background: brand.accent,
-                }}
-              />
-              <span className="micro" style={{ color: "var(--accent-dark)" }}>
-                {brand.name} · {brand.origin}
+            {brand.id ? (
+              <Link href={`/brand/${brand.id}`} style={brandChipStyle}>
+                <span
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 999,
+                    background: brand.accent,
+                  }}
+                />
+                <span className="micro" style={{ color: "var(--accent-dark)" }}>
+                  {brandLabel}
+                </span>
+              </Link>
+            ) : (
+              <span style={brandChipStyle}>
+                <span
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 999,
+                    background: brand.accent,
+                  }}
+                />
+                <span className="micro" style={{ color: "var(--accent-dark)" }}>
+                  {brandLabel}
+                </span>
               </span>
-            </Link>
+            )}
             <h1
               className="display-heavy"
               style={{ fontSize: 48, margin: "12px 0 8px", lineHeight: 1.05 }}
@@ -466,21 +469,28 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
                 overflow: "hidden",
               }}
             >
-              {[
-                { k: "Origin", v: brand.origin },
-                { k: "Maker", v: `${brand.name} · est. ${brand.est}` },
-                { k: "Format", v: p.weight },
-                { k: "Ships from", v: "Houston, TX" },
-                { k: "Shelf life", v: "6–12 months · ambient" },
-                { k: "Allergens", v: "Tree nuts · gluten · dairy" },
-              ].map((f, i, arr) => (
+              {(
+                [
+                  brand.origin ? { k: "Origin", v: brand.origin } : null,
+                  {
+                    k: "Maker",
+                    v: brand.est
+                      ? `${brand.name} · est. ${brand.est}`
+                      : brand.name,
+                  },
+                  p.weight ? { k: "Format", v: p.weight } : null,
+                  { k: "Ships from", v: "Houston, TX" },
+                ].filter(Boolean) as { k: string; v: string }[]
+              ).map((f, i, arr) => (
                 <div
-                  key={i}
+                  key={f.k}
                   style={{
                     padding: 14,
                     borderRight: i % 2 === 0 ? "1px solid var(--rule)" : 0,
                     borderBottom:
-                      i < arr.length - 2 ? "1px solid var(--rule)" : 0,
+                      i < arr.length - (arr.length % 2 || 2)
+                        ? "1px solid var(--rule)"
+                        : 0,
                   }}
                 >
                   <div
@@ -512,7 +522,6 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             {(
               [
                 { id: "description", label: "Description" },
-                { id: "ingredients", label: "Ingredients & nutrition" },
                 { id: "shipping", label: "Shipping & returns" },
               ] as { id: TabId; label: string }[]
             ).map((t) => (
@@ -548,7 +557,6 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
             {tab === "description" && (
               <PDPDescription product={p} brand={brand} />
             )}
-            {tab === "ingredients" && <PDPIngredients />}
             {tab === "shipping" && <PDPShipping />}
           </div>
         </div>
@@ -575,13 +583,15 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
                 From the same house
               </h2>
             </div>
-            <Link
-              href={`/brand/${brand.id}`}
-              className="market-btn outline"
-              style={{ padding: "10px 18px", fontSize: 13 }}
-            >
-              Visit {brand.name} →
-            </Link>
+            {brand.id && (
+              <Link
+                href={`/brand/${brand.id}`}
+                className="market-btn outline"
+                style={{ padding: "10px 18px", fontSize: 13 }}
+              >
+                Visit {brand.name} →
+              </Link>
+            )}
           </div>
           <div
             className="mk-pdp-related"
@@ -646,6 +656,17 @@ const qtyBtn: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const brandChipStyle: React.CSSProperties = {
+  background: "transparent",
+  border: 0,
+  padding: 0,
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 8,
+  color: "var(--accent-dark)",
+  textDecoration: "none",
 };
 
 function optionsFromVariant(
@@ -781,175 +802,69 @@ function PDPDescription({
   brand,
 }: {
   product: BabanujProduct;
-  brand: (typeof BRANDS)[number];
+  brand: BabanujBrand;
 }) {
+  const html = p.descriptionHtml?.trim();
+  const showMaker = Boolean(brand.id && (brand.blurb || brand.origin));
   return (
     <div
       className="mk-pdp-tab"
-      style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 48 }}
+      style={{
+        display: "grid",
+        gridTemplateColumns: showMaker ? "1.4fr 1fr" : "1fr",
+        gap: 48,
+      }}
     >
-      <div>
-        <p
-          style={{
-            fontSize: 17,
-            lineHeight: 1.7,
-            color: "var(--ink)",
-            marginTop: 0,
-          }}
-        >
-          {p.name} is made by {brand.name} in {brand.origin}, working from
-          recipes refined over {2026 - brand.est} years. Every batch is
-          hand-rolled, slow-baked, and shipped within 48 hours of leaving the
-          kitchen.
-        </p>
-        <p
-          style={{
-            fontSize: 16,
-            lineHeight: 1.7,
-            color: "var(--ink-2)",
-          }}
-        >
-          {brand.long}
-        </p>
-        <h3
-          className="display"
-          style={{ fontSize: 18, marginTop: 28, marginBottom: 12 }}
-        >
-          Tasting notes
-        </h3>
-        <ul
-          style={{
-            paddingLeft: 18,
-            fontSize: 15,
-            lineHeight: 1.7,
-            color: "var(--ink-2)",
-            margin: 0,
-          }}
-        >
-          <li>
-            Crisp top crust giving way to a yielding, syrup-soaked middle.
-          </li>
-          <li>
-            Deep pistachio, soft cardamom, a finish of orange-blossom honey.
-          </li>
-          <li>
-            Best with strong unsweetened tea or a small cup of Turkish coffee.
-          </li>
-        </ul>
-      </div>
       <div
-        style={{ background: "var(--paper)", borderRadius: 18, padding: 24 }}
+        className="mk-pdp-desc"
+        style={{ fontSize: 16, lineHeight: 1.7, color: "var(--ink-2)" }}
       >
-        <div
-          className="micro"
-          style={{ color: "var(--accent-dark)", marginBottom: 10 }}
-        >
-          The Maker
-        </div>
-        <div className="display" style={{ fontSize: 22, marginBottom: 6 }}>
-          {brand.name}
-        </div>
-        <div style={{ fontSize: 13, color: "var(--ink-2)", marginBottom: 14 }}>
-          {brand.origin} · est. {brand.est}
-        </div>
-        <p
-          style={{
-            fontSize: 14,
-            lineHeight: 1.65,
-            color: "var(--ink-2)",
-            margin: 0,
-          }}
-        >
-          {brand.blurb}
-        </p>
+        {html ? (
+          // Shopify product descriptionHtml — authored in the store admin.
+          <div dangerouslySetInnerHTML={{ __html: html }} />
+        ) : (
+          <p style={{ marginTop: 0 }}>
+            {p.description ||
+              `${p.name}${brand.name ? ` by ${brand.name}` : ""}.`}
+          </p>
+        )}
       </div>
-    </div>
-  );
-}
-
-function PDPIngredients() {
-  const rows: [string, string][] = [
-    ["Calories", "142 kcal"],
-    ["Fat", "7.8 g"],
-    ["Sugars", "11.4 g"],
-    ["Protein", "2.1 g"],
-    ["Sodium", "38 mg"],
-  ];
-  return (
-    <div
-      className="mk-pdp-tab"
-      style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40 }}
-    >
-      <div>
-        <h3
-          className="display"
-          style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}
-        >
-          Ingredients
-        </h3>
-        <p
-          style={{
-            fontSize: 14,
-            lineHeight: 1.7,
-            color: "var(--ink-2)",
-          }}
-        >
-          Unbleached wheat flour, butter, sugar, pistachios, walnuts, lemon,
-          salt. Contains: tree nuts, gluten, dairy. May contain traces of
-          sesame.
-        </p>
-        <h3
-          className="display"
-          style={{ fontSize: 18, marginTop: 24, marginBottom: 12 }}
-        >
-          Storage
-        </h3>
-        <p
-          style={{
-            fontSize: 14,
-            lineHeight: 1.7,
-            color: "var(--ink-2)",
-          }}
-        >
-          Store in a cool dry place. Best within 6 months of receipt.
-          Refrigerate after opening for extended freshness.
-        </p>
-      </div>
-      <div>
-        <h3
-          className="display"
-          style={{ fontSize: 18, marginTop: 0, marginBottom: 12 }}
-        >
-          Nutrition · per 30g serving
-        </h3>
+      {showMaker && (
         <div
-          style={{
-            border: "1px solid var(--rule)",
-            borderRadius: 14,
-            overflow: "hidden",
-          }}
+          style={{ background: "var(--paper)", borderRadius: 18, padding: 24 }}
         >
-          {rows.map(([k, v], i) => (
+          <div
+            className="micro"
+            style={{ color: "var(--accent-dark)", marginBottom: 10 }}
+          >
+            The Maker
+          </div>
+          <div className="display" style={{ fontSize: 22, marginBottom: 6 }}>
+            {brand.name}
+          </div>
+          {(brand.origin || brand.est > 0) && (
             <div
-              key={k}
+              style={{ fontSize: 13, color: "var(--ink-2)", marginBottom: 14 }}
+            >
+              {[brand.origin, brand.est > 0 ? `est. ${brand.est}` : ""]
+                .filter(Boolean)
+                .join(" · ")}
+            </div>
+          )}
+          {brand.blurb && (
+            <p
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "12px 16px",
-                borderBottom: i < rows.length - 1 ? "1px solid var(--rule)" : 0,
                 fontSize: 14,
+                lineHeight: 1.65,
+                color: "var(--ink-2)",
+                margin: 0,
               }}
             >
-              <span style={{ color: "var(--ink-2)" }}>{k}</span>
-              <span
-                style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }}
-              >
-                {v}
-              </span>
-            </div>
-          ))}
+              {brand.blurb}
+            </p>
+          )}
         </div>
-      </div>
+      )}
     </div>
   );
 }

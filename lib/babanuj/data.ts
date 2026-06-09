@@ -30,6 +30,14 @@ export type BabanujProduct = {
   handle: string;
   name: string;
   brand: string;
+  /** Curated brand slug resolved from the Shopify vendor, or null when the
+   *  vendor isn't one of the curated houses. Lets consumers resolve the brand
+   *  by id instead of fuzzy-matching the display name. */
+  brandId?: string | null;
+  /** Plain-text product description from Shopify (snippets/fallbacks). */
+  description?: string;
+  /** Rich product description HTML from Shopify, rendered on the PDP. */
+  descriptionHtml?: string;
   price: number;
   weight: string;
   tag: string;
@@ -595,6 +603,37 @@ export function findProductById(id: string): BabanujProduct | undefined {
 
 export function findBrand(id: string): BabanujBrand | undefined {
   return BRANDS.find((b) => b.id === id);
+}
+
+/**
+ * Resolve the brand object for a product. Prefers the curated brand id set by
+ * the Shopify adapter, then a display-name match, and finally synthesizes a
+ * minimal brand from the real Shopify vendor string. The synthetic fallback
+ * carries no invented origin/story, so an unmapped vendor is never mislabeled
+ * as one of the curated houses (previously it defaulted to the first brand).
+ */
+export function resolveProductBrand(
+  p: Pick<BabanujProduct, "brand" | "brandId">,
+): BabanujBrand {
+  const byId = p.brandId ? BRANDS.find((b) => b.id === p.brandId) : undefined;
+  if (byId) return byId;
+  const byName = BRANDS.find((b) => b.name === p.brand);
+  if (byName) return byName;
+  return {
+    id: "",
+    name: p.brand || "Babanuj",
+    sub: "",
+    origin: "",
+    est: 0,
+    tag: "",
+    blurb: "",
+    long: "",
+    note: "",
+    accent: "#3a5c3a",
+    color2: "#caa55a",
+    img: "",
+    products: [],
+  };
 }
 
 export function findCategory(id: string): BabanujCategory {
