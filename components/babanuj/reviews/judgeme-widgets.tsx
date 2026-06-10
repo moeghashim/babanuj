@@ -36,7 +36,9 @@ export function JudgemePreviewBadge({
   if (!JUDGEME_ENABLED) return null;
   return (
     <div
-      className={"jdgm-widget jdgm-preview-badge" + (className ? ` ${className}` : "")}
+      className={
+        "jdgm-widget jdgm-preview-badge" + (className ? ` ${className}` : "")
+      }
       data-id={numericProductId(productId)}
       style={style}
     />
@@ -70,7 +72,22 @@ export function JudgemeReviewWidget({
   );
 }
 
-/** Shop-wide / company reviews widget (all reviews across products). */
+/** Cache-backed shop review carousel for review sections. */
+export function JudgemeFeaturedCarousel() {
+  useJudgemeRefresh();
+  if (!JUDGEME_ENABLED) return null;
+  return <div className="jdgm-carousel-wrapper" />;
+}
+
+/** Cache-backed carousel filtered to Judge.me store/company reviews only. */
+export function JudgemeCompanyReviewCarousel() {
+  useJudgemeRefresh();
+  if (!JUDGEME_ENABLED) return null;
+  return <div className="jdgm-carousel-wrapper jdgm-company-review-carousel" />;
+}
+
+/** Shop-wide all-reviews widget. Currently unused because Judge.me's cache
+ * omits the `all_reviews` payload for this headless store. */
 export function JudgemeAllReviews() {
   useJudgemeRefresh();
   if (!JUDGEME_ENABLED) return null;

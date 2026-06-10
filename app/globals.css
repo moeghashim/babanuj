@@ -138,6 +138,18 @@ a {
   text-decoration: none;
 }
 
+.jdgm-company-review-carousel .jdgm-carousel-item:not(.jdgm--shop-review) {
+  display: none !important;
+}
+
+.jdgm-company-review-carousel .jdgm-carousel__arrows {
+  display: none !important;
+}
+
+.jdgm-company-review-carousel .jdgm-carousel__item-wrapper {
+  transform: none !important;
+}
+
 button {
   font-family: inherit;
 }

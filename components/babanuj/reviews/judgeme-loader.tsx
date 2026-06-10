@@ -42,8 +42,8 @@ import {
  *
  * The cache-server loader exposes `window.jdgmCacheServer.reloadAll()` (verified
  * against cdnwidget.judge.me/widget_preloader.js); `jdgmSetup()` is kept as a
- * fallback for the older loader. Safe no-op before the preloader has loaded —
- * first paint is covered by its own auto-render.
+ * fallback for the older loader. Safe no-op before the cache server finishes
+ * its initial boot; first paint is covered by its own auto-render.
  */
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -53,10 +53,19 @@ export function refreshJudgemeWidgets() {
   refreshTimer = setTimeout(() => {
     refreshTimer = null;
     const w = window as unknown as {
-      jdgmCacheServer?: { reloadAll?: () => void; reloadAllWidgets?: () => void };
+      jdgmCacheServer?: {
+        reloadAll?: () => void;
+        reloadAllWidgets?: () => void;
+      };
       jdgmSetup?: () => void;
+      jdgmSettings?: unknown;
     };
-    if (typeof w.jdgmCacheServer?.reloadAll === "function") w.jdgmCacheServer.reloadAll();
+    const hasCacheServer = Boolean(
+      w.jdgmCacheServer?.reloadAll || w.jdgmCacheServer?.reloadAllWidgets,
+    );
+    if (hasCacheServer && !w.jdgmSettings) return;
+    if (typeof w.jdgmCacheServer?.reloadAll === "function")
+      w.jdgmCacheServer.reloadAll();
     else if (typeof w.jdgmCacheServer?.reloadAllWidgets === "function")
       w.jdgmCacheServer.reloadAllWidgets();
     else if (typeof w.jdgmSetup === "function") w.jdgmSetup();
