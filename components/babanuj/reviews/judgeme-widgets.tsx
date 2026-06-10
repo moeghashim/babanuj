@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { useMountEffect } from "lib/use-mount-effect";
 import { numericProductId } from "lib/babanuj/data";
 import { JUDGEME_ENABLED } from "./config";
@@ -16,10 +16,15 @@ import { refreshJudgemeWidgets } from "./judgeme-loader";
  * App Router soft-navigation, not just on first load.
  */
 
-function useJudgemeRefresh() {
+function useJudgemeReady() {
+  const [ready, setReady] = useState(false);
+
   useMountEffect(() => {
+    setReady(true);
     refreshJudgemeWidgets();
   });
+
+  return JUDGEME_ENABLED && ready;
 }
 
 /** Compact star-rating badge for product cards and the PDP header. */
@@ -32,14 +37,15 @@ export function JudgemePreviewBadge({
   className?: string;
   style?: CSSProperties;
 }) {
-  useJudgemeRefresh();
-  if (!JUDGEME_ENABLED) return null;
+  const ready = useJudgemeReady();
+  if (!ready) return null;
   return (
     <div
       className={
         "jdgm-widget jdgm-preview-badge" + (className ? ` ${className}` : "")
       }
       data-id={numericProductId(productId)}
+      suppressHydrationWarning
       style={style}
     />
   );
@@ -54,8 +60,8 @@ export function JudgemeReviewWidget({
   productId: string;
   productTitle: string;
 }) {
-  useJudgemeRefresh();
-  if (!JUDGEME_ENABLED) return null;
+  const ready = useJudgemeReady();
+  if (!ready) return null;
   // Canonical inline review-widget markup. NOT `jdgm-outside-widget` — that's a
   // relocation placeholder that renders empty without a paired primary widget.
   const id = numericProductId(productId);
@@ -68,32 +74,41 @@ export function JudgemeReviewWidget({
       data-product-title={productTitle}
       data-widget="review"
       data-auto-install="false"
+      suppressHydrationWarning
     />
   );
 }
 
 /** Cache-backed shop review carousel for review sections. */
 export function JudgemeFeaturedCarousel() {
-  useJudgemeRefresh();
-  if (!JUDGEME_ENABLED) return null;
-  return <div className="jdgm-carousel-wrapper" />;
+  const ready = useJudgemeReady();
+  if (!ready) return null;
+  return <div className="jdgm-carousel-wrapper" suppressHydrationWarning />;
 }
 
 /** Cache-backed carousel filtered to Judge.me store/company reviews only. */
 export function JudgemeCompanyReviewCarousel() {
-  useJudgemeRefresh();
-  if (!JUDGEME_ENABLED) return null;
-  return <div className="jdgm-carousel-wrapper jdgm-company-review-carousel" />;
+  const ready = useJudgemeReady();
+  if (!ready) return null;
+  return (
+    <div
+      className="jdgm-carousel-wrapper jdgm-company-review-carousel"
+      suppressHydrationWarning
+    />
+  );
 }
 
 /** Shop-wide all-reviews widget. Currently unused because Judge.me's cache
  * omits the `all_reviews` payload for this headless store. */
 export function JudgemeAllReviews() {
-  useJudgemeRefresh();
-  if (!JUDGEME_ENABLED) return null;
+  const ready = useJudgemeReady();
+  if (!ready) return null;
   return (
-    <div className="jdgm-widget jdgm-all-reviews-widget">
-      <div className="jdgm-all-reviews__body" />
+    <div
+      className="jdgm-widget jdgm-all-reviews-widget"
+      suppressHydrationWarning
+    >
+      <div className="jdgm-all-reviews__body" suppressHydrationWarning />
     </div>
   );
 }

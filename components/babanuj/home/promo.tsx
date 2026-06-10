@@ -57,7 +57,9 @@ export function MarketPromo() {
               Pick six. We pack, wrap, and ship — anywhere in the U.S. Perfect
               for hosts, teams, and holidays.
             </p>
-            <button className="market-btn">Start Building →</button>
+            <Link href="/collections/gift-boxes" className="market-btn">
+              Start Building →
+            </Link>
           </div>
           <div
             className="mk-promo-img"
@@ -73,6 +75,7 @@ export function MarketPromo() {
               src={ALL_PRODUCTS[6]!.img}
               alt="Gift box"
               quality={60}
+              fallbackWidth={384}
               sizes="(max-width: 900px) 200px, 200px"
               style={{ position: "absolute", inset: 0 }}
             />
@@ -150,6 +153,7 @@ export function MarketPromo() {
               src={MILAF_COLA.img}
               alt="Milaf Date Cola 240ml can"
               quality={60}
+              fallbackWidth={384}
               sizes="(max-width: 900px) 200px, 200px"
               style={{ position: "absolute", inset: 0 }}
             />

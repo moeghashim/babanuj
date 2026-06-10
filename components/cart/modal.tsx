@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useFormStatus } from "react-dom";
 import { useMountEffect } from "lib/use-mount-effect";
 import { trackInitiateCheckout } from "lib/meta/events";
+import { FREE_SHIPPING_THRESHOLD } from "lib/babanuj/shipping";
 import {
   CartIcon,
   CloseIcon,
@@ -16,8 +17,6 @@ import { redirectToCheckout } from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
-
-const FREE_SHIP_THRESHOLD = 70;
 
 export default function CartModal() {
   const {
@@ -57,8 +56,8 @@ export default function CartModal() {
   const visibleCount = mounted ? count : 0;
   const lines = cart?.lines ?? [];
   const subtotal = Number(cart?.cost.totalAmount.amount ?? 0);
-  const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
-  const freeShipPct = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
+  const freeShipRemaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const freeShipPct = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
 
   const drawer = (
     <>

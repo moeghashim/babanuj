@@ -18,13 +18,13 @@ export function MarketProductCard({
   carouselCard = false,
   showAddOnHover = true,
 }: Props) {
+  const productHref = `/product/${p.handle}`;
+
   return (
-    <Link
-      href={`/product/${p.handle}`}
+    <article
       className={"market-card" + (carouselCard ? " mk-carousel-card" : "")}
       style={{
         position: "relative",
-        cursor: "pointer",
         display: "block",
         color: "inherit",
       }}
@@ -37,51 +37,64 @@ export function MarketProductCard({
           overflow: "hidden",
         }}
       >
-        <Photo
-          src={p.img}
-          alt={p.name}
-          quality={carouselCard ? 60 : 75}
-          sizes={
-            carouselCard
-              ? "(max-width: 900px) 64px, 280px"
-              : "(max-width: 900px) 50vw, 25vw"
-          }
-          style={{ position: "absolute", inset: 0 }}
-        />
-        {p.tag && (
-          <div
+        <Link
+          href={productHref}
+          aria-label={`View ${p.name}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "block",
+            color: "inherit",
+            cursor: "pointer",
+          }}
+        >
+          <Photo
+            src={p.img}
+            alt={p.name}
+            quality={carouselCard ? 60 : 75}
+            fallbackWidth={carouselCard ? 384 : 640}
+            sizes={
+              carouselCard
+                ? "(max-width: 900px) 64px, 280px"
+                : "(max-width: 480px) 50vw, (max-width: 900px) 33vw, 25vw"
+            }
+            style={{ position: "absolute", inset: 0 }}
+          />
+          {p.tag && (
+            <div
+              style={{
+                position: "absolute",
+                top: 12,
+                left: 12,
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+              }}
+            >
+              <span className="market-chip chip-soft">{p.tag}</span>
+            </div>
+          )}
+          <span
+            aria-hidden="true"
             style={{
               position: "absolute",
               top: 12,
-              left: 12,
+              right: 12,
+              background: "#fff",
+              border: 0,
+              width: 34,
+              height: 34,
+              borderRadius: 999,
+              cursor: "pointer",
               display: "flex",
-              flexDirection: "column",
-              gap: 6,
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--ink-2)",
             }}
           >
-            <span className="market-chip chip-soft">{p.tag}</span>
-          </div>
-        )}
-        <span
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            background: "#fff",
-            border: 0,
-            width: 34,
-            height: 34,
-            borderRadius: 999,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--ink-2)",
-          }}
-        >
-          <HeartIcon width={16} height={16} />
-        </span>
+            <HeartIcon width={16} height={16} />
+          </span>
+        </Link>
         {!carouselCard && (
           <div
             className={
@@ -92,6 +105,7 @@ export function MarketProductCard({
               left: 12,
               right: 12,
               bottom: 12,
+              zIndex: 2,
             }}
           >
             <AddToBagButton
@@ -103,10 +117,14 @@ export function MarketProductCard({
         )}
       </div>
 
-      <div
+      <Link
+        href={productHref}
         style={{
+          display: "block",
           padding: 16,
           fontFamily: "var(--font-dm-sans, system-ui), system-ui, sans-serif",
+          color: "inherit",
+          textDecoration: "none",
         }}
       >
         <div className="micro" style={{ fontSize: 10, color: "var(--ink-2)" }}>
@@ -152,7 +170,7 @@ export function MarketProductCard({
             {fmtPrice(p.price)}
           </span>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </article>
   );
 }

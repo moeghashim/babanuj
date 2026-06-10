@@ -27,6 +27,9 @@ const legacyCollectionRedirects = Object.entries(
 }));
 
 export default {
+  turbopack: {
+    root: process.cwd(),
+  },
   experimental: {
     ppr: "incremental",
     inlineCss: true,

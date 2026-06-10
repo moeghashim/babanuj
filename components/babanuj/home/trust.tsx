@@ -4,11 +4,12 @@ import {
   ShieldIcon,
   TruckIcon,
 } from "components/babanuj/icons";
+import { FREE_SHIPPING_SHORT_LABEL } from "lib/babanuj/shipping";
 
 const ITEMS = [
   {
     icon: <TruckIcon width={20} height={20} />,
-    title: "Free shipping over $70",
+    title: FREE_SHIPPING_SHORT_LABEL,
     sub: "From Houston, TX",
   },
   {
@@ -52,8 +53,7 @@ export function MarketTrust() {
               textAlign: "center",
               gap: 10,
               padding: "8px 20px",
-              borderRight:
-                i < arr.length - 1 ? "1px solid var(--rule)" : 0,
+              borderRight: i < arr.length - 1 ? "1px solid var(--rule)" : 0,
               minWidth: 0,
             }}
           >

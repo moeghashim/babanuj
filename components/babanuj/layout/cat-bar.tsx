@@ -13,7 +13,7 @@ const CATS = [
   { label: "Gift Boxes", href: "/collections/gift-boxes" },
   { label: "Dates", href: "/collections/dates" },
   { label: "Coffee", href: "/collections/coffee" },
-  { label: "Wholesale", href: "#wholesale" },
+  { label: "Wholesale", href: "/#wholesale" },
 ];
 
 // Highlight the item whose route we're on. Hash links (e.g. "#wholesale") have

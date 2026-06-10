@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function MarketUtility() {
   return (
     <div
@@ -12,14 +14,14 @@ export function MarketUtility() {
       }}
     >
       <div style={{ display: "flex", gap: 18 }}>
-        <a href="#">Gift Cards</a>
-        <a href="#">Become a Partner</a>
-        <a href="#">Refer a Friend · Get $20</a>
+        <Link href="/collections/gift-boxes">Gift Boxes</Link>
+        <Link href="/#wholesale">Become a Partner</Link>
+        <Link href="/reviews">Reviews</Link>
       </div>
       <div style={{ display: "flex", gap: 18 }}>
-        <a href="#">Track Order</a>
-        <a href="#">Help</a>
-        <a href="#">USD · EN</a>
+        <Link href="/account/orders">Track Order</Link>
+        <Link href="/shipping">Help</Link>
+        <span aria-label="Store currency and language">USD · EN</span>
       </div>
     </div>
   );

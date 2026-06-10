@@ -48,10 +48,10 @@ export async function MarketBrands() {
           </h2>
         </div>
         <Link
-          href="/brand/zaitoune"
+          href="/search"
           style={{ color: "var(--accent)", fontWeight: 600, fontSize: 14 }}
         >
-          All {BRANDS.length} brands →
+          Shop all brands →
         </Link>
       </div>
       <div
@@ -68,84 +68,85 @@ export async function MarketBrands() {
           // accent panel rather than cropping (cover) like a photo.
           const isLogo = b.img.startsWith("/brands/");
           return (
-          <Link
-            key={b.id}
-            href={`/brand/${b.id}`}
-            className="market-card"
-            style={{
-              cursor: "pointer",
-              display: "grid",
-              gridTemplateColumns: "140px 1fr",
-              overflow: "hidden",
-              color: "inherit",
-            }}
-          >
-            <div style={{ background: b.accent, position: "relative" }}>
-              <Photo
-                src={b.img}
-                alt={b.name}
-                quality={60}
-                sizes="(max-width: 900px) 96px, 140px"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  objectFit: isLogo ? "contain" : "cover",
-                  padding: isLogo ? 16 : 0,
-                }}
-              />
-            </div>
-            <div style={{ padding: 18 }}>
-              <div
-                className="micro"
-                style={{ fontSize: 10, color: "var(--ink-2)" }}
-              >
-                {b.origin} · est. {b.est}
-              </div>
-              <div
-                className="display-heavy"
-                style={{ fontSize: 22, marginTop: 4 }}
-              >
-                {b.name}
-              </div>
-              <p
-                style={{
-                  fontSize: 12.5,
-                  lineHeight: 1.5,
-                  color: "var(--ink-2)",
-                  marginTop: 6,
-                  marginBottom: 12,
-                }}
-              >
-                {b.tag}
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span
-                  className="market-chip chip-soft"
-                  style={{ fontSize: 11 }}
-                >
-                  {count} {count === 1 ? "product" : "products"}
-                </span>
-                <span
+            <Link
+              key={b.id}
+              href={`/brand/${b.id}`}
+              className="market-card"
+              style={{
+                cursor: "pointer",
+                display: "grid",
+                gridTemplateColumns: "140px 1fr",
+                overflow: "hidden",
+                color: "inherit",
+              }}
+            >
+              <div style={{ background: b.accent, position: "relative" }}>
+                <Photo
+                  src={b.img}
+                  alt={b.name}
+                  quality={60}
+                  fallbackWidth={384}
+                  sizes="(max-width: 900px) 96px, 140px"
                   style={{
-                    color: "var(--accent)",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
+                    position: "absolute",
+                    inset: 0,
+                    objectFit: isLogo ? "contain" : "cover",
+                    padding: isLogo ? 16 : 0,
+                  }}
+                />
+              </div>
+              <div style={{ padding: 18 }}>
+                <div
+                  className="micro"
+                  style={{ fontSize: 10, color: "var(--ink-2)" }}
+                >
+                  {b.origin} · est. {b.est}
+                </div>
+                <div
+                  className="display-heavy"
+                  style={{ fontSize: 22, marginTop: 4 }}
+                >
+                  {b.name}
+                </div>
+                <p
+                  style={{
+                    fontSize: 12.5,
+                    lineHeight: 1.5,
+                    color: "var(--ink-2)",
+                    marginTop: 6,
+                    marginBottom: 12,
                   }}
                 >
-                  Visit <ArrowRight width={12} height={12} />
-                </span>
+                  {b.tag}
+                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    className="market-chip chip-soft"
+                    style={{ fontSize: 11 }}
+                  >
+                    {count} {count === 1 ? "product" : "products"}
+                  </span>
+                  <span
+                    style={{
+                      color: "var(--accent)",
+                      fontSize: 12,
+                      fontWeight: 700,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                  >
+                    Visit <ArrowRight width={12} height={12} />
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
           );
         })}
       </div>

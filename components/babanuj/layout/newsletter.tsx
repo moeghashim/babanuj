@@ -29,13 +29,13 @@ export function MarketNewsletter() {
       >
         <div>
           <span className="micro" style={{ color: "var(--accent-dark)" }}>
-            $10 off your first order
+            Pantry notes
           </span>
           <h3
             className="display-heavy"
             style={{ fontSize: 36, margin: "10px 0 6px" }}
           >
-            Get $10 off when you join
+            Join the Babanuj list
           </h3>
           <p style={{ fontSize: 14, color: "var(--ink-2)" }}>
             One email a month. New brands, fresh drops, recipes. No spam, no
@@ -105,7 +105,7 @@ function SubmitButton() {
       disabled={pending}
       style={{ opacity: pending ? 0.6 : 1 }}
     >
-      {pending ? "Sending…" : "Get $10 Off"}
+      {pending ? "Sending…" : "Join the List"}
     </button>
   );
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, TruckIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
 import { ALL_PRODUCTS, BRANDS, HERO_IMG } from "lib/babanuj/data";
+import { FREE_SHIPPING_SHORT_LABEL } from "lib/babanuj/shipping";
 import { useMountEffect } from "lib/use-mount-effect";
 
 type Slide = {
@@ -40,9 +41,9 @@ const SLIDES: Slide[] = [
   },
   {
     img: ALL_PRODUCTS[2]!.img,
-    chip: "SPRING DROP · BAB SHARQI",
+    chip: "SMALL-BATCH MAAMOUL · BAB SHARQI",
     titleParts: ["Maamoul,", { italic: "baked this morning." }],
-    sub: "Damascus date cookies, baked the day they ship. Available for one season — order before April closes.",
+    sub: "Damascus date cookies baked close to ship day. Keep a tin ready for coffee, guests, and weekend dessert trays.",
     cta: {
       label: "Order Maamoul",
       href: "/product/zaitoune-maamoul-date-250g",
@@ -126,6 +127,7 @@ export function MarketHero() {
                 priority={i === 0}
                 fetchPriority={i === 0 ? "high" : "auto"}
                 quality={i === 0 ? 60 : 75}
+                fallbackWidth={i === 0 ? 1920 : 1200}
                 sizes="(max-width: 768px) 50vw, 100vw"
                 style={{
                   position: "absolute",
@@ -253,7 +255,7 @@ export function MarketHero() {
             zIndex: 4,
           }}
         >
-          <TruckIcon width={14} height={14} /> Free shipping over $70
+          <TruckIcon width={14} height={14} /> {FREE_SHIPPING_SHORT_LABEL}
         </div>
 
         <div
