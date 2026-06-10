@@ -6,6 +6,27 @@ needed.
 
 ## 2026-06-10
 
+- **Performance follow-up for low Lighthouse score**. Deferred PostHog out of
+  the initial app shell by moving the browser SDK behind a dynamic import that
+  starts after first interaction or a 6.5s delay. Reused that lazy initializer
+  for account identification and product/cart event captures. Moved Meta Pixel
+  behind the existing delayed third-party gate and split its component into a
+  separate deferred chunk.
+- Files: `components/babanuj/posthog-provider.tsx`,
+  `components/babanuj/posthog-identify.tsx`,
+  `components/babanuj/third-party.tsx`, `lib/posthog/browser.ts`,
+  `lib/meta/events.ts`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean (only the
+  existing `baseline-browser-mapping` age warning). Chunk inspection confirmed
+  the 194 KB PostHog SDK chunk and the Meta Pixel component chunk are not
+  referenced by the prerendered homepage HTML. Chrome loaded the local
+  production homepage at `http://localhost:3001/` with no console errors and
+  no initial PostHog SDK or Meta Pixel component scripts.
+- Follow-up: the homepage still ships a large app shell and prerendered HTML;
+  deeper performance work should profile cart/provider JS, below-the-fold
+  homepage sections, and image LCP behavior in a clean Chrome profile or
+  PageSpeed run without extensions.
+
 - **UI/UX audit + Ahrefs crawl-report fixes** (`babanuj_report_09-06-26`,
   summarized in `PRD090626.md`). Replaced repo-owned fake `href="#"` utility,
   footer, and mobile-menu links with real routes, encoded mailto links, or
