@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { JUDGEME_ENABLED } from "components/babanuj/reviews/config";
-import { JudgemeCompanyReviewCarousel } from "components/babanuj/reviews/judgeme-widgets";
+import { JudgemeFeaturedCarousel } from "components/babanuj/reviews/judgeme-widgets";
 
 export function MarketReviews() {
   // Hidden until Judge.me is configured — no hardcoded ratings (AGENTS.md).
@@ -34,7 +34,7 @@ export function MarketReviews() {
           Read all reviews →
         </Link>
       </div>
-      <JudgemeCompanyReviewCarousel />
+      <JudgemeFeaturedCarousel />
     </section>
   );
 }

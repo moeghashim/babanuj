@@ -150,6 +150,66 @@ a {
   transform: none !important;
 }
 
+/* ===== Judge.me featured review carousel — match the site's look ===== */
+/* Bigger product thumbnails (Judge.me defaults to ~56px). */
+.jdgm-carousel-wrapper .jdgm-carousel-item__product-image {
+  width: 96px !important;
+  height: 96px !important;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Restyle the nav arrows as circular buttons, matching CarouselControls. */
+.jdgm-carousel-wrapper .jdgm-carousel__arrows {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.jdgm-carousel-wrapper .jdgm-carousel__left-arrow,
+.jdgm-carousel-wrapper .jdgm-carousel__right-arrow {
+  position: relative;
+  width: 40px !important;
+  height: 40px !important;
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--rule) !important;
+  border-radius: 999px !important;
+  transform: none !important; /* cancel Judge.me's rotated-corner chevron */
+  box-sizing: border-box;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* Redraw the chevron via a pseudo-element so it sits inside the circle. */
+.jdgm-carousel-wrapper .jdgm-carousel__left-arrow::before,
+.jdgm-carousel-wrapper .jdgm-carousel__right-arrow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+}
+
+.jdgm-carousel-wrapper .jdgm-carousel__left-arrow::before {
+  transform: translate(-40%, -50%) rotate(225deg);
+}
+
+.jdgm-carousel-wrapper .jdgm-carousel__right-arrow::before {
+  transform: translate(-60%, -50%) rotate(45deg);
+}
+
+.jdgm-carousel-wrapper .jdgm-carousel__left-arrow:hover,
+.jdgm-carousel-wrapper .jdgm-carousel__right-arrow:hover {
+  background: var(--paper);
+  border-color: var(--ink-2);
+}
+
 button {
   font-family: inherit;
 }
