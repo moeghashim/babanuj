@@ -6,6 +6,24 @@ needed.
 
 ## 2026-06-09
 
+- Polished the homepage "What customers are saying" reviews section. Switched
+  the homepage to the **featured review carousel** (`JudgemeFeaturedCarousel`,
+  matching `/reviews`) so it shows product reviews *with photos* and variety,
+  instead of the company-review-only variant that rendered a single sparse shop
+  review with no image. Then styled Judge.me's carousel to match the site:
+  enlarged the product thumbnails from ~56px to 96px (rounded), and rebuilt the
+  nav arrows from bare 4px-border chevrons into 40px circular buttons with a
+  `var(--rule)` border, a pseudo-element chevron, and a hover state — mirroring
+  the site's own `CarouselControls`. All overrides are scoped to
+  `.jdgm-carousel-wrapper` in globals.css.
+- Files: `components/babanuj/home/reviews.tsx`, `app/globals.css`.
+- Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP with the live
+  Judge.me token — carousel renders (31 reviews); product images measure 96×96
+  and arrows 40×40 circular with chevron pseudo-elements; no horizontal overflow.
+- Follow-up: optional — the carousel still has generous vertical whitespace
+  because many reviews are one-liners ("So good!", "Delicious"); could tighten
+  the item spacing/height later.
+
 - Fixed the live Judge.me duplicate-injection issue after support switched the
   store back to the legacy/cache-compatible Review Widget. `refreshJudgemeWidgets()`
   now skips manual `reloadAll()` while Judge.me's cache server is still doing its
