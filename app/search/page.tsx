@@ -3,7 +3,7 @@ import { shopifyProductsToBabanuj } from "lib/babanuj/from-shopify";
 import { openGraph } from "lib/babanuj/seo";
 import { getProducts } from "lib/shopify";
 
-const title = "Search the pantry";
+const title = "Shop All Middle Eastern Sweets & Pantry";
 const description =
   "Browse baklava, maamoul, Turkish delight, Dubai chocolate, dates, honey, coffee, bread, and gift boxes from every brand in the Babanuj pantry.";
 
@@ -12,6 +12,13 @@ export const metadata = {
   description,
   alternates: {
     canonical: "/search",
+  },
+  // /search is the canonical all-products landing page (legacy
+  // /collections/all 301s here), not a private results page — keep it
+  // explicitly indexable.
+  robots: {
+    index: true,
+    follow: true,
   },
   openGraph: openGraph({
     title: `${title} | Babanuj`,

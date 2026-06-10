@@ -7,6 +7,9 @@ Everything there applies to Claude too.
 
 ## Claude-specific add-ons
 
+- Prerequisite for any change: the **Site architecture** section at the top
+  of AGENTS.md. This is headless Next.js Commerce on Vercel — not a Shopify
+  theme — and `checkout.babanuj.com` is Shopify's domain, correct by design.
 - For UI smoke tests, use the **Preview MCP** (`mcp__Claude_Preview__*`)
   registered via `.claude/launch.json`, not raw `curl`. Click through the
   flows you would as a user.

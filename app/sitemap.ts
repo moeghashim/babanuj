@@ -12,7 +12,7 @@ type Route = {
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const routesMap: Route[] = [""].map((route) => ({
+  const routesMap: Route[] = ["", "/search"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
   }));
@@ -20,7 +20,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const collectionsPromise = getCollections().then((collections) =>
     collections
       .filter(
-        (collection) => !(collection.handle in LEGACY_COLLECTION_REDIRECTS),
+        (collection) =>
+          // The synthetic "All" collection points at /search, which is
+          // already pinned in routesMap above.
+          collection.path !== "/search" &&
+          !(collection.handle in LEGACY_COLLECTION_REDIRECTS),
       )
       .map((collection) => ({
         url: `${baseUrl}${collection.path}`,

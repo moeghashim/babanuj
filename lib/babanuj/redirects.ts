@@ -16,6 +16,8 @@ export const STALE_PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
   "zaitoune-barazek-250g": "/collections/cookies",
   "zaitoune-barazek-500g-amazon": "/collections/cookies",
   "zaitoune-cashew-pistachio-baklava-1kg-amazon": "/collections/baklava",
+  "zaitoune-sweets-royal-petit-four-lotus-bounty-350g":
+    "/product/zaitoune-sweets-royal-petit-four-mix-chocolate-350g",
   "zaitoune-turkish-delight-lokum-250g":
     "/product/zaitoune-turkish-delight-250g",
   "zaitoune-turkish-delight-mix-250g-amazon":
