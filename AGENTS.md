@@ -3,6 +3,41 @@
 Standing playbook for any AI agent (Claude, Codex, Cursor, Hermes…) or human
 working on this repository. Read it before making changes.
 
+## Site architecture (prerequisite — read before any change)
+
+Babanuj is **headless Shopify**: this repo is a Next.js Commerce storefront
+talking to Shopify over the Storefront API. It is **not a Shopify theme** —
+there is no Liquid here and none should be added. Two hosts, one store,
+both intentional:
+
+- **`www.babanuj.com`** → this repo, on Vercel. All customer-facing pages
+  (home, `/product/*`, `/collections/*`, `/search`, `/brand/*`, content
+  pages) and the SEO-canonical site.
+- **`checkout.babanuj.com`** → Shopify's primary domain (CNAME to
+  `shops.myshopify.com`). Hosts checkout (`/cart/c/<token>` permalinks,
+  `/checkouts/*`), customer accounts (`/account/*`), order status, links in
+  Shopify emails, and the `/contact` endpoint the newsletter server action
+  posts to. `cart.checkoutUrl` pointing at this host is **correct by
+  design** — never a bug, never something to "fix" or redirect away.
+
+Rules that follow:
+
+- Never claim `checkout.babanuj.com` is misconfigured, and never swap the
+  host on URLs returned by the Storefront API.
+- Never enable Online Store password protection in Shopify admin — it 302s
+  checkout URLs to `/password` (kills purchases) and silently breaks
+  newsletter signups (`app/actions/newsletter.ts` POSTs to `/contact` and
+  treats Shopify's 30x responses as success).
+- Known, accepted condition: the Shopify Online Store channel still has the
+  legacy merch theme published, so `checkout.babanuj.com` also serves
+  duplicate catalog pages (`/products/*`, its own robots.txt and
+  sitemap.xml). The documented remedy is publishing Vercel's **Shopify
+  Headless Theme** (Theme settings → STOREFRONT → enter the headless
+  domain), which keeps checkout/account/email surfaces working — a Shopify
+  admin action that requires Moe's explicit go-ahead. Do not try to work
+  around it from this repo, and do not flag the subdomain itself as a
+  defect.
+
 ## Stack
 
 - **Next.js 15** (canary, Turbopack) with App Router and PPR
@@ -190,6 +225,10 @@ Start dev server (or Preview MCP), walk through:
 - Don't bypass the `shopifyProductToBabanuj` adapter when reading live data
 - Don't modify Shopify webhooks, store settings, or product data on the
   user's behalf without explicit confirmation
+- Don't treat `checkout.babanuj.com` as a bug or rewrite URLs pointing at
+  it — see "Site architecture" at the top
+- Don't enable Shopify Online Store password protection (breaks checkout
+  and newsletter signups)
 - Don't force-push shared branches without explicit user permission
 
 ## When stuck
