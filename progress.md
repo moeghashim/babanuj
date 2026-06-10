@@ -35,9 +35,9 @@ needed.
 - Follow-up: after deploy, URL-Inspect in Search Console before re-validating:
   `https://www.babanuj.com/`, `/search`, `/collections/all`, both
   `/pages/contact` hosts, and the lotus-bounty product URL. Separately decide
-  the checkout.babanuj.com containment (password-protect the Online Store
-  channel vs theme-level noindex/canonical) — Shopify settings, needs
-  explicit confirmation first.
+  the checkout.babanuj.com containment (Headless Theme publish or
+  theme-level noindex/canonical) — Shopify settings, needs explicit
+  confirmation first.
 
 - Polished the homepage "What customers are saying" reviews section. Switched
   the homepage to the **featured review carousel** (`JudgemeFeaturedCarousel`,
