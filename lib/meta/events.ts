@@ -1,6 +1,6 @@
 "use client";
 
-import posthog from "posthog-js";
+import { capturePostHog } from "lib/posthog/browser";
 import type { Cart } from "lib/shopify/types";
 
 declare global {
@@ -105,7 +105,7 @@ function track(eventName: string, payload: MetaEventPayload, prefix: string) {
 
 function phTrack(eventName: string, payload: Record<string, unknown>) {
   if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
-  posthog.capture(eventName, payload);
+  void capturePostHog(eventName, payload);
 }
 
 function gaTrack(eventName: string, payload: GaEventPayload) {
