@@ -6,15 +6,10 @@ import { redirectToCheckout } from "components/cart/actions";
 import { useCart } from "components/cart/cart-context";
 import { DeleteItemButton } from "components/cart/delete-item-button";
 import { EditItemQuantityButton } from "components/cart/edit-item-quantity-button";
-import {
-  ArrowRight,
-  ShieldIcon,
-  TruckIcon,
-} from "components/babanuj/icons";
+import { ArrowRight, ShieldIcon, TruckIcon } from "components/babanuj/icons";
 import { MarketProductCard } from "components/babanuj/product-card";
 import type { BabanujProduct } from "lib/babanuj/data";
-
-const FREE_SHIP_THRESHOLD = 70;
+import { FREE_SHIPPING_THRESHOLD } from "lib/babanuj/shipping";
 
 type Props = {
   recommended: BabanujProduct[];
@@ -30,8 +25,8 @@ export function CartView({ recommended }: Props) {
     return <EmptyState />;
   }
 
-  const freeShipRemaining = Math.max(0, FREE_SHIP_THRESHOLD - subtotal);
-  const freeShipPct = Math.min(100, (subtotal / FREE_SHIP_THRESHOLD) * 100);
+  const freeShipRemaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const freeShipPct = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
 
   return (
     <div>
@@ -328,8 +323,10 @@ export function CartView({ recommended }: Props) {
                       gap: 8,
                     }}
                   >
-                    <TruckIcon width={14} height={14} /> Free standard shipping
-                    over $70
+                    <TruckIcon width={14} height={14} />
+                    <span>
+                      {`Free standard shipping over $${FREE_SHIPPING_THRESHOLD}`}
+                    </span>
                   </div>
                   <div
                     style={{
@@ -694,8 +691,8 @@ function Line({
           color: accent
             ? "var(--accent-dark)"
             : subtle
-            ? "var(--ink-2)"
-            : "var(--ink)",
+              ? "var(--ink-2)"
+              : "var(--ink)",
         }}
       >
         {value}

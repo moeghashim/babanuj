@@ -4,6 +4,46 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-10
+
+- **UI/UX audit + Ahrefs crawl-report fixes** (`babanuj_report_09-06-26`,
+  summarized in `PRD090626.md`). Replaced repo-owned fake `href="#"` utility,
+  footer, and mobile-menu links with real routes, encoded mailto links, or
+  non-link placeholders; removed the fake referral offer; fixed the wholesale
+  catalog duplicate-`subject=` mailto bug; converted dead promo/brand CTA
+  buttons into real links. Reworked product cards so quick-add buttons are no
+  longer nested inside PDP links. Centralized free-shipping copy/math at `$75`
+  to match the live Shopify shipping policy and removed stale Spring/April hero
+  copy. Removed the unsupported newsletter `$10 off` signup offer and success
+  message. Added smaller Next image fallback `src` widths for crawlers that
+  ignore `srcset`. Delayed Judge.me widget placeholders until client mount and
+  normalized injected review links from `/products/*` to canonical `/product/*`. Added
+  `turbopack.root = process.cwd()` so local dev resolves the repo root correctly.
+- Files: `PRD090626.md`, `app/actions/newsletter.ts`, `next.config.ts`,
+  `lib/babanuj/contact.ts`, `lib/babanuj/shipping.ts`, `components/babanuj/photo.tsx`,
+  `components/babanuj/product-card.tsx`,
+  `components/babanuj/reviews/judgeme-loader.tsx`,
+  `components/babanuj/reviews/judgeme-widgets.tsx`,
+  `components/babanuj/layout/{announce,utility,mobile-menu,cat-bar,footer,newsletter}.tsx`,
+  `components/babanuj/home/{hero,trust,how-it-works,catalog,brands,promo}.tsx`,
+  `components/babanuj/{brand-view,pdp,cart-view}.tsx`, `components/cart/modal.tsx`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean (only the
+  existing `baseline-browser-mapping` age warning). Chrome desktop audit opened
+  52 local URLs at `1920 x 839`; Chrome mobile audit used a claimed visible
+  `430 x 757` Chrome tab. Final checks found no console errors, no 404-like
+  opened internal URLs, no dead repo-owned hash links, no duplicate mailto
+  subjects, no legacy Judge.me `/products/*` links after hydration, no
+  horizontal overflow, and no audited `w=2048/3840` image fallback URLs. Mobile
+  menu, filters, PDP add-to-bag, and cart drawer all passed. Clean
+  `next start -p 3001` smoke returned 200 for `/`, `/search`, the Milaf PDP,
+  `/shipping`, `/policies/terms-of-service`, and `/cart` with no runtime
+  errors.
+- Follow-up: Shopify-managed content still needs an Admin decision if Moe wants
+  it refreshed: `/contact` shows a November 21, 2023 updated date with sparse
+  content; `/shipping` shows June 2025 updated dates and placeholder-looking
+  `+1 (555) 123-4567` support copy. Account nofollow/noindex and canonical
+  redirects were left intact by design.
+
 ## 2026-06-09
 
 - **Search Console indexing fixes** (branch `fix/search-console-indexing`,
@@ -41,7 +81,7 @@ needed.
 
 - Polished the homepage "What customers are saying" reviews section. Switched
   the homepage to the **featured review carousel** (`JudgemeFeaturedCarousel`,
-  matching `/reviews`) so it shows product reviews *with photos* and variety,
+  matching `/reviews`) so it shows product reviews _with photos_ and variety,
   instead of the company-review-only variant that rendered a single sparse shop
   review with no image. Then styled Judge.me's carousel to match the site:
   enlarged the product thumbnails from ~56px to 96px (rounded), and rebuilt the
@@ -170,13 +210,13 @@ needed.
   invented founder names + quotes, year-by-year timelines, and fake metrics
   like "4.9★ on 2,400 reviews", "600+ U.S. retailers", "~28,000 kg/yr"). The
   `BabanujBrandDetail` type and BrandView's quote/timeline rendering are kept
-  as a capability for future *real* content; with the data gone, all brands now
+  as a capability for future _real_ content; with the data gone, all brands now
   render the same lean factual page (truthful description + live product grid +
   derived facts). Homepage "What customers are saying" was intentionally left
   as-is per the owner's decision.
 - Files: `components/babanuj/pdp.tsx`, `lib/babanuj/data.ts`.
 - Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP — `/brand/
-  zaitoune` renders the lean page (facts ORIGIN/CATEGORY/FOUNDED/LINES 24
+zaitoune` renders the lean page (facts ORIGIN/CATEGORY/FOUNDED/LINES 24
   products/NOTE, real description) with no timeline, founder quote, or fake
   review/retailer/output stats; the homepage wholesale table now lists Zaitoune
   (not Bab Sharqi) for those lines; "Bab Sharqi" appears nowhere on the page. No
@@ -209,7 +249,7 @@ needed.
   `components/babanuj/brand-view.tsx`, `components/babanuj/home/brands.tsx`,
   `components/babanuj/layout/mobile-menu.tsx`.
 - Verification: `tsc --noEmit` + `pnpm build` clean. Preview MCP — `/brand/
-  bal-coffee` renders a lean honest page (3 real products, derived facts, no
+bal-coffee` renders a lean honest page (3 real products, derived facts, no
   Est. badge, no fabricated quote/timeline); `/brand/milaf` shows "Saudi
   Arabia · Est. 2024", "From Saudi Arabia, with care.", "1 product"; homepage
   still shows exactly 4 brand cards; footer lists all 8 brands. No console

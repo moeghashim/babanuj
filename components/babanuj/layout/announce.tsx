@@ -1,4 +1,5 @@
 import { TruckIcon } from "components/babanuj/icons";
+import { FREE_SHIPPING_LABEL } from "lib/babanuj/shipping";
 
 export function MarketAnnounce() {
   return (
@@ -17,7 +18,7 @@ export function MarketAnnounce() {
       }}
     >
       <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-        <TruckIcon width={16} height={16} /> Free U.S. shipping over $70
+        <TruckIcon width={16} height={16} /> {FREE_SHIPPING_LABEL}
       </span>
     </div>
   );

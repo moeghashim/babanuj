@@ -1,4 +1,5 @@
 import { ArrowRight } from "components/babanuj/icons";
+import { FREE_SHIPPING_LABEL } from "lib/babanuj/shipping";
 
 const STEPS = [
   {
@@ -9,7 +10,7 @@ const STEPS = [
   {
     n: "02",
     title: "Fill your bag",
-    sub: "Free U.S. shipping on every order over $70.",
+    sub: `${FREE_SHIPPING_LABEL} on qualifying orders.`,
   },
   {
     n: "03",
@@ -25,7 +26,10 @@ export function MarketHowItWorks() {
         <span className="micro" style={{ color: "var(--accent-dark)" }}>
           How it works
         </span>
-        <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
+        <h2
+          className="display-heavy"
+          style={{ fontSize: 44, margin: "8px 0 0" }}
+        >
           Sweet on your schedule.
         </h2>
       </div>

@@ -47,6 +47,46 @@ import {
  */
 let refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
+function normalizeJudgemeLinks() {
+  document
+    .querySelectorAll<HTMLAnchorElement>('a[href*="/products/"]')
+    .forEach((link) => {
+      const rawHref = link.getAttribute("href");
+      if (!rawHref) return;
+      try {
+        const url = new URL(rawHref, window.location.origin);
+        if (
+          url.origin !== window.location.origin ||
+          !url.pathname.startsWith("/products/")
+        ) {
+          return;
+        }
+        url.pathname = url.pathname.replace(/^\/products\//, "/product/");
+        link.setAttribute("href", `${url.pathname}${url.search}${url.hash}`);
+      } catch {
+        // Ignore third-party markup that is not a parseable URL.
+      }
+    });
+  document
+    .querySelectorAll<HTMLAnchorElement>('a.jdgm-random-link[href="#"]')
+    .forEach((link) => {
+      link.setAttribute("href", "https://judge.me");
+      link.setAttribute("rel", "nofollow noopener");
+      link.setAttribute("target", "_blank");
+    });
+  document
+    .querySelectorAll<HTMLAnchorElement>('a.jdgm-write-rev-link[href="#"]')
+    .forEach((link) => {
+      link.setAttribute("href", "#judgeme_product_reviews");
+    });
+}
+
+function scheduleJudgemeLinkNormalization() {
+  normalizeJudgemeLinks();
+  window.setTimeout(normalizeJudgemeLinks, 250);
+  window.setTimeout(normalizeJudgemeLinks, 1000);
+}
+
 export function refreshJudgemeWidgets() {
   if (typeof window === "undefined") return;
   if (refreshTimer) clearTimeout(refreshTimer);
@@ -63,12 +103,16 @@ export function refreshJudgemeWidgets() {
     const hasCacheServer = Boolean(
       w.jdgmCacheServer?.reloadAll || w.jdgmCacheServer?.reloadAllWidgets,
     );
-    if (hasCacheServer && !w.jdgmSettings) return;
+    if (hasCacheServer && !w.jdgmSettings) {
+      scheduleJudgemeLinkNormalization();
+      return;
+    }
     if (typeof w.jdgmCacheServer?.reloadAll === "function")
       w.jdgmCacheServer.reloadAll();
     else if (typeof w.jdgmCacheServer?.reloadAllWidgets === "function")
       w.jdgmCacheServer.reloadAllWidgets();
     else if (typeof w.jdgmSetup === "function") w.jdgmSetup();
+    scheduleJudgemeLinkNormalization();
   }, 50);
 }
 
@@ -87,7 +131,8 @@ jdgm.PUBLIC_TOKEN = ${JSON.stringify(JUDGEME_PUBLIC_TOKEN)};`}
         id="judgeme-widgets"
         src={JUDGEME_WIDGET_URL}
         data-id={JUDGEME_PUBLIC_TOKEN}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
+        onReady={refreshJudgemeWidgets}
       />
     </>
   );

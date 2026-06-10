@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { supportMailto, wholesaleMailto } from "lib/babanuj/contact";
 import { BRANDS } from "lib/babanuj/data";
 
 const SHOP_LINKS = [
@@ -14,19 +15,29 @@ const COLS = [
   {
     h: "Wholesale",
     items: [
-      "Request Catalog",
-      "Become a Partner",
-      "Private Label",
-      "Foodservice",
+      { label: "Request Catalog", href: wholesaleMailto() },
+      { label: "Become a Partner", href: "/#wholesale" },
+      {
+        label: "Private Label",
+        href: wholesaleMailto("Private label inquiry"),
+      },
+      { label: "Foodservice", href: wholesaleMailto("Foodservice inquiry") },
     ],
   },
   {
     h: "Help",
-    items: ["Contact", "Shipping", "Returns", "FAQ", "Recipes"],
+    items: [
+      { label: "Contact", href: "/contact" },
+      { label: "Shipping", href: "/shipping" },
+      { label: "Returns", href: "/policies/refund-policy" },
+      { label: "Support", href: supportMailto() },
+    ],
   },
 ];
 
 export function MarketFooter() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer
       style={{
@@ -78,9 +89,9 @@ export function MarketFooter() {
           </p>
           <div style={{ display: "flex", gap: 8, marginTop: 18 }}>
             {["IG", "TT", "PIN", "LI"].map((s) => (
-              <a
+              <span
                 key={s}
-                href="#"
+                aria-label={`${s} social profile not linked yet`}
                 style={{
                   width: 36,
                   height: 36,
@@ -91,10 +102,11 @@ export function MarketFooter() {
                   justifyContent: "center",
                   fontSize: 10,
                   fontWeight: 700,
+                  opacity: 0.65,
                 }}
               >
                 {s}
-              </a>
+              </span>
             ))}
           </div>
         </div>
@@ -136,9 +148,9 @@ export function MarketFooter() {
                 {b.name}
               </Link>
             ))}
-            <a href="#" style={{ fontSize: 13.5, opacity: 0.75 }}>
-              All 32 brands
-            </a>
+            <Link href="/search" style={{ fontSize: 13.5, opacity: 0.75 }}>
+              Shop all brands
+            </Link>
           </div>
         </div>
 
@@ -151,10 +163,12 @@ export function MarketFooter() {
               {col.h}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {col.items.map((i) => (
-                <a key={i} href="#" style={{ fontSize: 13.5, opacity: 0.75 }}>
-                  {i}
-                </a>
+              {col.items.map((item) => (
+                <FooterLink
+                  key={item.label}
+                  href={item.href}
+                  label={item.label}
+                />
               ))}
             </div>
           </div>
@@ -171,14 +185,32 @@ export function MarketFooter() {
           opacity: 0.6,
         }}
       >
-        <span>© 2026 Babanuj Inc. · 10099 Westpark Dr, Houston TX 77042</span>
+        <span>
+          © {currentYear} Babanuj Inc. · 10099 Westpark Dr, Houston TX 77042
+        </span>
         <div style={{ display: "flex", gap: 18 }}>
           <Link href="/reviews">Reviews</Link>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
-          <a href="#">Accessibility</a>
+          <Link href="/policies/privacy-policy">Privacy</Link>
+          <Link href="/policies/terms-of-service">Terms</Link>
+          <a href={supportMailto("Accessibility support")}>Accessibility</a>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLink({ href, label }: { href: string; label: string }) {
+  const style = { fontSize: 13.5, opacity: 0.75 };
+  if (href.startsWith("mailto:")) {
+    return (
+      <a href={href} style={style}>
+        {label}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} style={style}>
+      {label}
+    </Link>
   );
 }

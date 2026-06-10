@@ -5,6 +5,7 @@ import { ArrowRight, QuoteIcon } from "components/babanuj/icons";
 import { Photo } from "components/babanuj/photo";
 import { RubElHizb } from "components/babanuj/ornaments";
 import { MarketProductCard } from "components/babanuj/product-card";
+import { wholesaleMailto } from "lib/babanuj/contact";
 import {
   BRANDS,
   BRAND_DETAILS,
@@ -32,17 +33,14 @@ export function BrandView({ brand, products = [] }: Props) {
     ? detail.facts.map((f) =>
         f.k === "Lines" ? { k: "Lines", v: lineCount } : f,
       )
-    : (
-        [
-          brand.origin ? { k: "Origin", v: brand.origin } : null,
-          brand.sub ? { k: "Category", v: brand.sub } : null,
-          brand.est > 0 ? { k: "Founded", v: String(brand.est) } : null,
-          { k: "Lines", v: lineCount },
-          brand.note ? { k: "Note", v: brand.note } : null,
-        ].filter(Boolean) as { k: string; v: string }[]
-      );
-  const story: string[] =
-    detail?.longStory ?? (brand.long ? [brand.long] : []);
+    : ([
+        brand.origin ? { k: "Origin", v: brand.origin } : null,
+        brand.sub ? { k: "Category", v: brand.sub } : null,
+        brand.est > 0 ? { k: "Founded", v: String(brand.est) } : null,
+        { k: "Lines", v: lineCount },
+        brand.note ? { k: "Note", v: brand.note } : null,
+      ].filter(Boolean) as { k: string; v: string }[]);
+  const story: string[] = detail?.longStory ?? (brand.long ? [brand.long] : []);
   const storyRegion = (detail?.region ?? brand.origin ?? "").split(",")[0];
   const brandProducts = products;
   // Cross-sell only the curated houses, keeping this grid at a fixed width.
@@ -89,7 +87,10 @@ export function BrandView({ brand, products = [] }: Props) {
             <span className="micro" style={{ color: "var(--accent-dark)" }}>
               The Collection · {lineCount}
             </span>
-            <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
+            <h2
+              className="display-heavy"
+              style={{ fontSize: 44, margin: "8px 0 0" }}
+            >
               Everything from {brand.name}
             </h2>
           </div>
@@ -158,6 +159,8 @@ export function BrandView({ brand, products = [] }: Props) {
           <Photo
             src={brand.img}
             alt={brand.name}
+            fallbackWidth={1200}
+            sizes="(max-width: 900px) 100vw, 1200px"
             style={{
               position: "absolute",
               inset: 0,
@@ -259,9 +262,7 @@ export function BrandView({ brand, products = [] }: Props) {
                 Back to collection
               </a>
               <a
-                href={`mailto:wholesale@babanuj.com?subject=${encodeURIComponent(
-                  `Wholesale inquiry — ${brand.name}`,
-                )}`}
+                href={wholesaleMailto(`Wholesale inquiry - ${brand.name}`)}
                 className="market-btn"
                 style={{
                   background: "rgba(255,255,255,0.15)",
@@ -293,8 +294,7 @@ export function BrandView({ brand, products = [] }: Props) {
               key={f.k}
               style={{
                 padding: "4px 20px",
-                borderRight:
-                  i < arr.length - 1 ? "1px solid var(--rule)" : 0,
+                borderRight: i < arr.length - 1 ? "1px solid var(--rule)" : 0,
                 minWidth: 0,
               }}
             >
@@ -418,99 +418,102 @@ export function BrandView({ brand, products = [] }: Props) {
 
       {/* Timeline — only for curated houses with a real, sourced history */}
       {detail?.timeline && detail.timeline.length > 0 && (
-      <section style={{ padding: "64px 56px" }}>
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <span className="micro" style={{ color: "var(--accent-dark)" }}>
-            {detail.yearLabel}
-          </span>
-          <h2 className="display-heavy" style={{ fontSize: 44, margin: "8px 0 0" }}>
-            A few moments in the history
-          </h2>
-        </div>
-        <div
-          className="mk-brand-timeline"
-          style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}
-        >
+        <section style={{ padding: "64px 56px" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <span className="micro" style={{ color: "var(--accent-dark)" }}>
+              {detail.yearLabel}
+            </span>
+            <h2
+              className="display-heavy"
+              style={{ fontSize: 44, margin: "8px 0 0" }}
+            >
+              A few moments in the history
+            </h2>
+          </div>
           <div
-            className="mk-timeline-line"
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: 0,
-              bottom: 0,
-              width: 2,
-              background: "var(--rule)",
-              transform: "translateX(-50%)",
-            }}
-          />
-          {detail.timeline.map((m, i) => {
-            const isLeft = i % 2 === 0;
-            return (
-              <div
-                key={i}
-                className="mk-timeline-row"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 60px 1fr",
-                  gap: 16,
-                  padding: "24px 0",
-                  alignItems: "center",
-                  position: "relative",
-                }}
-              >
+            className="mk-brand-timeline"
+            style={{ position: "relative", maxWidth: 900, margin: "0 auto" }}
+          >
+            <div
+              className="mk-timeline-line"
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: 0,
+                bottom: 0,
+                width: 2,
+                background: "var(--rule)",
+                transform: "translateX(-50%)",
+              }}
+            />
+            {detail.timeline.map((m, i) => {
+              const isLeft = i % 2 === 0;
+              return (
                 <div
-                  className="mk-timeline-content"
+                  key={i}
+                  className="mk-timeline-row"
                   style={{
-                    textAlign: isLeft ? "right" : "left",
-                    gridColumn: isLeft ? 1 : 3,
-                    paddingRight: isLeft ? 12 : 0,
-                    paddingLeft: isLeft ? 0 : 12,
-                  }}
-                >
-                  <div
-                    className="display-heavy num"
-                    style={{ fontSize: 36, color: "var(--accent-dark)" }}
-                  >
-                    {m.year}
-                  </div>
-                  <p
-                    style={{
-                      fontSize: 14.5,
-                      lineHeight: 1.55,
-                      color: "var(--ink-2)",
-                      margin: "4px 0 0",
-                      maxWidth: 360,
-                      marginLeft: isLeft ? "auto" : 0,
-                    }}
-                  >
-                    {m.t}
-                  </p>
-                </div>
-                <div
-                  className="mk-timeline-dot"
-                  style={{
-                    gridColumn: 2,
-                    display: "flex",
-                    justifyContent: "center",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 60px 1fr",
+                    gap: 16,
+                    padding: "24px 0",
+                    alignItems: "center",
                     position: "relative",
-                    zIndex: 1,
                   }}
                 >
                   <div
+                    className="mk-timeline-content"
                     style={{
-                      width: 16,
-                      height: 16,
-                      borderRadius: 999,
-                      background: "#fff",
-                      border: "3px solid var(--accent-dark)",
+                      textAlign: isLeft ? "right" : "left",
+                      gridColumn: isLeft ? 1 : 3,
+                      paddingRight: isLeft ? 12 : 0,
+                      paddingLeft: isLeft ? 0 : 12,
                     }}
-                  />
+                  >
+                    <div
+                      className="display-heavy num"
+                      style={{ fontSize: 36, color: "var(--accent-dark)" }}
+                    >
+                      {m.year}
+                    </div>
+                    <p
+                      style={{
+                        fontSize: 14.5,
+                        lineHeight: 1.55,
+                        color: "var(--ink-2)",
+                        margin: "4px 0 0",
+                        maxWidth: 360,
+                        marginLeft: isLeft ? "auto" : 0,
+                      }}
+                    >
+                      {m.t}
+                    </p>
+                  </div>
+                  <div
+                    className="mk-timeline-dot"
+                    style={{
+                      gridColumn: 2,
+                      display: "flex",
+                      justifyContent: "center",
+                      position: "relative",
+                      zIndex: 1,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 999,
+                        background: "#fff",
+                        border: "3px solid var(--accent-dark)",
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
       )}
 
       {/* CTA strip */}
@@ -577,13 +580,15 @@ export function BrandView({ brand, products = [] }: Props) {
               position: "relative",
             }}
           >
-            <button
+            <a
+              href={wholesaleMailto(`Wholesale catalog - ${brand.name}`)}
               className="market-btn warn"
               style={{ width: "100%", justifyContent: "center" }}
             >
               Request wholesale catalog
-            </button>
-            <button
+            </a>
+            <a
+              href={wholesaleMailto(`Brand fact sheet - ${brand.name}`)}
               className="market-btn"
               style={{
                 background: "rgba(255,255,255,0.15)",
@@ -594,7 +599,7 @@ export function BrandView({ brand, products = [] }: Props) {
               }}
             >
               Brand fact-sheet
-            </button>
+            </a>
           </div>
         </div>
       </section>
@@ -613,7 +618,10 @@ export function BrandView({ brand, products = [] }: Props) {
             <span className="micro" style={{ color: "var(--accent-dark)" }}>
               The Babanuj Pantry
             </span>
-            <h2 className="display-heavy" style={{ fontSize: 36, margin: "8px 0 0" }}>
+            <h2
+              className="display-heavy"
+              style={{ fontSize: 36, margin: "8px 0 0" }}
+            >
               Other houses
             </h2>
           </div>
@@ -643,6 +651,8 @@ export function BrandView({ brand, products = [] }: Props) {
                 <Photo
                   src={b.img}
                   alt={b.name}
+                  fallbackWidth={384}
+                  sizes="(max-width: 900px) 120px, 160px"
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -654,10 +664,16 @@ export function BrandView({ brand, products = [] }: Props) {
                 />
               </div>
               <div style={{ padding: 18 }}>
-                <div className="micro" style={{ fontSize: 10, color: "var(--ink-2)" }}>
+                <div
+                  className="micro"
+                  style={{ fontSize: 10, color: "var(--ink-2)" }}
+                >
                   {b.origin} · est. {b.est}
                 </div>
-                <div className="display-heavy" style={{ fontSize: 22, marginTop: 4 }}>
+                <div
+                  className="display-heavy"
+                  style={{ fontSize: 22, marginTop: 4 }}
+                >
                   {b.name}
                 </div>
                 <p

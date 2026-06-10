@@ -25,6 +25,10 @@ import {
   type BabanujProduct,
   type BabanujProductVariant,
 } from "lib/babanuj/data";
+import {
+  FREE_SHIPPING_COMPACT_LABEL,
+  FREE_SHIPPING_THRESHOLD,
+} from "lib/babanuj/shipping";
 
 type TabId = "description" | "shipping";
 
@@ -36,7 +40,9 @@ type Props = {
 
 export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
   const brand = resolveProductBrand(p);
-  const brandLabel = brand.origin ? `${brand.name} · ${brand.origin}` : brand.name;
+  const brandLabel = brand.origin
+    ? `${brand.name} · ${brand.origin}`
+    : brand.name;
   const cat = categoryFor(p);
   const productOptions = (p.options ?? []).filter(
     (option) => option.values.length > 1,
@@ -114,6 +120,8 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
               <Photo
                 src={activeGalleryImage}
                 alt={p.name}
+                fallbackWidth={1200}
+                sizes="(max-width: 900px) 100vw, 50vw"
                 style={{ position: "absolute", inset: 0 }}
               />
               <button
@@ -173,6 +181,8 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
                   <Photo
                     src={g}
                     alt=""
+                    fallbackWidth={256}
+                    sizes="(max-width: 900px) 20vw, 120px"
                     style={{ position: "absolute", inset: 0 }}
                   />
                 </button>
@@ -191,7 +201,7 @@ export function MarketPDP({ product: p, fromBrand = [], related = [] }: Props) {
               {[
                 {
                   icon: <TruckIcon width={18} height={18} />,
-                  t: "Free over $70",
+                  t: FREE_SHIPPING_COMPACT_LABEL,
                   s: "Houston, TX",
                 },
                 {
@@ -887,7 +897,7 @@ function PDPDescription({
 function PDPShipping() {
   const items = [
     {
-      t: "Standard · Free over $70",
+      t: `Standard · Free over $${FREE_SHIPPING_THRESHOLD}`,
       s: "2–4 business days. Ships from our Houston, TX warehouse via UPS Ground.",
     },
     {

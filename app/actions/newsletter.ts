@@ -37,8 +37,8 @@ export async function subscribeNewsletter(
 
   // Shopify's classic theme newsletter form posts these fields.
   const body = new URLSearchParams({
-    "form_type": "customer",
-    "utf8": "✓",
+    form_type: "customer",
+    utf8: "✓",
     "contact[tags]": "newsletter",
     "contact[email]": email,
     "contact[accepts_marketing]": "1",
@@ -64,7 +64,7 @@ export async function subscribeNewsletter(
     }
     return {
       ok: true,
-      message: "Subscribed — check your inbox for $10 off.",
+      message: "Subscribed — check your inbox for pantry updates.",
     };
   } catch (err) {
     return {

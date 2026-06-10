@@ -13,6 +13,8 @@ type Props = {
   priority?: boolean;
   fetchPriority?: "high" | "low" | "auto";
   quality?: number;
+  /** Fallback `<img src>` width for crawlers that ignore `srcset`. */
+  fallbackWidth?: number;
 };
 
 export function Photo({
@@ -24,7 +26,14 @@ export function Photo({
   priority,
   fetchPriority,
   quality,
+  fallbackWidth,
 }: Props) {
+  const fallbackSrc = fallbackWidth
+    ? `/_next/image?url=${encodeURIComponent(src)}&w=${fallbackWidth}&q=${
+        quality ?? 75
+      }`
+    : undefined;
+
   if (!fill) {
     /* eslint-disable-next-line @next/next/no-img-element */
     return (
@@ -47,6 +56,7 @@ export function Photo({
   return (
     <Image
       src={src}
+      overrideSrc={fallbackSrc}
       alt={alt}
       fill
       sizes={sizes ?? "(max-width: 900px) 100vw, 50vw"}

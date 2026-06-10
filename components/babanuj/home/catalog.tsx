@@ -1,7 +1,5 @@
 import { CATALOG } from "lib/babanuj/data";
-
-const WHOLESALE_MAILTO =
-  "mailto:wholesale@babanuj.com?subject=Wholesale%20inquiry&body=Hi%20Babanuj%2C%20we%27re%20interested%20in%20wholesale%20pricing%20for%3A%0A%0AStore%20name%3A%0AChannel%20(Grocery%2FSpecialty%2FFoodservice)%3A%0AEstimated%20monthly%20volume%3A%0ALines%20of%20interest%3A%0A";
+import { wholesaleMailto } from "lib/babanuj/contact";
 
 export function MarketCatalog() {
   return (
@@ -25,7 +23,10 @@ export function MarketCatalog() {
             <span className="micro" style={{ color: "var(--accent-dark)" }}>
               For Retailers & Foodservice
             </span>
-            <h2 className="display-heavy" style={{ fontSize: 38, margin: "6px 0 0" }}>
+            <h2
+              className="display-heavy"
+              style={{ fontSize: 38, margin: "6px 0 0" }}
+            >
               Wholesale catalog
             </h2>
             <p
@@ -40,7 +41,7 @@ export function MarketCatalog() {
               Most accounts go live within two weeks.
             </p>
           </div>
-          <a className="market-btn" href={WHOLESALE_MAILTO}>
+          <a className="market-btn" href={wholesaleMailto()}>
             Request Full Catalog →
           </a>
         </div>
@@ -84,9 +85,7 @@ export function MarketCatalog() {
                   alignItems: "center",
                   gap: 12,
                   borderBottom:
-                    i < CATALOG.length - 1
-                      ? "1px solid var(--rule)"
-                      : 0,
+                    i < CATALOG.length - 1 ? "1px solid var(--rule)" : 0,
                   fontSize: 13.5,
                 }}
               >
@@ -112,9 +111,9 @@ export function MarketCatalog() {
                   ))}
                 </span>
                 <a
-                  href={`${WHOLESALE_MAILTO}&subject=${encodeURIComponent(
-                    `Wholesale inquiry — ${c.brand} · ${c.line}`,
-                  )}`}
+                  href={wholesaleMailto(
+                    `Wholesale inquiry - ${c.brand} · ${c.line}`,
+                  )}
                   style={{
                     justifySelf: "end",
                     padding: "6px 14px",

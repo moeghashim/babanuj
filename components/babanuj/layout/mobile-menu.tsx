@@ -20,11 +20,11 @@ const CATEGORIES = [
 ];
 
 const UTILITY = [
-  { label: "Gift Cards", href: "#" },
-  { label: "Become a Partner", href: "#wholesale" },
-  { label: "Refer a Friend · Get $20", href: "#" },
-  { label: "Track Order", href: "#" },
-  { label: "Help", href: "#" },
+  { label: "Gift Boxes", href: "/collections/gift-boxes" },
+  { label: "Become a Partner", href: "/#wholesale" },
+  { label: "Reviews", href: "/reviews" },
+  { label: "Track Order", href: "/account/orders" },
+  { label: "Help", href: "/shipping" },
 ];
 
 export function MobileMenu({
