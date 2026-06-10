@@ -6,6 +6,39 @@ needed.
 
 ## 2026-06-09
 
+- **Search Console indexing fixes** (branch `fix/search-console-indexing`,
+  from `reports/search-console-indexing-2026-06-10.md`). (1) Made `/search`
+  an intentional, indexable all-products landing page: retitled "Search the
+  pantry" → "Shop All Middle Eastern Sweets & Pantry", explicit
+  `robots: index, follow`, and pinned `/search` statically in
+  `app/sitemap.ts` (previously it appeared only via the synthetic Shopify
+  "All" collection, now filtered there so it isn't listed twice). (2) Added
+  stale-product redirect `zaitoune-sweets-royal-petit-four-lotus-bounty-350g`
+  → `/product/zaitoune-sweets-royal-petit-four-mix-chocolate-350g` (live
+  product, same Royal Petit Four 350g line); covers `/product/…` and legacy
+  `/products/…` via the shared map. (3) Homepage canonical left as
+  `https://www.babanuj.com` (no trailing slash) on purpose: Next 15 hardcodes
+  emitting the bare origin for root canonicals (`resolve-url.js`), and the
+  slashless form normalizes to the identical URL per the URL spec, so it
+  can't be the duplicate-flag cause. Real suspect: `checkout.babanuj.com`
+  serves the full Shopify storefront (homepage + products 200 with
+  self-canonicals, `Allow: /` robots.txt, own sitemap.xml) — operational
+  Shopify-side fix required, intentionally not attempted from this repo.
+- Files: `app/search/page.tsx`, `app/sitemap.ts`, `lib/babanuj/redirects.ts`.
+- Verification: `pnpm exec tsc --noEmit` + `pnpm build` clean. Local prod
+  server (`next start`): both stale-handle variants 308 → replacement, final
+  200 self-canonical `index, follow`; `/search` 200, new title, canonical
+  `/search`, `index, follow`; sitemap lists `/search` exactly once (82 locs,
+  matching live count); `/collections/all` → `/search` and `/pages/contact`
+  → `/contact` legacy redirects intact. Live pre-deploy state of every
+  validation-failed URL recorded.
+- Follow-up: after deploy, URL-Inspect in Search Console before re-validating:
+  `https://www.babanuj.com/`, `/search`, `/collections/all`, both
+  `/pages/contact` hosts, and the lotus-bounty product URL. Separately decide
+  the checkout.babanuj.com containment (password-protect the Online Store
+  channel vs theme-level noindex/canonical) — Shopify settings, needs
+  explicit confirmation first.
+
 - Polished the homepage "What customers are saying" reviews section. Switched
   the homepage to the **featured review carousel** (`JudgemeFeaturedCarousel`,
   matching `/reviews`) so it shows product reviews *with photos* and variety,
