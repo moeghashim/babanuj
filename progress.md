@@ -4,6 +4,85 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-11
+
+- **Dashboard repo separation and live ops deployment**. Moved the live ops
+  dashboard implementation out of the storefront repo into the existing
+  `moeghashim/babanuj-dashboard` repository under `ops-dashboard/`, restored the
+  richer command-center visual design while keeping dynamic data slots, deployed
+  `babanuj-dashboard-1y3tq9tvw-bannaa.vercel.app`, and aliased it to
+  `dashboard.babanuj.com`. Removed the generated `dashboard/` app directory from
+  this storefront repo after deployment verification.
+- Files: `progress.md` here; dashboard implementation now lives in
+  `/Users/moeghashim/babanuj-dashboard/ops-dashboard`.
+- Verification: live `https://dashboard.babanuj.com/` serves the separated
+  dashboard app; live `/api/metrics?range=30d` returns real Shopify catalog
+  counts (65 products / 61 available); live `/api/products` returns 65 Shopify
+  product rows; unauthenticated `/api/cron/sync` returns 401; authenticated
+  `/api/cron/sync` returns 200 and builds 7d/30d/90d/ytd metric payloads plus
+  the product payload.
+- Follow-up: Vercel requires Neon provisioning through the Web UI for this
+  account; once a dedicated Neon database is provisioned, set
+  `DASHBOARD_DATABASE_URL` on the `babanuj-dashboard` project to activate
+  cache-first reads and snapshot writes.
+
+- **Dashboard platform tabs, snapshot cache foundation, and product comparison**.
+  Added Overall/Shopify/Amazon/Google/Meta/Products views, a Shopify-vs-Amazon
+  product comparison endpoint, a Postgres-backed snapshot adapter for dashboard
+  metrics/products, and a protected Vercel Cron sync endpoint scheduled every
+  two hours. The dashboard uses cached snapshots when `DASHBOARD_DATABASE_URL`
+  is configured; until then it remains in direct-read mode.
+- Files: `dashboard/index.html`, `dashboard/api/metrics.js`,
+  `dashboard/api/products.js`, `dashboard/api/_lib/database.js`,
+  `dashboard/api/cron/sync.js`, `dashboard/vercel.json`,
+  `dashboard/package.json`, `dashboard/pnpm-lock.yaml`, `dashboard/.env.example`,
+  `dashboard/.gitignore`.
+- Verification: `node --check` passed for all dashboard function files; local
+  product comparison returned 65 Shopify rows; Vercel normal production deploy
+  `babanuj-dashboard-rlukic5xf-bannaa.vercel.app` succeeded and was aliased to
+  `dashboard.babanuj.com`; live `/api/metrics?range=30d` returns Shopify catalog
+  count 65 with platform placeholders; live `/api/products` returns 65 Shopify
+  product rows; authenticated `/api/cron/sync` returns 200 and builds 7d/30d/90d/ytd
+  metric snapshots plus the product snapshot.
+- Follow-up: provision a dedicated dashboard database and set
+  `DASHBOARD_DATABASE_URL`; then add Shopify Admin, Amazon Ads/Seller, Google Ads,
+  Search Console, and Meta credentials after application-level authentication is
+  in place.
+
+- **Dashboard real-metrics foundation**. Replaced the command-center mock figures
+  with a Vercel Function at `dashboard/api/metrics.js` and live-rendered dashboard
+  values from `/api/metrics`. The deployed dashboard now shows real Shopify
+  Storefront catalog counts and explicitly marks Shopify Admin revenue/orders,
+  Google Ads, Amazon Ads, and Search Console as needing credentials instead of
+  displaying placeholder business numbers.
+- Files: `dashboard/index.html`, `dashboard/api/metrics.js`,
+  `dashboard/vercel.json`.
+- Verification: local handler returned Shopify catalog counts of 65 products and
+  61 available products; added `SHOPIFY_STORE_DOMAIN` and
+  `SHOPIFY_STOREFRONT_ACCESS_TOKEN` to the `babanuj-dashboard` production env;
+  deployed `babanuj-dashboard-6n8khyo9d-bannaa.vercel.app`, aliased
+  `dashboard.babanuj.com`, and verified `https://dashboard.babanuj.com/api/metrics?range=30d`
+  returns live Shopify catalog data with missing-key states for unconnected
+  sources.
+- Follow-up: add application-level authentication before enabling sensitive
+  revenue, order, and ad-spend env vars on the public dashboard.
+
+- **Standalone command-center dashboard deployment**. Created a separate static
+  dashboard app under `dashboard/`, linked it to a new Vercel project
+  `babanuj-dashboard`, disabled Vercel Authentication on that dashboard project,
+  and assigned `dashboard.babanuj.com` to the dashboard deployment. The storefront
+  project and `babanuj.com` / `www.babanuj.com` aliases were left untouched.
+- Files: `dashboard/index.html`, `dashboard/vercel.json`,
+  `dashboard/fonts/marketplace/{bricolage-grotesque-latin,dm-sans-latin,dm-serif-display-latin-italic}.woff2`,
+  `dashboard/.gitignore`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean; Vercel
+  deployment `babanuj-dashboard-o93q9btvu-bannaa.vercel.app` created and aliased
+  to `dashboard.babanuj.com`; `curl -I -L https://dashboard.babanuj.com/`
+  returned `HTTP/2 200`.
+- Follow-up: replace the static mockup with a real dashboard app and add
+  application-level authentication before connecting live operational data.
+
+
 ## 2026-06-10
 
 - **UI/UX audit + Ahrefs crawl-report fixes** (`babanuj_report_09-06-26`,
