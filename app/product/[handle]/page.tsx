@@ -93,6 +93,7 @@ export default async function ProductPage(props: {
       priceCurrency: product.priceRange.minVariantPrice.currencyCode,
       highPrice: product.priceRange.maxVariantPrice.amount,
       lowPrice: product.priceRange.minVariantPrice.amount,
+      offerCount: product.variants.length,
       // Mirrors the standard shipping option surfaced in PDPShipping. Google
       // requires shippingDetails for Merchant listing eligibility.
       shippingDetails: {

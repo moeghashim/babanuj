@@ -1,7 +1,9 @@
 export const STALE_PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
   "bab-sharqi-baklawa-mini": "/collections/baklava",
   "bab-sharqi-petit-four-mini-240g": "/collections/cookies",
+  "ecto-pdrn-10-extreme-dose-30ml-1-014-fl-oz": "/",
   "honey-tube-mixed-honey-25g": "/product/mixed-honey-packets-25g",
+  "hydrogum-70-priming-grip-dose-30ml-1-014-fl-oz": "/",
   "lacto-microbiome-10-exosome-dose-30ml-1-014fl-oz": "/",
   "milaf-mabroom-premium-dates-pouch-fresh-soft-delicious-juicy-distinct-sweet-taste-no-additives-or-preservatives-ideal-for-snacking-or-cooking-can-support-a-healthy-balanced-diet":
     "/collections/dates",
@@ -16,6 +18,8 @@ export const STALE_PRODUCT_HANDLE_REDIRECTS: Record<string, string> = {
   "zaitoune-barazek-250g": "/collections/cookies",
   "zaitoune-barazek-500g-amazon": "/collections/cookies",
   "zaitoune-cashew-pistachio-baklava-1kg-amazon": "/collections/baklava",
+  "zaitoune-sweets-royal-petit-four-chocolate-nescafe-350g":
+    "/product/zaitoune-sweets-royal-petit-four-mix-chocolate-350g",
   "zaitoune-sweets-royal-petit-four-lotus-bounty-350g":
     "/product/zaitoune-sweets-royal-petit-four-mix-chocolate-350g",
   "zaitoune-turkish-delight-lokum-250g":
