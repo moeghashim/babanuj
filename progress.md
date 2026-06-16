@@ -4,6 +4,52 @@ Append a short entry here whenever the website changes. Keep entries newest
 first, with the date, scope, files touched, verification run, and any follow-up
 needed.
 
+## 2026-06-16
+
+- **Google Search Console product snippet enhancement pass**. Rechecked the
+  Search Console overview plus Page indexing, Product snippets, Merchant
+  listings, Review snippets, Core Web Vitals, HTTPS, and Sitemaps. Product
+  snippets had 0 invalid items but 22 valid items with enhancement warnings for
+  missing `offerCount`, `aggregateRating`, and `review`. Added `offerCount` to
+  the PDP `AggregateOffer` JSON-LD using the real Shopify variant count already
+  fetched for each product.
+- Files: `app/product/[handle]/page.tsx`.
+- Verification: `pnpm exec tsc --noEmit`, `pnpm build`, and focused Prettier
+  check clean (only the existing `baseline-browser-mapping` age warning during
+  build). Search Console showed Review snippets, HTTPS, Core Web Vitals,
+  Merchant listings, and Sitemaps with no critical invalid errors. Local
+  production PDP check on
+  `/product/milaf-date-cola-240ml-8-1-fl-oz` confirmed Product JSON-LD now
+  emits `AggregateOffer.offerCount: 3` while keeping shipping details and
+  merchant return policy. Production deploy to `www.babanuj.com` was completed
+  from a clean Vercel upload, and the same PDP JSON-LD check passed live.
+- Follow-up: do not add `aggregateRating` or `review` until server-side real
+  Judge.me/reviews data is available; the repo forbids fake review counts and
+  hardcoded star ratings.
+
+- **Google Search Console stale URL cleanup**. Checked the live Page indexing
+  report for `sc-domain:babanuj.com` in Chrome: 162 pages not indexed across 8
+  reasons, with failed validations for redirect pages, 404s, duplicate
+  canonicals, and crawled-not-indexed URLs. Live-tested the example URLs and
+  found three repo-fixable stale product handles that still fell through to
+  404: `hydrogum-70-priming-grip-dose-30ml-1-014-fl-oz`,
+  `ecto-pdrn-10-extreme-dose-30ml-1-014-fl-oz`, and
+  `zaitoune-sweets-royal-petit-four-chocolate-nescafe-350g`. Added them to the
+  shared stale-product redirect map so both legacy `/products/...` redirects
+  and direct `/product/...` requests resolve to live destinations.
+- Files: `lib/babanuj/redirects.ts`.
+- Verification: `pnpm exec tsc --noEmit` clean; `pnpm build` clean (only the
+  existing `baseline-browser-mapping` age warning). Local production server on
+  `localhost:3016` confirmed both `/products/...` and `/product/...` variants
+  for all three handles now redirect to 200 destinations. Chrome Search Console
+  drilldowns also confirmed other sampled issues are mostly expected redirect,
+  query-parameter alternate, Shopify checkout-host, or Google discovery backlog
+  states rather than additional repo-owned 404s.
+- Follow-up: use Search Console URL Inspection/Validate Fix for the repo-owned
+  404 and duplicate-canonical examples after Google sees the deploy.
+  `https://checkout.babanuj.com/wpm` remains a Shopify checkout-host 404 and is
+  not fixable from this Next app.
+
 ## 2026-06-10
 
 - **UI/UX audit + Ahrefs crawl-report fixes** (`babanuj_report_09-06-26`,
