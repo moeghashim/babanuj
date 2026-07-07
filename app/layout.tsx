@@ -37,6 +37,35 @@ export const metadata = {
   },
 };
 
+// Organization + WebSite (with SearchAction) structured data so Google can
+// attribute the site to the brand and offer a sitelinks search box.
+const siteJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": `${baseUrl}/#organization`,
+    name: SITE_NAME,
+    url: baseUrl,
+    logo: `${baseUrl}/opengraph-image`,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${baseUrl}/#website`,
+    name: SITE_NAME,
+    url: baseUrl,
+    publisher: { "@id": `${baseUrl}/#organization` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${baseUrl}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  },
+];
+
 export default async function RootLayout({
   children,
 }: {
@@ -73,6 +102,10 @@ export default async function RootLayout({
         />
       </head>
       <body className="market-root">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+        />
         <PostHogProvider>
           <CartProvider cartPromise={cart}>
             <MarketAnnounce />

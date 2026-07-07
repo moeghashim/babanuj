@@ -88,6 +88,15 @@ export default {
         destination: "/search",
         permanent: true,
       },
+      // Browsers and crawlers request /favicon.ico unconditionally; only the
+      // app-router /icon route exists, so point the legacy path at it.
+      // Temporary redirect so a real .ico can replace it without fighting
+      // cached 308s.
+      {
+        source: "/favicon.ico",
+        destination: "/icon",
+        permanent: false,
+      },
       ...legacyCollectionRedirects,
       {
         source: "/collections/:handle.atom",

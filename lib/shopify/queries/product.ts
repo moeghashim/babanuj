@@ -15,6 +15,8 @@ export const getProductsQuery = /* GraphQL */ `
     $reverse: Boolean
     $query: String
   ) {
+    # TODO: bump to first: 250 (Storefront API max) or paginate once the
+    # catalog nears 100 products, or the sitemap will silently drop products.
     products(sortKey: $sortKey, reverse: $reverse, query: $query, first: 100) {
       edges {
         node {

@@ -11,6 +11,10 @@ import { redirect } from "next/navigation";
 export const metadata = {
   title: "Your account",
   description: "Manage your Babanuj orders, profile, and saved addresses.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default async function AccountPage({
