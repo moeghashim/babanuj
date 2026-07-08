@@ -512,6 +512,9 @@ const POLICY_FIELD_BY_HANDLE = {
   "terms-of-service": "termsOfService",
 } as const;
 
+/** Policy handles served by /policies/[policy], for the sitemap. */
+export const POLICY_HANDLES = Object.keys(POLICY_FIELD_BY_HANDLE);
+
 export async function getPolicy(handle: string): Promise<Policy | undefined> {
   "use cache";
   cacheTag(TAGS.collections);

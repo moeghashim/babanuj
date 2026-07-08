@@ -1,9 +1,11 @@
 import { MarketPDP } from "components/babanuj/pdp";
 import { MetaProductTracker } from "components/babanuj/meta-product-tracker";
+import { categoryFor } from "lib/babanuj/data";
 import {
   shopifyProductToBabanuj,
   shopifyProductsToBabanuj,
 } from "lib/babanuj/from-shopify";
+import { getJudgemeProductRating } from "lib/babanuj/judgeme";
 import { STALE_PRODUCT_HANDLE_REDIRECTS } from "lib/babanuj/redirects";
 import { openGraph, seoDescription, seoTitle } from "lib/babanuj/seo";
 import {
@@ -11,12 +13,34 @@ import {
   getProductRecommendations,
   getProducts,
 } from "lib/shopify";
+import type { Image } from "lib/shopify/types";
+import { baseUrl } from "lib/utils";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 
 function redirectStaleProductHandle(handle: string) {
   const target = STALE_PRODUCT_HANDLE_REDIRECTS[handle];
   if (target) permanentRedirect(target);
+}
+
+/**
+ * Social crawlers want a large og:image; Shopify uploads can be huge, so ask
+ * the CDN for a 1200px-wide rendition (it never upscales past the original).
+ */
+function productOgImage(image: Image | undefined) {
+  if (!image?.url) return undefined;
+  if (!image.width || !image.height) return image;
+
+  const width = Math.min(image.width, 1200);
+  const height = Math.round((width * image.height) / image.width);
+  const separator = image.url.includes("?") ? "&" : "?";
+
+  return {
+    url: `${image.url}${separator}width=${width}`,
+    width,
+    height,
+    alt: image.altText,
+  };
 }
 
 export async function generateMetadata(props: {
@@ -44,7 +68,7 @@ export async function generateMetadata(props: {
       title: `${title} | Babanuj`,
       description,
       url: `/product/${product.handle}`,
-      image: product.featuredImage,
+      image: productOgImage(product.featuredImage),
     }),
   };
 }
@@ -61,11 +85,12 @@ export default async function ProductPage(props: {
 
   const babanujProduct = shopifyProductToBabanuj(product);
 
-  const [recsRaw, sameBrandRaw] = await Promise.all([
+  const [recsRaw, sameBrandRaw, judgemeRating] = await Promise.all([
     getProductRecommendations(product.id).catch(() => []),
     product.vendor
       ? getProducts({ query: `vendor:"${product.vendor}"` }).catch(() => [])
       : Promise.resolve([]),
+    getJudgemeProductRating(product.handle),
   ]);
 
   const related = shopifyProductsToBabanuj(
@@ -85,6 +110,20 @@ export default async function ProductPage(props: {
     name: product.title,
     description: product.description,
     image: product.featuredImage?.url,
+    url: `${baseUrl}/product/${product.handle}`,
+    sku: product.variants[0]?.sku || undefined,
+    brand: product.vendor
+      ? { "@type": "Brand", name: product.vendor }
+      : undefined,
+    // Judge.me reviews render client-side only, so crawlers never see them —
+    // surface the aggregate score in structured data instead.
+    aggregateRating: judgemeRating
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: judgemeRating.rating,
+          reviewCount: judgemeRating.reviewCount,
+        }
+      : undefined,
     offers: {
       "@type": "AggregateOffer",
       availability: product.availableForSale
@@ -135,12 +174,38 @@ export default async function ProductPage(props: {
     },
   };
 
+  // Mirrors the visible Home › <category> › <product> breadcrumb in MarketPDP.
+  const cat = categoryFor(babanujProduct);
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: cat.name,
+        item: `${baseUrl}${cat.id === "all" ? "/search" : `/collections/${cat.id}`}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.title,
+      },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd),
+          __html: JSON.stringify([productJsonLd, breadcrumbJsonLd]),
         }}
       />
       <MarketPDP

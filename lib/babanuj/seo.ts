@@ -59,6 +59,9 @@ export function openGraph({
     description,
     url,
     siteName: SITE_NAME,
+    // og:type "product" would be more precise for PDPs, but Next rejects it
+    // at runtime ("Invalid OpenGraph type") — only the og.me core types are
+    // allowed. Google ignores og:type, so "website" everywhere is fine.
     type: "website",
     images: [
       {

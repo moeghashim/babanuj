@@ -43,6 +43,8 @@ export const getCollectionProductsQuery = /* GraphQL */ `
     $reverse: Boolean
   ) {
     collection(handle: $handle) {
+      # TODO: bump to first: 250 (Storefront API max) or paginate once any
+      # collection nears 100 products.
       products(sortKey: $sortKey, reverse: $reverse, first: 100) {
         edges {
           node {

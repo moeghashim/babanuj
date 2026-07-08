@@ -5,6 +5,10 @@ import { getProducts } from "lib/shopify";
 export const metadata = {
   title: "Your bag",
   description: "Review your bag and check out.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export const experimental_ppr = true;
