@@ -9,6 +9,7 @@ const SHOP_LINKS = [
   { label: "Chocolate", href: "/collections/chocolate" },
   { label: "Cookies", href: "/collections/cookies" },
   { label: "Gift Boxes", href: "/collections/gift-boxes" },
+  { label: "HoneyTube", href: "/honeytube" },
 ];
 
 const COLS = [
