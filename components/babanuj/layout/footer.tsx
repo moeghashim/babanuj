@@ -10,6 +10,7 @@ const SHOP_LINKS = [
   { label: "Cookies", href: "/collections/cookies" },
   { label: "Gift Boxes", href: "/collections/gift-boxes" },
   { label: "HoneyTube", href: "/honeytube" },
+  { label: "Milaf Cola", href: "/milaf-cola" },
 ];
 
 const COLS = [
