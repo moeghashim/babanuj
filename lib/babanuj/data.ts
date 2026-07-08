@@ -96,8 +96,8 @@ export const BRANDS: BabanujBrand[] = [
     est: 1991,
     tag: "Turkish & Middle Eastern Sweets",
     blurb:
-      "Heritage recipes crafted with premium ingredients for an authentic taste experience.",
-    long: "Three generations of Anatolian sweetmakers, working from stone-floored ateliers in Gaziantep. Every tray of baklava is rolled, layered and baked the same day it leaves the kitchen.",
+      "Turkish baklava, Turkish delight, maamoul, and traditional sweets from heritage recipes, crafted with premium ingredients.",
+    long: "Three generations of Anatolian sweetmakers, working from stone-floored ateliers in Gaziantep. Every tray of baklava is rolled, layered and baked the same day it leaves the kitchen. The Zaitoune range covers the full Levantine-Turkish dessert table: pistachio and mixed baklava in trays from 100g to 1kg, rose-scented Turkish delight, date, walnut, and pistachio maamoul, kol w shkor with honey, mabrouma, nawashef, ghraybeh, royal petit four, and cardamom-ground Turkish coffee — stocked in Houston and shipped fresh across the United States by Babanuj.",
     note: "Premium Quality",
     accent: "#3a5c3a",
     color2: "#caa55a",
