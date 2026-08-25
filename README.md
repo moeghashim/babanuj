@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> **ARCHIVED — this app no longer serves production.** `www.babanuj.com` has run
+> on the Hydrogen storefront ([`moeghashim/babanuj-hydrogen`](https://github.com/moeghashim/babanuj-hydrogen))
+> since the 2026-07-20 cutover; the two-week soak passed (see that repo's
+> `docs/soak-summary.md`) and the rollback window closed 2026-08-25. This repo
+> is kept read-only as the historical record of the Next.js storefront.
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fcommerce&project-name=commerce&repo-name=commerce&demo-title=Next.js%20Commerce&demo-url=https%3A%2F%2Fdemo.vercel.store&demo-image=https%3A%2F%2Fbigcommerce-demo-asset-ksvtgfvnd.vercel.app%2Fbigcommerce.png&env=COMPANY_NAME,SHOPIFY_REVALIDATION_SECRET,SHOPIFY_STORE_DOMAIN,SHOPIFY_STOREFRONT_ACCESS_TOKEN,SITE_NAME)
 
 # Next.js Commerce
