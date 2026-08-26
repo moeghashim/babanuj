@@ -1,9 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Script from "next/script";
 import { useState } from "react";
 import { useMountEffect } from "lib/use-mount-effect";
-import { MetaPixel } from "components/babanuj/meta-pixel";
+
+const MetaPixel = dynamic(
+  () => import("components/babanuj/meta-pixel").then((mod) => mod.MetaPixel),
+  { ssr: false },
+);
 
 /**
  * Embed loaders for third-party tools — each renders ONLY when its env
@@ -32,10 +37,10 @@ export function ThirdPartyScripts() {
 
   return (
     <>
-      {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
-
       {!canLoad ? null : (
         <>
+          {metaPixelId && <MetaPixel pixelId={metaPixelId} />}
+
           {/* Google Analytics 4 (gtag.js) */}
           {gaId && (
             <>
